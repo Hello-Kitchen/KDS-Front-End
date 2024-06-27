@@ -15,7 +15,7 @@ function SideText({text}) {
 function Header({textRight, textCenter, textLeft}) {
 
     return (
-      <div className='container'>
+      <div className='container-header'>
         <div className='center-container'>
             {<SideText text={textLeft}/>}
             {<CenterText text={textCenter}/>}
