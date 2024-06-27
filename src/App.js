@@ -7,9 +7,9 @@ function App() {
   return (
     <div style={{ width: "100%", height: "100%", flexDirection: "column" }}>
       <Header textLeft="time" textCenter="Cuisine" textRight="date" />
-      <div style={{ width: "100%", height: "85%" }}>
-        <OrdersDisplay/>
-      </div>
+        <div style={{ width: "100%", height: "85%" }}>
+          <OrdersDisplay/>
+        </div>
       <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} />
     </div>
   );
