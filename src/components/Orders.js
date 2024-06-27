@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Order from '../components/Order';
+import Order from './Order';
 import './Orders.css';
 
 function Orders() {
