@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./Order.css";
+import "./Orders.css";
 
-export default function Order({
+export default function SingleOrderDisplay({
   id
 }) {
   const [orderDetails, setOrderDetails] = useState();
