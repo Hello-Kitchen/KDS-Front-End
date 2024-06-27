@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Footer from './components/Footer';
+import Footer from './components/Footer/Footer';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ root.render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<Footer />} />
+        <Route path="/" element={<Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}/>} />
       </Routes>
     </Router>
   </React.StrictMode>
