@@ -1,30 +1,29 @@
-import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle, IoIosStats } from "react-icons/io";
-import { RiRefreshFill } from "react-icons/ri";
+import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 import './Buttons.css';
 
 const ButtonServie = () => (
-    <div className='button'>
+    <div className='button-footer'>
         <IoIosCheckmarkCircle color='#F2E5A2' size={60} />
         <div className='text'>SERVIE</div>
     </div>
 );
 
 const ButtonPrecedent = () => (
-    <div className='button'>
+    <div className='button-footer'>
         <IoIosArrowDropleftCircle color='#F2E5A2' size={60} />
         <div className='text'>PRECEDENT</div>
     </div>
 );
 
 const ButtonSuivant = () => (
-    <div className='button'>
+    <div className='button-footer'>
         <IoIosArrowDroprightCircle color='#F2E5A2' size={60} />
         <div className='text'>SUIVANT</div>
     </div>
 );
 
 const ButtonRappel = () => (
-    <div className='button'>
+    <div className='button-footer'>
         <svg viewBox="0 0 24 24" height="60" width="60" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="imageRecall" patternUnits="userSpaceOnUse" width="24" height="24">
@@ -38,7 +37,7 @@ const ButtonRappel = () => (
 );
 
 const ButtonStatistiques = () => (
-    <div className='button'>
+    <div className='button-footer'>
         <svg viewBox="0 0 24 24" height="60" width="60" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="imageStat" patternUnits="userSpaceOnUse" width="24" height="24">
@@ -52,7 +51,7 @@ const ButtonStatistiques = () => (
 );
 
 const ButtonReglages = () => (
-    <div className='button'>
+    <div className='button-footer'>
         <svg viewBox="0 0 24 24" height="60" width="60" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="imageSetting" patternUnits="userSpaceOnUse" width="24" height="24">

@@ -37,19 +37,15 @@ const notconnected = () => (
 )
 
 function Footer({ buttons }) {
-    const connect = false;
+    const connect = true;
     const Etat = connect ? connected : notconnected;
     return (
-        <div style={{ width: "100%", height: "100%", flexDirection: "column" }}>
-            <div style={{ width: "100%", height: "5%", backgroundColor: "#499CA6" }}></div>
-            <div style={{ width: "100%", height: "85%" }}></div>
-            <div className='container'>
-                {buttons.map(buttonKey => {
-                    const ButtonComponent = buttonComponents.hasOwnProperty(buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
-                    return <ButtonComponent key={buttonKey} />;
-                })}
-                <Etat />
-            </div>
+        <div className='container-footer'>
+            {buttons.map(buttonKey => {
+                const ButtonComponent = buttonComponents.hasOwnProperty(buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
+                return <ButtonComponent key={buttonKey} />;
+            })}
+            <Etat />
         </div>
     );
 }

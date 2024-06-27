@@ -5,7 +5,7 @@
     color: #FFFFFF;
 }
 
-.button {
+.button-footer {
     width: 16%;
     background-color: #499CA6;
     padding: 2px;
@@ -14,11 +14,4 @@
     justify-content: center;
     align-items: center;
     gap: 5px;
-}
-
-.circle {
-    background-color: #F2E5A2;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
 }
