@@ -19,8 +19,7 @@ function Orders() {
 
     return (
       <div>
-        <h1>Orders</h1>
-        <div class="grid grid-cols-5 gap-4 mx-2">
+        <div class="grid grid-cols-5 gap-4 mx-2 py-2">
           {ordersList}
         </div>
       </div>
