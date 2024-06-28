@@ -20,7 +20,7 @@ const Login = () => {
     };
 
     return (
-        <div className="flex flex-col justify-center items-center h-screen bg-[#499CA6]">
+        <div className="flex flex-col justify-center items-center h-screen bg-kitchen-blue">
             <img src={logo} alt="Logo" className="w-52 h-52 mb-5" />
             <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-md w-80 text-center">
                 <form onSubmit={handleSubmit}>
@@ -46,7 +46,7 @@ const Login = () => {
                     </div>
                     <button
                         type="submit"
-                        className="px-4 py-2 rounded bg-[#499CA6] text-white hover:bg-[#417f8c] transition duration-300"
+                        className="px-4 py-2 rounded bg-kitchen-blue text-white hover:bg-[#417f8c] transition duration-300"
                     >
                         Se connecter
                     </button>
