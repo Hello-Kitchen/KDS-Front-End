@@ -60,7 +60,7 @@ const ButtonReglages = () => (
             </defs>
             <circle r="10" cx="12" cy="12" fill="url(#imageSetting)" />
         </svg>
-        <div className='text'>STATISTIQUES</div>
+        <div className='text'>REGLAGES</div>
     </div>
 );
 

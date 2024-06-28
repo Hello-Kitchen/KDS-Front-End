@@ -1,21 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import Login from './pages/Login';
-import Header from './components/Header/Header';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
+import "./index.css";
+
+import PosRouter from './Pages/PosRouter';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Header textLeft="time" textCenter="Cuisine" textRight="" />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
+    <PosRouter />
   </React.StrictMode>
 );
 

@@ -16,8 +16,34 @@ module.exports = {
         'lh': '7%',
         'lf': '13%',
         'pos-button': '11%',
-      }
+      },
+      writingMode: {
+        'tb-rl': 'vertical-rl',
+      },
+      rotate: {
+        '-180': '-180deg',
+      },
+      height: {
+        '85%': '85%',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.writing-mode-tb-rl': {
+          writingMode: 'vertical-rl',
+        },
+        '.rotate-180': {
+          transform: 'rotate(-180deg)',
+        },
+        '.border-l-2': {
+          borderLeftWidth: '10px',
+        },
+        '.border-l': {
+          borderLeftColor: 'kitchen-blue',
+        },
+      });
+    },
+  ],
 }
