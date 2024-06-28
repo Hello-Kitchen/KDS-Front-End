@@ -15,7 +15,15 @@ module.exports = {
       height: {
         'lh': '7%',
         'lf': '13%',
+        'lb': '80%',
         'pos-button': '11%',
+      },
+      width: {
+        'etat': '4%'
+      },
+      fontSize: {
+        '24px': '24px',
+        '20px': '20px',
       }
     },
   },
