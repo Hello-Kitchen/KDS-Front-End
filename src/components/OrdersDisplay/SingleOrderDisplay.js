@@ -74,3 +74,7 @@ export default function SingleOrderDisplay({
     </div>
   );
 }
+
+SingleOrderDisplay.propTypes = {
+  id: PropTypes.number.isRequired
+};

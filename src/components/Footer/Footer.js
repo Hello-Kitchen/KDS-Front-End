@@ -1,3 +1,5 @@
+import React from 'react';
+
 import './Footer.css';
 import buttonComponents from '../Buttons/Buttons';
 
