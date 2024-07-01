@@ -94,7 +94,7 @@ export default function SingleOrderDisplay({ id }) {
                       </li>
                     ))}
                     <div>
-                      {food.note ? <div className="flex flex-row pl-5">;
+                      {food.note ? <div className="flex flex-row pl-5">
                         <div className="pl-5p-px text-white font-semibold bg-orange-500">
                           NOTE
                         </div>
