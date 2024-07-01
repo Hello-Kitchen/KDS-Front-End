@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from './Login/Login';
-import Dashboard from './Dashboard/Dashboard'
+import DashboardCuisine from './Dashboard/DashboardCuisine'
+import DashboardPasse from './Dashboard/DashboardPasse'
 
 
 function PosRouter() {
@@ -10,7 +11,8 @@ function PosRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />}/>
-        <Route path="/dashboard" element={<Dashboard />}/>
+        <Route path="/passe" element={<DashboardPasse />}/>
+        <Route path="/cuisine" element={<DashboardCuisine />}/>
       </Routes>
     </BrowserRouter>
     );
