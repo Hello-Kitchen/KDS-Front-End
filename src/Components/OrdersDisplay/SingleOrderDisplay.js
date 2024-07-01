@@ -11,14 +11,14 @@ export default function SingleOrderDisplay({
   const [waitingTime, setWaitingTime] = useState({});
 
   useEffect(() => {
-      fetch(`http://localhost:4000/api/orders/${id}?forKDS=true`).then(response => {
+      fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/${id}?forKDS=true`).then(response => {
         response.json().then(data => {
           setOrderDate({
             hours: new Date(data.date).getHours(),
             minutes: new Date(data.date).getMinutes(),
             seconds: new Date(data.date).getSeconds()
           });
-          const waitTime = new Date(new Date - new Date(data.date));
+          const waitTime = new Date(new Date() - new Date(data.date));
           setWaitingTime({
             hours: waitTime.getHours(),
             minutes: waitTime.getMinutes(),

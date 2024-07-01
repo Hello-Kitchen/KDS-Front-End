@@ -6,9 +6,9 @@ import './Orders.css';
 function OrdersDisplay() {
 
     const [ordersList, setOrdersList] = useState([]);
-  
+
     useEffect(() => {
-      fetch ("http://localhost:4000/api/orders/").then(response => {
+      fetch (`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/`).then(response => {
         response.json().then(data => {
           setOrdersList(data.map(order => <SingleOrderDisplay key={order.id} id={order.id}/>));
         });

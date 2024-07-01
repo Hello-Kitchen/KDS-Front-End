@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../Logo_Hello_Kitchen.png";
+import logo from "./Logo_Hello_Kitchen.png";
 import axios from "axios";
 
 const Login = () => {
@@ -14,7 +14,7 @@ const Login = () => {
         e.preventDefault();
         axios.post(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login/`, {username, password})
         .then(() => {
-            navigate('/');
+            navigate('/cuisine');
         })
         .catch((err) => {
             console.log("ERROR", err);

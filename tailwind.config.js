@@ -9,6 +9,12 @@ module.exports = {
         'lb': '80%',
         'pos-button': '11%',
       },
+      writingMode: {
+        'tb-rl': 'vertical-rl',
+      },
+      rotate: {
+        '-180': '-180deg',
+      },
       width: {
         'etat': '4%'
       },
@@ -26,5 +32,22 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.writing-mode-tb-rl': {
+          writingMode: 'vertical-rl',
+        },
+        '.rotate-180': {
+          transform: 'rotate(-180deg)',
+        },
+        '.border-l-2': {
+          borderLeftWidth: '10px',
+        },
+        '.border-l': {
+          borderLeftColor: 'kitchen-blue',
+        },
+      });
+    },
+  ],
 }
