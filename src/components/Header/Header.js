@@ -1,3 +1,7 @@
+import React from 'react';
+
+import PropTypes from 'prop-types';
+
 function CenterText({text}) {
     return (
         <p className='text-white font-bold text-4xl'>{text}</p>
@@ -21,5 +25,19 @@ function Header({textRight, textCenter, textLeft}) {
       </div>
     );
 }
+
+CenterText.propTypes = {
+    text: PropTypes.string.isRequired
+};
+
+SideText.propTypes = {
+    text: PropTypes.string.isRequired
+};
+
+Header.propTypes = {
+    textLeft: PropTypes.string.isRequired,
+    textCenter: PropTypes.string.isRequired,
+    textRight: PropTypes.string.isRequired
+};
 
 export default Header;
