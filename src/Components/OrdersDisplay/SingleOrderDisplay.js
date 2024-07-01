@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+import PropTypes from "prop-types";
 import "./Orders.css";
 
 export default function SingleOrderDisplay({
@@ -74,3 +76,7 @@ export default function SingleOrderDisplay({
     </div>
   );
 }
+
+SingleOrderDisplay.propTypes = {
+  id: PropTypes.number.isRequired
+};

@@ -1,3 +1,5 @@
+/* eslint-env node */
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "./Logo_Hello_Kitchen.png";
@@ -11,8 +13,8 @@ const Login = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login/`, {username, password})
-        .then((res) => {
-            navigate('/dashboard');
+        .then(() => {
+            navigate('/cuisine');
         })
         .catch((err) => {
             console.log("ERROR", err);
@@ -25,7 +27,7 @@ const Login = () => {
             <div className="bg-white bg-opacity-80 p-8 rounded-lg shadow-md w-80 text-center">
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label htmlFor="username" className="block mb-2">Nom d'utilisateur</label>
+                        <label htmlFor="username" className="block mb-2">Nom d&#39;utilisateur</label>
                         <input
                             type="text"
                             id="username"

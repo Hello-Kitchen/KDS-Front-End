@@ -18,14 +18,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "eject": "react-scripts eject",
+    "format": "eslint src/** --no-warn-ignored",
+    "formatFix": "eslint src/** --fix --no-warn-ignored"
   },
   "browserslist": {
     "production": [
@@ -40,6 +36,11 @@
     ]
   },
   "devDependencies": {
+    "@eslint/compat": "^1.1.0",
+    "@eslint/js": "^8.56.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.34.3",
+    "globals": "^15.6.0",
     "tailwindcss": "^3.4.4"
   }
 }

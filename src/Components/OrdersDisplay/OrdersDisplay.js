@@ -10,7 +10,7 @@ function OrdersDisplay() {
     useEffect(() => {
       fetch (`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/`).then(response => {
         response.json().then(data => {
-          setOrdersList(data.map(order => <SingleOrderDisplay id={order.id}/>));
+          setOrdersList(data.map(order => <SingleOrderDisplay key={order.id} id={order.id}/>));
         });
       }).catch(error => {
         console.log(error);
