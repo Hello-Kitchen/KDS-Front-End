@@ -28,7 +28,7 @@ function App() {
 
   return (
     <div style={{ width: "100%", height: "100%", display: 'flex', flexDirection: "column" }}>
-      <Header textLeft="time" textCenter="Cuisine" textRight="date" />
+      <Header textLeft="time" textCenter="Cuisine" textRight={formatDate(currentTime)} />
       <div className='w-full h-lb'>
         <OrdersDisplay />
       </div>
