@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './Header.css';
+import PropTypes from 'prop-types';
 
 function CenterText({text}) {
     return (
@@ -25,6 +26,20 @@ function Header({textRight, textCenter, textLeft}) {
         </div>
       </div>
     );
-  }
-  
-  export default Header;
+}
+
+CenterText.propTypes = {
+    text: PropTypes.string.isRequired
+};
+
+SideText.propTypes = {
+    text: PropTypes.string.isRequired
+};
+
+Header.propTypes = {
+    textLeft: PropTypes.string.isRequired,
+    textCenter: PropTypes.string.isRequired,
+    textRight: PropTypes.string.isRequired
+};
+
+export default Header;

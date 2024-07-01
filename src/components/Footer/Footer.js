@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './Footer.css';
+import PropTypes from 'prop-types';
 import buttonComponents from '../Buttons/Buttons';
 
 const ButtonEmpty = () => (
@@ -44,12 +45,16 @@ function Footer({ buttons }) {
     return (
         <div className='container-footer'>
             {buttons.map(buttonKey => {
-                const ButtonComponent = buttonComponents.hasOwnProperty(buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
+                const ButtonComponent = Object.prototype.hasOwnProperty.call(buttonComponents, buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
                 return <ButtonComponent key={buttonKey} />;
             })}
             <Etat />
         </div>
     );
 }
+
+Footer.propTypes = {
+    buttons: PropTypes.arrayOf(PropTypes.string).isRequired
+};
 
 export default Footer;
