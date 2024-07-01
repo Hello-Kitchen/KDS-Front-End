@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./Orders.css";
+import { BeatLoader } from "react-spinners";
 
 export default function SingleOrderDisplay({ id }) {
   const [orderDetails, setOrderDetails] = useState(null);
@@ -104,7 +105,28 @@ export default function SingleOrderDisplay({ id }) {
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <div>
+          <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
+            <div className="p-2 text-left">
+              <p className="font-semibold text-lg">-</p>
+              <p className="text-sm">-</p>
+            </div>
+            <div className="text-right p-2 text-lg">
+                <p className="font-semibold text-lg">
+                  --:--
+                </p>
+              <p className="text-sm">
+                --:--
+              </p>
+            </div>
+          </div>
+          <div className="px-3 py-5 border-2 border-t-0 rounded-b-lg bg-slate-200 flex flex-col justify-center text-center">
+              Chargement de la commande...
+              <div className="pt-5">
+                <BeatLoader speedMultiplier={0.5}/>
+              </div>
+          </div>
+        </div>
       )}
     </div>
   );
