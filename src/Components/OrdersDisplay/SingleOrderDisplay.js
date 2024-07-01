@@ -92,12 +92,21 @@ export default function SingleOrderDisplay({ id }) {
                   <ol>
                     {food.mods_ingredients.map((modif, index) => (
                       <li key={index} className="flex flex-row">
-                        <div className={`p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" ? "bg-red-500" : "bg-orange-500"}`}>
+                        <div className={`p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" || modif.type === "ALL"  ? "bg-red-500" : "bg-orange-500"}`}>
                           {modif.type}
                         </div>
                         <div className="pl-1">{modif.ingredient}</div>
                       </li>
                     ))}
+                    <div>
+                      {food.note ? <div className="flex flex-row">
+                        <div className="p-px text-white font-semibold bg-orange-500">
+                          NOTE
+                        </div>
+                        <div className="pl-1">{food.note}</div>
+                      </div>
+                      : <div/>}
+                    </div>
                   </ol>
                 </li>
               ))}
