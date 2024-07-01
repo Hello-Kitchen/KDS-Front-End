@@ -83,15 +83,10 @@ export default function SingleOrderDisplay({ id }) {
             <ul>
               {orderDetails.food.map((food, index) => (
                 <li key={index}>
-                  {food.name}
-                  <ol>
-                    {food.details.map((detail, index) => (
-                      <li key={index}>→ {detail}</li>
-                    ))}
-                  </ol>
+                  {food.quantity}x {food.name}
                   <ol>
                     {food.mods_ingredients.map((modif, index) => (
-                      <li key={index} className="flex flex-row">
+                      <li key={index} className="flex flex-row pl-5">
                         <div className={`p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" || modif.type === "ALL"  ? "bg-red-500" : "bg-orange-500"}`}>
                           {modif.type}
                         </div>
@@ -99,14 +94,24 @@ export default function SingleOrderDisplay({ id }) {
                       </li>
                     ))}
                     <div>
-                      {food.note ? <div className="flex flex-row">
-                        <div className="p-px text-white font-semibold bg-orange-500">
+                      {food.note ? <div className="flex flex-row pl-5">
+                        <div className="pl-5p-px text-white font-semibold bg-orange-500">
                           NOTE
                         </div>
                         <div className="pl-1">{food.note}</div>
                       </div>
                       : <div/>}
                     </div>
+                  </ol>
+                  <ol>
+                    {food.details.map((detail, index) => (
+                      <li key={index} className="pl-5">→ {detail}</li>
+                    ))}
+                  </ol>
+                  <ol>
+                    {food.details.map((detail, index) => (
+                      <li key={index} className="pl-5">→ {detail}</li>
+                    ))}
                   </ol>
                 </li>
               ))}
