@@ -82,20 +82,20 @@ export default function SingleOrderDisplay({ id }) {
             <ul>
               {orderDetails.food.map((food, index) => (
                 <li key={index}>
-                  {food.name}
-                  <ol>
-                    {food.details.map((detail, index) => (
-                      <li key={index}>→ {detail}</li>
-                    ))}
-                  </ol>
+                  {food.quantity}x {food.name}
                   <ol>
                     {food.mods_ingredients.map((modif, index) => (
-                      <li key={index} className="flex flex-row">
+                      <li key={index} className="flex flex-row pl-5">
                         <div className={`p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" ? "bg-red-500" : "bg-orange-500"}`}>
                           {modif.type}
                         </div>
                         <div className="pl-1">{modif.ingredient}</div>
                       </li>
+                    ))}
+                  </ol>
+                  <ol>
+                    {food.details.map((detail, index) => (
+                      <li key={index} className="pl-5">→ {detail}</li>
                     ))}
                   </ol>
                 </li>
