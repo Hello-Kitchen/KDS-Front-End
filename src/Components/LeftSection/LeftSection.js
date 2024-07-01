@@ -1,3 +1,5 @@
+import React from "react";
+
 const LeftSection = () => {
     return (
         <div className="bg-kitchen-blue flex flex-col justify-around items-center h-full">
