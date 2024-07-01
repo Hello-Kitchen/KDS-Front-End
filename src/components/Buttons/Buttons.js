@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 import './Buttons.css';
 
