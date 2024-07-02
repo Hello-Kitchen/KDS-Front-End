@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
-import "./Orders.css";
 
 export default function SingleOrderDisplay({
   id
@@ -52,7 +51,8 @@ export default function SingleOrderDisplay({
           <ul>
             {orderDetails.food.map((food, index) =>
             <li key={index}>
-                {food.name}
+                <span className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>{food.name + " "}</span>
+                <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 ${food.is_ready ? "bg-green-500" : ""}`}>     </span>
                 <ol>
                     {food.details.map((detail, index) => <li key={index}>→ {detail}</li>)}
                 </ol>

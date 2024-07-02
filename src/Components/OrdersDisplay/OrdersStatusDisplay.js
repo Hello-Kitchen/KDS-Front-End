@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import SingleOrderDisplay from './SingleOrderDisplay';
 
-function OrdersDisplay() {
+function OrdersStatusDisplay({status}) {
 
     const [ordersList, setOrdersList] = useState([]);
 
     useEffect(() => {
-      fetch (`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/`).then(response => {
+      fetch (`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/status/${status}`).then(response => {
         response.json().then(data => {
           setOrdersList(data.map(order => <SingleOrderDisplay key={order.id} id={order.id}/>));
         });
@@ -25,4 +25,4 @@ function OrdersDisplay() {
     );
   }
 
-export default OrdersDisplay;
+export default OrdersStatusDisplay;
