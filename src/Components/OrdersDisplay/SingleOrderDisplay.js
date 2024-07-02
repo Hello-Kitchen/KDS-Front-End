@@ -3,71 +3,43 @@ import PropTypes from "prop-types";
 import "./Orders.css";
 import { BeatLoader } from "react-spinners";
 
-export default function SingleOrderDisplay({ id }) {
-  const [orderDetails, setOrderDetails] = useState(null);
-  const [orderDate, setOrderDate] = useState({});
-  const [waitingTime, setWaitingTime] = useState({});
-  const [nbrColumns, setNbrColumns] = useState(1);
+export default function SingleOrderDisplay({ orderDetails, span }) {
+
+  const [nbrCols, setNbrCols] = useState(0);
+
+
+  const [waitingTime, setWaitingTime] = useState({
+    hours: "--",
+    minutes: "--",
+    seconds: "--",
+  });
 
   const calculateWaitingTime = (orderDate) => {
     const waitTime = new Date(Date.now() - new Date(orderDate));
     return {
       hours: String(waitTime.getHours()).padStart(2, "0"),
       minutes: String(waitTime.getMinutes()).padStart(2, "0"),
-      seconds: String(waitTime.getSeconds()).padStart(2, "0")
+      seconds: String(waitTime.getSeconds()).padStart(2, "0"),
     };
-  };
-
-  const getNbrColumns = (data) => {
-    let nbrLines = 0;
-    data.map((food) => {
-      nbrLines += 1;
-      food.details.map((detail) => {
-        nbrLines += 1;
-      });
-      food.mods_ingredients.map((modif) => {
-        nbrLines += 1;
-      });
-      if (food.note) {
-        nbrLines += 1;
-      }
-      setNbrColumns(Math.round(nbrLines / 10));
-    });
   };
 
   useEffect(() => {
-    const fetchOrderDetails = () => {
-      fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/${id}?forKDS=true`)
-        .then(response => response.json())
-        .then(data => {
-          const orderDateObj = new Date(data.date);
-          setOrderDate({
-            hours: String(orderDateObj.getHours()).padStart(2, "0"),
-            minutes: String(orderDateObj.getMinutes()).padStart(2, "0"),
-            seconds: String(orderDateObj.getSeconds()).padStart(2, "0")
-          });
-          setWaitingTime(calculateWaitingTime(data.date));
-          setOrderDetails(data);
-          getNbrColumns(data.food);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    };
+    setNbrCols(span);
+  }, [span]);
 
-    fetchOrderDetails();
+  useEffect(() => {
+    if (orderDetails) {
+      calculateWaitingTime(orderDetails.date);
 
-    const intervalId = setInterval(() => {
-      if (orderDetails) {
+      const interval = setInterval(() => {
         setWaitingTime(calculateWaitingTime(orderDetails.date));
-      }
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [id, orderDetails]);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [orderDetails]);
 
   return (
-    <div className={`col-span-${nbrColumns}`}>
+    <div className={`col-span-${nbrCols}`}>
       {orderDetails ? (
         <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
@@ -76,28 +48,41 @@ export default function SingleOrderDisplay({ id }) {
               <p className="text-sm">{orderDetails.channel}</p>
             </div>
             <div className="text-right p-2 text-lg">
-              {waitingTime.hours > 1  && waitingTime.seconds % 2 ? (
+              {waitingTime.hours > 1 && waitingTime.seconds % 2 ? (
                 <p className="font-semibold text-xl text-white border-2 bg-red-500 border-red-500 text-center rounded-lg">
-                  {waitingTime.hours}:{waitingTime.minutes}:{waitingTime.seconds}
+                  {waitingTime.hours}:{waitingTime.minutes}:
+                  {waitingTime.seconds}
                 </p>
               ) : waitingTime.hours > 1 ? (
                 <p className="font-semibold text-xl text-red-500 border-2 bg-white border-red-500 text-center rounded-lg">
-                  {waitingTime.hours}:{waitingTime.minutes}:{waitingTime.seconds}
+                  {waitingTime.hours}:{waitingTime.minutes}:
+                  {waitingTime.seconds}
                 </p>
               ) : (
-                <p className={waitingTime.minutes > 15 ? "font-semibold text-lg text-red-500" : "font-semibold text-lg"}>
+                <p
+                  className={
+                    waitingTime.minutes > 15
+                      ? "font-semibold text-lg text-red-500"
+                      : "font-semibold text-lg"
+                  }
+                >
                   {waitingTime.minutes}:{waitingTime.seconds}
                 </p>
               )}
               <p className="text-sm">
-                {orderDate.hours}:{orderDate.minutes}
+                {orderDetails.orderDate.hours}:{orderDetails.orderDate.minutes}
               </p>
             </div>
           </div>
           <div
             className={`px-3 py-1 border-2 border-t-0 rounded-b-lg ${
-              orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"
-            }`} style={{columnCount: nbrColumns}}
+              orderDetails.channel === "En salle"
+                ? "bg-yellow-100"
+                : orderDetails.channel === "A emporter"
+                ? "bg-blue-100"
+                : "bg-purple-100"
+            }`}
+            style={{ columnCount: nbrCols }}
           >
             <ul>
               {orderDetails.food.map((food, index) => (
@@ -106,30 +91,45 @@ export default function SingleOrderDisplay({ id }) {
                   <ol>
                     {food.mods_ingredients.map((modif, index) => (
                       <li key={index} className="flex flex-row pl-5">
-                        <div className={`p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" || modif.type === "ALL"  ? "bg-red-500" : "bg-orange-500"}`}>
+                        <div
+                          className={`p-px text-white font-semibold ${
+                            modif.type === "ADD"
+                              ? "bg-green-500"
+                              : modif.type === "DEL" || modif.type === "ALL"
+                              ? "bg-red-500"
+                              : "bg-orange-500"
+                          }`}
+                        >
                           {modif.type}
                         </div>
                         <div className="pl-1">{modif.ingredient}</div>
                       </li>
                     ))}
                     <div>
-                      {food.note ? <div className="flex flex-row pl-5">
-                        <div className="pl-5p-px text-white font-semibold bg-orange-500">
-                          NOTE
+                      {food.note ? (
+                        <div className="flex flex-row pl-5">
+                          <div className="pl-5p-px text-white font-semibold bg-orange-500">
+                            NOTE
+                          </div>
+                          <div className="pl-1">{food.note}</div>
                         </div>
-                        <div className="pl-1">{food.note}</div>
-                      </div>
-                      : <div/>}
+                      ) : (
+                        <div />
+                      )}
                     </div>
                   </ol>
                   <ol>
                     {food.details.map((detail, index) => (
-                      <li key={index} className="pl-5">→ {detail}</li>
+                      <li key={index} className="pl-5">
+                        → {detail}
+                      </li>
                     ))}
                   </ol>
                   <ol>
                     {food.details.map((detail, index) => (
-                      <li key={index} className="pl-5">→ {detail}</li>
+                      <li key={index} className="pl-5">
+                        → {detail}
+                      </li>
                     ))}
                   </ol>
                 </li>
@@ -145,19 +145,15 @@ export default function SingleOrderDisplay({ id }) {
               <p className="text-sm">-</p>
             </div>
             <div className="text-right p-2 text-lg">
-                <p className="font-semibold text-lg">
-                  --:--
-                </p>
-              <p className="text-sm">
-                --:--
-              </p>
+              <p className="font-semibold text-lg">--:--</p>
+              <p className="text-sm">--:--</p>
             </div>
           </div>
           <div className="px-3 py-5 border-2 border-t-0 rounded-b-lg bg-slate-200 flex flex-col justify-center text-center">
-              Chargement de la commande...
-              <div className="pt-5">
-                <BeatLoader speedMultiplier={0.5}/>
-              </div>
+            Chargement de la commande...
+            <div className="pt-5">
+              <BeatLoader speedMultiplier={0.5} />
+            </div>
           </div>
         </div>
       )}
@@ -166,5 +162,6 @@ export default function SingleOrderDisplay({ id }) {
 }
 
 SingleOrderDisplay.propTypes = {
-  id: PropTypes.number.isRequired,
+  orderDetails: PropTypes.object.isRequired,
+  span: PropTypes.number.isRequired,
 };
