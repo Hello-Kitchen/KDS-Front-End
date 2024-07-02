@@ -44,12 +44,12 @@ function OrdersDisplay() {
         ))}
       </div>
         {nbrOrders === 11 && (
-          <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold">
+          <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">;
             {nbrOrders - 10} commande en attente &gt;&gt;
           </div>
         )}
         {nbrOrders > 11 && (
-          <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold">
+          <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">
             {nbrOrders - 10} commandes en attente &gt;&gt;
           </div>
         )}
