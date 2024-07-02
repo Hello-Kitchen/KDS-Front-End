@@ -7,6 +7,7 @@ export default function SingleOrderDisplay({ id }) {
   const [orderDetails, setOrderDetails] = useState(null);
   const [orderDate, setOrderDate] = useState({});
   const [waitingTime, setWaitingTime] = useState({});
+  const [nbrColumns, setNbrColumns] = useState(1);
 
   const calculateWaitingTime = (orderDate) => {
     const waitTime = new Date(Date.now() - new Date(orderDate));
@@ -15,6 +16,23 @@ export default function SingleOrderDisplay({ id }) {
       minutes: String(waitTime.getMinutes()).padStart(2, "0"),
       seconds: String(waitTime.getSeconds()).padStart(2, "0")
     };
+  };
+
+  const getNbrColumns = (data) => {
+    let nbrLines = 0;
+    data.map((food) => {
+      nbrLines += 1;
+      food.details.map((detail) => {
+        nbrLines += 1;
+      });
+      food.mods_ingredients.map((modif) => {
+        nbrLines += 1;
+      });
+      if (food.note) {
+        nbrLines += 1;
+      }
+      setNbrColumns(Math.round(nbrLines / 10));
+    });
   };
 
   useEffect(() => {
@@ -30,6 +48,7 @@ export default function SingleOrderDisplay({ id }) {
           });
           setWaitingTime(calculateWaitingTime(data.date));
           setOrderDetails(data);
+          getNbrColumns(data.food);
         })
         .catch(error => {
           console.error(error);
@@ -48,7 +67,7 @@ export default function SingleOrderDisplay({ id }) {
   }, [id, orderDetails]);
 
   return (
-    <div className="">
+    <div className={`col-span-${nbrColumns}`}>
       {orderDetails ? (
         <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
@@ -78,7 +97,7 @@ export default function SingleOrderDisplay({ id }) {
           <div
             className={`px-3 py-1 border-2 border-t-0 rounded-b-lg ${
               orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"
-            }`}
+            }`} style={{columnCount: nbrColumns}}
           >
             <ul>
               {orderDetails.food.map((food, index) => (
