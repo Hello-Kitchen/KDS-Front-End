@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import SingleOrderDisplay from './SingleOrderDisplay';
 
-function OrdersStatusDisplay({status}) {
+function OrdersStatusDisplay({status, orders, updateOrders}) {
 
     const [ordersList, setOrdersList] = useState([]);
 
     useEffect(() => {
-      fetch (`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/status/${status}`).then(response => {
-        response.json().then(data => {
-          setOrdersList(data.map(order => <SingleOrderDisplay key={order.id} id={order.id}/>));
-        });
-      }).catch(error => {
-        console.log(error);
-      });
-    }, []);
+      setOrdersList(orders.map(order => <SingleOrderDisplay key={order.id} id={order.id} updateOrders={updateOrders} />));
+    }, [orders, updateOrders]);
 
     return (
       <div>
