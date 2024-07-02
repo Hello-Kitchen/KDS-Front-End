@@ -45,12 +45,12 @@ function OrdersDisplay() {
       </div>
         {nbrOrders === 11 && (
           <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold">
-            {nbrOrders - 10} commande en attente
+            {nbrOrders - 10} commande en attente &gt;&gt;
           </div>
         )}
-        {nbrOrders > 10 && (
+        {nbrOrders > 11 && (
           <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold">
-            {nbrOrders - 10} commandes en attente
+            {nbrOrders - 10} commandes en attente &gt;&gt;
           </div>
         )}
     </div>
