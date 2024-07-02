@@ -18,8 +18,8 @@ const connected = () => (
             </defs>
             <circle r="10" cx="12" cy="12" fill="url(#imageConnected)" />
         </svg>
-        <div className='text-white text-24px'>R1161</div>
-        <div className='text-white text-24px'>N03</div>
+        <div className='text-white text-etat'>R1161</div>
+        <div className='text-white text-etat'>N03</div>
     </div>
 )
 
@@ -33,8 +33,8 @@ const notconnected = () => (
             </defs>
             <circle r="10" cx="12" cy="12" fill="url(#imageNotConnected)" />
         </svg>
-        <div className='text-white text-24px'>R1161</div>
-        <div className='text-white text-24px'>N03</div>
+        <div className='text-white text-etat'>R1161</div>
+        <div className='text-white text-etat'>N03</div>
     </div>
 )
 
