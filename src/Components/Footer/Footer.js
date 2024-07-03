@@ -43,12 +43,12 @@ function Footer({ buttons, setConfig }) {
     const Etat = connect ? connected : notconnected;
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between gap-0.5'>
-            {buttons.map(buttonKey => {
+            {buttons.map((buttonKey, i) => {
                 const ButtonComponent = Object.prototype.hasOwnProperty.call(buttonComponents, buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
                 if (buttonKey === "activer")
-                    return <ButtonComponent key={buttonKey} setConfig={setConfig} />;
+                    return <ButtonComponent key={i} setConfig={setConfig} />;
                 else
-                    return <ButtonComponent key={buttonKey} />;
+                    return <ButtonComponent key={i} />;
             })}
             <Etat />
         </div>
