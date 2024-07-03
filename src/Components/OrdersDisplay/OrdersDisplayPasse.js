@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
+import PropTypes from "prop-types";
 
 function OrdersDisplayPasse({ status }) {
   const [nbrOrders, setNbrOrders] = useState(0);
@@ -121,5 +122,9 @@ function OrdersDisplayPasse({ status }) {
     </div>
   );
 }
+
+OrdersDisplayPasse.propTypes = {
+  status: PropTypes.String.isRequired,
+};
 
 export default OrdersDisplayPasse;
