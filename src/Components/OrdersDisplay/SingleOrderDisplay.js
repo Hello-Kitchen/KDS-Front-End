@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { BeatLoader } from "react-spinners";
 
 export default function SingleOrderDisplay({ orderDetails, span }) {
+  const [orderDetail, setOrderDetail] = useState(orderDetails);
   const [waitingTime, setWaitingTime] = useState({
     hours: "--",
     minutes: "--",
@@ -19,6 +20,11 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   };
 
   const updateStatus = (idFood) => {
+    orderDetail.food.forEach(food => {
+      if (food.id === idFood) {
+        food.is_ready = true;
+      }
+    });
     fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/food_ordered/status/${idFood}`, { method: 'POST' })
     .then(response => response.json()).then(data => console.log(data))
       .catch(error => console.log(error));
@@ -85,7 +91,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
           </div>
         <div className={`px-3 py-1 border-2 border-t-0 rounded-b-lg ${orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}`} style={{ columnCount: span }}>
           <ul>
-            {orderDetails.food.map((food, index) =>
+            {orderDetail.food.map((food, index) =>
               <li key={index}>
                 <span onClick={() => updateStatus(food.id)} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>{food.quantity + "x " + food.name + " "}</span>
                 <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 ${food.is_ready ? "bg-green-500" : ""}`}>     </span>
