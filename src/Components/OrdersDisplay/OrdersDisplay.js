@@ -34,7 +34,6 @@ function OrdersDisplay() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setNbrOrders(data.length);
 
         const fetchOrderDetailsPromises = data.slice(0, 10).map((order) => {
