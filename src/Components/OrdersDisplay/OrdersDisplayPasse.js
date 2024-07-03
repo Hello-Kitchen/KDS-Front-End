@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import SingleOrderDisplay from "./SingleOrderDisplay";
+import React, { useState, useEffect } from 'react';
+import SingleOrderDisplay from './SingleOrderDisplay';
+import PropTypes from "prop-types";
 
-function OrdersDisplay() {
+function OrdersDisplayPasse({ status }) {
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
-  const [ordersLine2, setOrdersLine2] = useState([]);
 
   const fetchOrders = () => {
     const getNbrColumns = (orderDetails) => {
       let nbrLines = 0;
       let nbrCol = 0;
 
-      orderDetails.food.map((food) => {
+      orderDetails.food.forEach((food) => {
         nbrLines += 1;
-        food.details.map(() => {
+        food.details.forEach(() => {
           nbrLines += 1;
         });
-        food.mods_ingredients.map(() => {
+        food.mods_ingredients.forEach(() => {
           nbrLines += 1;
         });
         if (food.note) {
@@ -28,17 +28,13 @@ function OrdersDisplay() {
       return nbrCol;
     };
 
-    fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/`
-    )
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/status/${status}`)
       .then((response) => response.json())
       .then((data) => {
         setNbrOrders(data.length);
 
         const fetchOrderDetailsPromises = data.slice(0, 10).map((order) => {
-          return fetch(
-            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/${order.id}?forKDS=true`
-          )
+          return fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/${order.id}?forKDS=true`)
             .then((response) => response.json())
             .then((data) => {
               const orderDateObj = new Date(data.date);
@@ -52,54 +48,36 @@ function OrdersDisplay() {
         });
 
         Promise.all(fetchOrderDetailsPromises).then((orderDetailsArray) => {
-          const ordersLineComponents = orderDetailsArray.map(
-            (orderDetails) => ({
-              component: (
-                <SingleOrderDisplay
-                  key={orderDetails.number}
-                  orderDetails={orderDetails}
-                  span={getNbrColumns(orderDetails)}
-                />
-              ),
-              nbrCol: getNbrColumns(orderDetails),
-            })
-          );
+          const ordersLineComponents = orderDetailsArray.map((orderDetails) => ({
+            component: (
+              <SingleOrderDisplay
+                key={orderDetails.number}
+                orderDetails={orderDetails}
+                span={getNbrColumns(orderDetails)}
+                updateOrders={fetchOrders}
+              />
+            ),
+            nbrCol: getNbrColumns(orderDetails),
+          }));
 
           let ordersLine1 = [];
-          let ordersLine2 = [];
           let currentLine1Cols = 0;
-          let currentLine2Cols = 0;
           let waitingOrdersQueue = [];
 
           ordersLineComponents.forEach((order) => {
-            if (
-              currentLine1Cols + order.nbrCol <= 5 &&
-              waitingOrdersQueue.length === 0 &&
-              ordersLine2.length === 0
-            ) {
+            if (currentLine1Cols + order.nbrCol <= 5 && waitingOrdersQueue.length === 0) {
               ordersLine1.push(order.component);
               currentLine1Cols += order.nbrCol;
-            } else if (
-              currentLine2Cols + order.nbrCol <= 5 &&
-              waitingOrdersQueue.length === 0
-            ) {
-              ordersLine2.push(order.component);
-              currentLine2Cols += order.nbrCol;
             } else {
               waitingOrdersQueue.push(order);
             }
           });
 
           const processWaitingOrders = () => {
-            waitingOrdersQueue.every((order) => {
+            waitingOrdersQueue.forEach((order) => {
               if (currentLine1Cols + order.nbrCol <= 5) {
                 ordersLine1.push(order.component);
                 currentLine1Cols += order.nbrCol;
-              } else if (currentLine2Cols + order.nbrCol <= 5) {
-                ordersLine2.push(order.component);
-                currentLine2Cols += order.nbrCol;
-              } else {
-                return;
               }
             });
           };
@@ -107,7 +85,6 @@ function OrdersDisplay() {
           processWaitingOrders();
 
           setOrdersLine1(ordersLine1);
-          setOrdersLine2(ordersLine2);
         });
       })
       .catch((error) => {
@@ -116,9 +93,8 @@ function OrdersDisplay() {
   };
 
   useEffect(() => {
-    if (ordersLine1.length !== 0 && ordersLine2.length !== 0)
-      setNbrOrdersWaiting(nbrOrders - ordersLine1.length - ordersLine2.length);
-  }, [nbrOrders, ordersLine1, ordersLine2]);
+    setNbrOrdersWaiting(nbrOrders - ordersLine1.length);
+  }, [nbrOrders, ordersLine1]);
 
   useEffect(() => {
     fetchOrders();
@@ -126,15 +102,12 @@ function OrdersDisplay() {
     const intervalId = setInterval(fetchOrders, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [status]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
         {ordersLine1}
-      </div>
-      <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
-        {ordersLine2}
       </div>
       {nbrOrdersWaiting === 1 && (
         <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">
@@ -150,4 +123,8 @@ function OrdersDisplay() {
   );
 }
 
-export default OrdersDisplay;
+OrdersDisplayPasse.propTypes = {
+  status: PropTypes.string.isRequired,
+};
+
+export default OrdersDisplayPasse;
