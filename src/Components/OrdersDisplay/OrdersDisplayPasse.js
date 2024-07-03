@@ -124,7 +124,7 @@ function OrdersDisplayPasse({ status }) {
 }
 
 OrdersDisplayPasse.propTypes = {
-  status: PropTypes.String.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 export default OrdersDisplayPasse;
