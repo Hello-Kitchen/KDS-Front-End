@@ -5,7 +5,7 @@ import { BeatLoader } from "react-spinners";
 
 export default function SingleOrderDisplay({ orderDetails, span }) {
 
-  const [nbrCols, setNbrCols] = useState(0);
+  const [nbrCols, setNbrCols] = useState(1);
 
 
   const [waitingTime, setWaitingTime] = useState({
