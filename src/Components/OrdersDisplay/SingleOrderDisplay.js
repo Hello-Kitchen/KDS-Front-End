@@ -26,12 +26,13 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       }
     });
     fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/food_ordered/status/${idFood}`, { method: 'POST' })
-    .then(response => response.json()).then(data => console.log(data))
+    .then(response => response.json())
       .catch(error => console.log(error));
   };
 
   useEffect(() => {
     if (orderDetails) {
+      setOrderDetail(orderDetails);
       calculateWaitingTime(orderDetails.date);
 
       const interval = setInterval(() => {
@@ -100,8 +101,8 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
                   </ol>
                   <ol>
                     {food.mods_ingredients.map((modif, index) => (
-                      <div>
-                        <li key={index} className="flex flex-row pl-5">
+                      <div key={index}>
+                        <li className="flex flex-row pl-5">
                           <div className={`${food.is_ready ? "text-slate-500 italic" : ""} p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" ? "bg-red-500" : "bg-orange-500"}`}>
                             {modif.type}
                           </div>
