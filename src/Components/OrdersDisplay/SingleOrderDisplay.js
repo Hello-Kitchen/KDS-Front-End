@@ -4,10 +4,6 @@ import "./Orders.css";
 import { BeatLoader } from "react-spinners";
 
 export default function SingleOrderDisplay({ orderDetails, span }) {
-
-  const [nbrCols, setNbrCols] = useState(1);
-
-
   const [waitingTime, setWaitingTime] = useState({
     hours: "--",
     minutes: "--",
@@ -24,10 +20,6 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   };
 
   useEffect(() => {
-    setNbrCols(span);
-  }, [span]);
-
-  useEffect(() => {
     if (orderDetails) {
       calculateWaitingTime(orderDetails.date);
 
@@ -39,7 +31,19 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   }, [orderDetails]);
 
   return (
-    <div className={`col-span-${nbrCols}`}>
+    <div
+      className={
+        span === 1
+          ? "col-span-1"
+          : span === 2
+          ? "col-span-2"
+          : span === 3
+          ? "col-span-3"
+          : span === 4
+          ? "col-span-4"
+          : "col-span-5"
+      }
+    >
       {orderDetails ? (
         <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
@@ -82,7 +86,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
                 ? "bg-blue-100"
                 : "bg-purple-100"
             }`}
-            style={{ columnCount: nbrCols }}
+            style={{ columnCount: span }}
           >
             <ul>
               {orderDetails.food.map((food, index) => (
