@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       height: {
-        'lh': '7%',
-        'lf': '13%',
-        'lb': '80%',
+        'lh': '5%',
+        'lf': '10%',
+        'lb': '85%',
         'pos-button': '11%',
       },
       writingMode: {

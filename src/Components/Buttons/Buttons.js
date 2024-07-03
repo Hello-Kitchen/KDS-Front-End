@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 
@@ -65,6 +66,20 @@ const ButtonReglages = () => (
     </div>
 );
 
+const ButtonPower = ({ setConfig }) => (
+    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5 cursor-pointer' onClick={() => { setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable })); }}>
+        <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="imagePower" patternUnits="userSpaceOnUse" width="24" height="24">
+                    <image href="./power.jpg" x="0" y="0" width="24" height="24" />
+                </pattern>
+            </defs>
+            <circle r="10" cx="12" cy="12" fill="url(#imagePower)" />
+        </svg>
+        <div className='text-24px font-bold text-white'>ACTIVER</div>
+    </div>
+);
+
 const buttonComponents = {
     servie: ButtonServie,
     precedent: ButtonPrecedent,
@@ -72,6 +87,11 @@ const buttonComponents = {
     rappel: ButtonRappel,
     statistique: ButtonStatistiques,
     reglage: ButtonReglages,
+    activer: ButtonPower,
 };
+
+ButtonPower.propTypes = {
+    setConfig: PropTypes.func.isRequired,
+}
 
 export default buttonComponents;
