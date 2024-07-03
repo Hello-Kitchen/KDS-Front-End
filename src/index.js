@@ -8,9 +8,7 @@ import PosRouter from './Pages/PosRouter';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <PosRouter />
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
