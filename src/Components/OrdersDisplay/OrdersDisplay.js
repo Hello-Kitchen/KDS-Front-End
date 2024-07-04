@@ -29,7 +29,7 @@ function OrdersDisplay() {
     };
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders?sort=time`
     )
       .then((response) => response.json())
       .then((data) => {
