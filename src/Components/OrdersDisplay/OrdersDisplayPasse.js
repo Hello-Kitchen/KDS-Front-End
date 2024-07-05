@@ -28,7 +28,7 @@ function OrdersDisplayPasse({ status }) {
       return nbrCol;
     };
 
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders?status=${status}`)
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders?status=${status}&sort=time`)
       .then((response) => response.json())
       .then((data) => {
         setNbrOrders(data.length);
