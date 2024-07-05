@@ -58,6 +58,7 @@ function OrdersDisplay() {
                 <SingleOrderDisplay
                   key={orderDetails.number}
                   orderDetails={orderDetails}
+                  location={"cuisine"}
                   span={getNbrColumns(orderDetails)}
                 />
               ),

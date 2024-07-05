@@ -54,6 +54,7 @@ function OrdersDisplayPasse({ status }) {
                 key={orderDetails.number}
                 orderDetails={orderDetails}
                 span={getNbrColumns(orderDetails)}
+                location={"passe"}
                 updateOrders={fetchOrders}
               />
             ),

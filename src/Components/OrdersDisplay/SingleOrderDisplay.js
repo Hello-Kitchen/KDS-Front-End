@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BeatLoader } from "react-spinners";
 import { FcGoodDecision } from "react-icons/fc";
+import { computeHeadingLevel } from "@testing-library/react";
 
-export default function SingleOrderDisplay({ orderDetails, span }) {
+export default function SingleOrderDisplay({ orderDetails, span, location }) {
   const [orderDetail, setOrderDetail] = useState(orderDetails);
   const [waitingTime, setWaitingTime] = useState({
     hours: "--",
@@ -22,12 +23,20 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   };
 
   const updateStatus = (idFood) => {
-    const updatedFood = orderDetail.food.map(food => {
+    let notReadyFood = undefined;
+    let updatedFood = orderDetail.food.map(food => {
       if (food.id === idFood) {
-        return { ...food, is_ready: true };
+        const quantity = food.quantity || 1;
+        const readyFood = { ...food, is_ready: true, quantity: 1 };
+        if (quantity > 1)
+          notReadyFood = { ...food, is_ready: false, quantity: quantity - 1 };
+        return readyFood;
+      } else {
+        return food;
       }
-      return food;
     });
+    if (notReadyFood)
+      updatedFood.push(notReadyFood)
     setOrderDetail(prevOrderDetail => ({
       ...prevOrderDetail,
       food: updatedFood
@@ -43,8 +52,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
 
   useEffect(() => {
     if (orderDetails) {
-      if (checkRender())
-        setIsRender(false);
+      setIsRender(true)
       setOrderDetail(orderDetails);
       calculateWaitingTime(orderDetails.date);
 
@@ -60,7 +68,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       setIsRender(false);
   }, [orderDetail])
 
-  if (isRender === true) {
+  if (isRender || location === "passe") {
     return (
       <div
         className={
