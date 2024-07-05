@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BeatLoader } from "react-spinners";
-import { FcGoodDecision } from "react-icons/fc";
-import { computeHeadingLevel } from "@testing-library/react";
 
 export default function SingleOrderDisplay({ orderDetails, span, location }) {
   const [orderDetail, setOrderDetail] = useState(orderDetails);
