@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BeatLoader } from "react-spinners";
 
-export default function SingleOrderDisplay({ orderDetails, span, location }) {
+export default function SingleOrderDisplay({ orderDetails, span }) {
   const [orderDetail, setOrderDetail] = useState(orderDetails);
   const [waitingTime, setWaitingTime] = useState({
     hours: "--",
@@ -66,7 +66,7 @@ export default function SingleOrderDisplay({ orderDetails, span, location }) {
       setIsRender(false);
   }, [orderDetail])
 
-  if (isRender || location === "passe") {
+  if (isRender || window.location.pathname === "/passe") {
     return (
       <div
         className={
