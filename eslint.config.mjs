@@ -17,6 +17,13 @@ export default [
         ...globals.browser,
       },
     },
+    rules: {
+      "camelcase": 
+      ["error", 
+        {"ignoreDestructuring": true, allow: ["location", "is_ready"]}
+      ], 
+      "semi": ["error"]
+    },
     settings: {
       react: {
         version: "detect",
