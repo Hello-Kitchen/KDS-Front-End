@@ -92,6 +92,6 @@ const buttonComponents = {
 
 ButtonPower.propTypes = {
     setConfig: PropTypes.func.isRequired,
-}
+};
 
 export default buttonComponents;

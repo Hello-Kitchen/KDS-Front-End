@@ -34,7 +34,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       }
     });
     if (notReadyFood)
-      updatedFood.push(notReadyFood)
+      updatedFood.push(notReadyFood);
     setOrderDetail(prevOrderDetail => ({
       ...prevOrderDetail,
       food: updatedFood
@@ -46,11 +46,11 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
 
   const checkRender = () => {
     return orderDetail.food.every(food => food.is_ready === true);
-  }
+  };
 
   useEffect(() => {
     if (orderDetails) {
-      setIsRender(true)
+      setIsRender(true);
       setOrderDetail(orderDetails);
       calculateWaitingTime(orderDetails.date);
 
@@ -64,7 +64,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   useEffect(() => {
     if (checkRender())
       setIsRender(false);
-  }, [orderDetail])
+  }, [orderDetail]);
 
   if (isRender || window.location.pathname === "/passe") {
     return (

@@ -45,13 +45,13 @@ function DashboardCuisine({ config, setConfig }) {
         </div>
         <Footer buttons={["activer", "", "", "", "", "reglage"]} setConfig={setConfig} />
       </div>
-    )
+    );
   }
 }
 
 DashboardCuisine.propTypes = {
   config: PropTypes.object.isRequired,
   setConfig: PropTypes.func.isRequired,
-}
+};
 
 export default DashboardCuisine;

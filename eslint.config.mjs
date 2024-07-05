@@ -20,7 +20,7 @@ export default [
     rules: {
       "camelcase": 
       ["error", 
-        {"ignoreDestructuring": true, allow: ["location"]}
+        {"ignoreDestructuring": true, allow: ["location", "is_ready"]}
       ], 
       "semi": ["error"]
     },

@@ -21,7 +21,7 @@ const connected = () => (
         <div className='text-white text-etat'>R1161</div>
         <div className='text-white text-etat'>N03</div>
     </div>
-)
+);
 
 const notconnected = () => (
     <div className='w-etat bg-kitchen-blue flex flex-col justify-center items-center'>
@@ -36,7 +36,7 @@ const notconnected = () => (
         <div className='text-white text-etat'>R1161</div>
         <div className='text-white text-etat'>N03</div>
     </div>
-)
+);
 
 function Footer({ buttons, setConfig }) {
     const connect = true;

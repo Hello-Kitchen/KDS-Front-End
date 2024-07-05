@@ -2,12 +2,12 @@ import {React, useState} from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from './Login/Login';
-import DashboardCuisine from './Dashboard/DashboardCuisine'
-import DashboardPasse from './Dashboard/DashboardPasse'
+import DashboardCuisine from './Dashboard/DashboardCuisine';
+import DashboardPasse from './Dashboard/DashboardPasse';
 
 
 function PosRouter() {
-  const [config, setConfig] = useState({enable: false})
+  const [config, setConfig] = useState({enable: false});
 
   return (
     <BrowserRouter>
