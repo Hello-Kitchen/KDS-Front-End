@@ -12,7 +12,7 @@ function OrdersDisplay() {
       let nbrLines = 0;
       let nbrCol = 0;
 
-      orderDetails.food.map((food) => {
+      orderDetails.food_ordered.map((food) => {
         nbrLines += 1;
         food.details.map(() => {
           nbrLines += 1;
@@ -29,30 +29,56 @@ function OrdersDisplay() {
     };
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders?sort=time`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
     )
       .then((response) => response.json())
-      .then((data) => {
-        setNbrOrders(data.length);
+      .then((ordersData) => {
+        
+        
+        // Filter orders to display, only those that have at least one food that is not ready
+        
+        const orderToDisplay = [];
+        
+        ordersData.forEach((order) => {
+          const foodPart = [];
+          order.food_ordered.forEach((food) => {
+            if (food.part === order.part) {
+              foodPart.push(food);
+            }
+          });
+          console.log("foodPart", foodPart);
+          if (foodPart.some((food) => !food.is_ready)) {
+            console.log("if", foodPart);
+            orderToDisplay.push(order);
+          }
+        });
 
-        const fetchOrderDetailsPromises = data.slice(0, 10).map((order) => {
+        // Used to display the number of orders waiting
+        setNbrOrders(orderToDisplay.length);
+
+        // Fetch food details for each order to display
+
+        const fetchFoodDetailsPromises = orderToDisplay.slice(0, 10).map((order) => {
           return fetch(
-            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/orders/${order.id}?forKDS=true`
+            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
           )
             .then((response) => response.json())
             .then((data) => {
-              const orderDateObj = new Date(data.date);
+              const orderDateObj = new Date(order.date);
               const orderDate = {
                 hours: String(orderDateObj.getHours()).padStart(2, "0"),
                 minutes: String(orderDateObj.getMinutes()).padStart(2, "0"),
                 seconds: String(orderDateObj.getSeconds()).padStart(2, "0"),
               };
-              return { ...data, orderDate };
+              ordersData.find((singleOrder) => singleOrder.id === order.id).food_ordered = data.food_ordered;
+              ordersData.find((singleOrder) => singleOrder.id === order.id).orderDate = orderDate;
             });
         });
 
-        Promise.all(fetchOrderDetailsPromises).then((orderDetailsArray) => {
-          const ordersLineComponents = orderDetailsArray.map(
+        // Create array of components to display
+
+        Promise.all(fetchFoodDetailsPromises).then(() => {
+          const ordersLineComponents = orderToDisplay.slice(0, 10).map(
             (orderDetails) => ({
               component: (
                 <SingleOrderDisplay
