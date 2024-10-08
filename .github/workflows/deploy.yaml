@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+    workflow_dispatch:
+    push:
+      tags:
+         - "v*"
+
+jobs:
+  deployEpitech:
+    runs-on: ubuntu-latest
+    name: Deploy to EPITECH Repository
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.DEPLOY_EPITECH_KEY }}
+
+    - name: Clone EPITECH repository
+      run: |
+        git clone git@github.com:EpitechPromo2026/G-EIP-700-PAR-7-1-eip-jules.gresset.git
+        cd G-EIP-700-PAR-7-1-eip-jules.gresset
+        mkdir -p -v KDS-Front-End
+        rsync -av --delete ../ KDS-Front-End/ --exclude .git --exclude G-EIP-700-PAR-7-1-eip-jules.gresset/
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "Jules Gresset"
+        git config --global user.email "jules.gresset@epitech.eu"
+
+    - name: Push to EPITECH repository
+      run: |
+        cd G-EIP-700-PAR-7-1-eip-jules.gresset
+        git add .
+        git commit -m "Update from KDS-Front-End (Automation)"
+        git push origin main
