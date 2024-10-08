@@ -46,9 +46,7 @@ function OrdersDisplay() {
               foodPart.push(food);
             }
           });
-          console.log("foodPart", foodPart);
           if (foodPart.some((food) => !food.is_ready)) {
-            console.log("if", foodPart);
             orderToDisplay.push(order);
           }
         });
