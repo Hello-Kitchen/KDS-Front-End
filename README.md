@@ -46,7 +46,7 @@ $ npm run test
 
 ## 📄 Documentation
 
-Comprehensive documentation for the project can be found in the [Wiki section of the GitHub repository](https://github.com/Hello-Kitchen/POS-Front-End/wiki).
+Comprehensive documentation for the project can be found in the [Wiki section of the GitHub repository](https://github.com/Hello-Kitchen/KDS-Front-End/wiki).
 
 ## 🤝 Contribution Guidelines
 
