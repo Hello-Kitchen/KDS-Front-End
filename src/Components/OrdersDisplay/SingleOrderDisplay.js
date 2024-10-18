@@ -3,13 +3,13 @@ import PropTypes from "prop-types";
 import { BeatLoader } from "react-spinners";
 
 export default function SingleOrderDisplay({ orderDetails, span }) {
+
   const [orderDetail, setOrderDetail] = useState(orderDetails);
   const [waitingTime, setWaitingTime] = useState({
     hours: "--",
     minutes: "--",
     seconds: "--",
   });
-  const [isRender, setIsRender] = useState(true);
 
   const calculateWaitingTime = (orderDate) => {
     const waitTime = new Date(Date.now() - new Date(orderDate));
@@ -20,15 +20,12 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
     };
   };
 
+  // To be optimized
   const updateStatus = (idFood) => {
     let notReadyFood = undefined;
-    let updatedFood = orderDetail.food.map(food => {
+    let updatedFood = orderDetail.food_ordered.map(food => {
       if (food.id === idFood) {
-        const quantity = food.quantity || 1;
-        const readyFood = { ...food, is_ready: true, quantity: 1 };
-        if (quantity > 1)
-          notReadyFood = { ...food, is_ready: false, quantity: quantity - 1 };
-        return readyFood;
+        return {...food, is_ready: !food.is_ready};
       } else {
         return food;
       }
@@ -37,20 +34,15 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       updatedFood.push(notReadyFood);
     setOrderDetail(prevOrderDetail => ({
       ...prevOrderDetail,
-      food: updatedFood
+      food_ordered: updatedFood
     }));
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/food_ordered/status/${idFood}`, { method: 'POST' })
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, { method: 'PUT' })
       .then(response => response.json())
       .catch(error => console.log(error));
   };
 
-  const checkRender = () => {
-    return orderDetail.food.every(food => food.is_ready === true);
-  };
-
   useEffect(() => {
     if (orderDetails) {
-      setIsRender(true);
       setOrderDetail(orderDetails);
       calculateWaitingTime(orderDetails.date);
 
@@ -61,26 +53,8 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
     }
   }, [orderDetails]);
 
-  useEffect(() => {
-    if (checkRender())
-      setIsRender(false);
-  }, [orderDetail]);
-
-  if (isRender || window.location.pathname === "/passe") {
     return (
-      <div
-        className={
-          span === 1
-            ? "col-span-1"
-            : span === 2
-              ? "col-span-2"
-              : span === 3
-                ? "col-span-3"
-                : span === 4
-                  ? "col-span-4"
-                  : "col-span-5"
-        }
-      >
+      <div className={`col-span-${span}`}>
         {orderDetails ? (
           <div>
             <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
@@ -117,10 +91,10 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
             </div>
             <div className={`px-3 py-1 border-2 border-t-0 rounded-b-lg ${orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}`} style={{ columnCount: span }}>
               <ul>
-                {orderDetail.food.map((food, index) =>
+                {orderDetail.food_ordered.map((food, index) =>
                   <li key={index}>
                     <span onClick={() => updateStatus(food.id)} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>{food.quantity + "x " + food.name + " "}</span>
-                    <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 ${food.is_ready ? "bg-green-500" : ""}`}>     </span>
+                    {food.is_ready && <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 bg-green-500`}>     </span>}
                     <ol>
                       {food.details.map((detail, index) => <li key={index} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>→ {detail}</li>)}
                     </ol>
@@ -177,7 +151,6 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
         )}
       </div>
     );
-  }
 
 }
 
