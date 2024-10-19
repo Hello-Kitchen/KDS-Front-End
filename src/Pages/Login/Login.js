@@ -28,7 +28,7 @@ const Login = () => {
             .then(response => {
                 if (response.status === 400)
                     setError('Username or password is incorrect');
-                return response.json()
+                return response.json();
             })
             .then(data => {
                 if (data.access_token) {
