@@ -41,7 +41,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
     fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, { method: 'PUT', headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}})
       .then((response) => {
         if (response.status === 401) {
-          navigate("/");
+          navigate("/", {state: {error: "Unauthorized access. Please log in."}});
           throw new Error("Unauthorized access. Please log in.");
         }
         return response.json();
