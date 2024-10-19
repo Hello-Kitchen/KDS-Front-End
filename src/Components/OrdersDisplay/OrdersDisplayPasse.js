@@ -30,8 +30,16 @@ function OrdersDisplayPasse({ status }) {
 
     fetch(
       `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
-    )
-      .then((response) => response.json())
+      , {headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }})
+      .then((response) => {
+        if (response.status === 401) {
+          window.location.href = "/";
+          throw new Error("Unauthorized access. Please log in.");
+        }
+        return response.json()
+      })
       .then((ordersData) => {
         
         
@@ -61,7 +69,9 @@ function OrdersDisplayPasse({ status }) {
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 5).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
-          )
+            , {headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }})
             .then((response) => response.json())
             .then((data) => {
               const orderDateObj = new Date(order.date);

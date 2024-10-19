@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "./Logo_Hello_Kitchen.png";
 import axios from "axios";
+import bcrypt from "bcryptjs-react";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -12,13 +13,21 @@ const Login = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/login/`, {username, password})
-        .then(() => {
-            navigate('/cuisine');
-        })
-        .catch((err) => {
-            console.log("ERROR", err);
-        });
+
+        const hasedPassword = bcrypt.hashSync(password, `${process.env.REACT_APP_SALT_HASH}`);
+
+
+        fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login?idRestaurant=${process.env.REACT_APP_NBR_RESTAURANT}&username=${username}&password=${hasedPassword}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.access_token) {
+                    localStorage.setItem('token', data.access_token);
+                }
+                navigate('/cuisine');
+            })
+            .catch(error => {
+                console.error('Login error:', error);
+            });
     };
 
     return (
