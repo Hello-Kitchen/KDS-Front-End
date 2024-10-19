@@ -38,7 +38,7 @@ function OrdersDisplay() {
           window.location.href = "/";
           throw new Error("Unauthorized access. Please log in.");
         }
-        return response.json()
+        return response.json();
       })
       .then((ordersData) => {
         
@@ -75,7 +75,7 @@ function OrdersDisplay() {
                 window.location.href = "/";
                 throw new Error("Unauthorized access. Please log in.");
               }
-              return response.json()
+              return response.json();
             })
             .then((data) => {
               const orderDateObj = new Date(order.date);

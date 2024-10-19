@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "./Logo_Hello_Kitchen.png";
-import axios from "axios";
 import bcrypt from "bcryptjs-react";
 
 const Login = () => {

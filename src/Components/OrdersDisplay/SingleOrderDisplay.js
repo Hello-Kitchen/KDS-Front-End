@@ -42,7 +42,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
           window.location.href = "/";
           throw new Error("Unauthorized access. Please log in.");
         }
-        return response.json()
+        return response.json();
       })
       .catch(error => console.error(error));
   };
