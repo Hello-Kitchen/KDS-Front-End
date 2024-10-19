@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
+import { useNavigate } from "react-router-dom";
 
 function OrdersDisplay() {
+  const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
@@ -35,7 +37,7 @@ function OrdersDisplay() {
       }})
       .then((response) => {
         if (response.status === 401) {
-          window.location.href = "/";
+          navigate("/");
           throw new Error("Unauthorized access. Please log in.");
         }
         return response.json();
@@ -72,7 +74,7 @@ function OrdersDisplay() {
           }})
             .then((response) => {
               if (response.status === 401) {
-                window.location.href = "/";
+                navigate("/");
                 throw new Error("Unauthorized access. Please log in.");
               }
               return response.json();

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 function OrdersDisplayPasse({ status }) {
+  const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
@@ -35,7 +37,7 @@ function OrdersDisplayPasse({ status }) {
       }})
       .then((response) => {
         if (response.status === 401) {
-          window.location.href = "/";
+          navigate("/");
           throw new Error("Unauthorized access. Please log in.");
         }
         return response.json();
@@ -72,7 +74,13 @@ function OrdersDisplayPasse({ status }) {
             , {headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             }})
-            .then((response) => response.json())
+            .then((response) => {
+              if (response.status === 401) {
+                navigate("/");
+                throw new Error("Unauthorized access. Please log in.");
+              }
+              return response.json();
+            })
             .then((data) => {
               const orderDateObj = new Date(order.date);
               const orderDate = {
