@@ -21,8 +21,8 @@ const Login = () => {
             .then(data => {
                 if (data.access_token) {
                     localStorage.setItem('token', data.access_token);
+                    navigate('/cuisine');
                 }
-                navigate('/cuisine');
             })
             .catch(error => {
                 console.error('Login error:', error);
