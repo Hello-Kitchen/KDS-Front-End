@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { BeatLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
 
 export default function SingleOrderDisplay({ orderDetails, span }) {
+  const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState(orderDetails);
   const [waitingTime, setWaitingTime] = useState({
@@ -36,9 +38,15 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       ...prevOrderDetail,
       food_ordered: updatedFood
     }));
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, { method: 'PUT' })
-      .then(response => response.json())
-      .catch(error => console.log(error));
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, { method: 'PUT', headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}})
+      .then((response) => {
+        if (response.status === 401) {
+          navigate("/");
+          throw new Error("Unauthorized access. Please log in.");
+        }
+        return response.json();
+      })
+      .catch(error => console.error(error));
   };
 
   useEffect(() => {

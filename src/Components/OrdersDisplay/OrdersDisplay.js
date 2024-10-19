@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
+import { useNavigate } from "react-router-dom";
 
 function OrdersDisplay() {
+  const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
@@ -30,8 +32,16 @@ function OrdersDisplay() {
 
     fetch(
       `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
-    )
-      .then((response) => response.json())
+      , {headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }})
+      .then((response) => {
+        if (response.status === 401) {
+          navigate("/");
+          throw new Error("Unauthorized access. Please log in.");
+        }
+        return response.json();
+      })
       .then((ordersData) => {
         
         
@@ -59,8 +69,16 @@ function OrdersDisplay() {
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 10).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
-          )
-            .then((response) => response.json())
+          , {headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          }})
+            .then((response) => {
+              if (response.status === 401) {
+                navigate("/");
+                throw new Error("Unauthorized access. Please log in.");
+              }
+              return response.json();
+            })
             .then((data) => {
               const orderDateObj = new Date(order.date);
               const orderDate = {
