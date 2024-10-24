@@ -40,19 +40,16 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       .then(response => response.json())
       .catch(error => console.log(error));
   };
-
   useEffect(() => {
     if (orderDetails) {
       setOrderDetail(orderDetails);
       calculateWaitingTime(orderDetails.date);
-
       const interval = setInterval(() => {
         setWaitingTime(calculateWaitingTime(orderDetails.date));
       }, 1000);
       return () => clearInterval(interval);
     }
   }, [orderDetails]);
-
     return (
       <div className={`col-span-${span}`}>
         {orderDetails ? (

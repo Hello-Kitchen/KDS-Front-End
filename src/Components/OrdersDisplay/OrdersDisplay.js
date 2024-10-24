@@ -33,12 +33,12 @@ function OrdersDisplay() {
     )
       .then((response) => response.json())
       .then((ordersData) => {
-        
-        
+
+
         // Filter orders to display, only those that have at least one food that is not ready
-        
+
         const orderToDisplay = [];
-        
+
         ordersData.forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
@@ -47,7 +47,7 @@ function OrdersDisplay() {
             }
           });
           if (foodPart.some((food) => !food.is_ready)) {
-            orderToDisplay.push(order);
+            orderToDisplay.push({...order});
           }
         });
 
@@ -88,7 +88,6 @@ function OrdersDisplay() {
               nbrCol: getNbrColumns(orderDetails),
             })
           );
-
           let ordersLine1 = [];
           let ordersLine2 = [];
           let currentLine1Cols = 0;

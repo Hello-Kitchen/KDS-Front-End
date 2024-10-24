@@ -33,12 +33,12 @@ function OrdersDisplayPasse({ status }) {
     )
       .then((response) => response.json())
       .then((ordersData) => {
-        
-        
+
+
         // Filter orders to display, only those that have at least one food that is not ready
-        
+
         const orderToDisplay = [];
-        
+
         ordersData.forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
@@ -47,9 +47,9 @@ function OrdersDisplayPasse({ status }) {
             }
           });
           if (status == "ready" && foodPart.every((food) => food.is_ready)) {
-            orderToDisplay.push(order);
+            orderToDisplay.push({...order});
           } else if (status == "pending" && foodPart.some((food) => food.is_ready) && !foodPart.every((food) => food.is_ready)) {
-            orderToDisplay.push(order);
+            orderToDisplay.push({...order});
           }
         });
 
