@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import OrdersDisplayPasse from '../Components/OrdersDisplay/OrdersDisplayPasse';
+import { MemoryRouter } from 'react-router-dom';
 
 jest.mock('../Components/OrdersDisplay/SingleOrderDisplay', () => ({ orderDetails }) => (
     <div data-testid={`order-${orderDetails.number}`}>
@@ -45,7 +46,7 @@ describe('OrdersDisplayPasse', () => {
   });
 
   test('fetches and displays orders correctly for status "ready"', async () => {
-    render(<OrdersDisplayPasse status="ready" />);
+    render(<MemoryRouter><OrdersDisplayPasse status="ready" /></MemoryRouter>);
 
     // Wait for the fetch to complete and data to be rendered
     await waitFor(() => {
@@ -65,7 +66,7 @@ describe('OrdersDisplayPasse', () => {
   test('handles fetch errors gracefully for status "ready"', async () => {
     global.fetch.mockImplementationOnce(() => Promise.reject('API error'));
 
-    render(<OrdersDisplayPasse status='ready'/>);
+    render(<MemoryRouter><OrdersDisplayPasse status='ready'/></MemoryRouter>);
 
     await waitFor(() => expect(console.error).toHaveBeenCalledWith('Error fetching orders:', 'API error'));
 
@@ -89,7 +90,7 @@ describe('OrdersDisplayPasse', () => {
       })
     );
 
-    render(<OrdersDisplayPasse status='ready'/>);
+    render(<MemoryRouter><OrdersDisplayPasse status='ready'/></MemoryRouter>);
 
     // Wait for the orders to be fetched
     await waitFor(() => screen.getAllByTestId(/^order/));
@@ -115,7 +116,7 @@ describe('OrdersDisplayPasse', () => {
         })
       );
 
-    render(<OrdersDisplayPasse status='ready'/>);
+    render(<MemoryRouter><OrdersDisplayPasse status='ready'/></MemoryRouter>);
 
     // Wait for the fetch to complete
     await waitFor(() => expect(screen.getAllByTestId(/^order/).length).toBeGreaterThan(0));
@@ -143,7 +144,7 @@ describe('OrdersDisplayPasse', () => {
       })
     );
 
-    render(<OrdersDisplayPasse status='pending'/>);
+    render(<MemoryRouter><OrdersDisplayPasse status='pending'/></MemoryRouter>);
 
     // Wait for the orders to be fetched
     await waitFor(() => screen.getAllByTestId(/^order/));
@@ -170,7 +171,7 @@ describe('OrdersDisplayPasse', () => {
         })
       );
 
-    render(<OrdersDisplayPasse status='pending'/>);
+    render(<MemoryRouter><OrdersDisplayPasse status='pending'/></MemoryRouter>);
 
     // Wait for the fetch to complete
     await waitFor(() => expect(screen.getAllByTestId(/^order/).length).toBeGreaterThan(0));

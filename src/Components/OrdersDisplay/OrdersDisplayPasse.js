@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 function OrdersDisplayPasse({ status }) {
+  const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
@@ -30,8 +32,16 @@ function OrdersDisplayPasse({ status }) {
 
     fetch(
       `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
-    )
-      .then((response) => response.json())
+      , {headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }})
+      .then((response) => {
+        if (response.status === 401) {
+          navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+          throw new Error("Unauthorized access. Please log in.");
+        }
+        return response.json();
+      })
       .then((ordersData) => {
 
 
@@ -47,9 +57,9 @@ function OrdersDisplayPasse({ status }) {
             }
           });
           if (status == "ready" && foodPart.every((food) => food.is_ready)) {
-            orderToDisplay.push({...order});
+            orderToDisplay.push(order);
           } else if (status == "pending" && foodPart.some((food) => food.is_ready) && !foodPart.every((food) => food.is_ready)) {
-            orderToDisplay.push({...order});
+            orderToDisplay.push(order);
           }
         });
 
@@ -61,8 +71,16 @@ function OrdersDisplayPasse({ status }) {
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 5).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
-          )
-            .then((response) => response.json())
+            , {headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            }})
+            .then((response) => {
+              if (response.status === 401) {
+                navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                throw new Error("Unauthorized access. Please log in.");
+              }
+              return response.json();
+            })
             .then((data) => {
               const orderDateObj = new Date(order.date);
               const orderDate = {
