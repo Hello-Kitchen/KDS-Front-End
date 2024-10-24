@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * @component OrdersDisplay
+ * @description A functional component that fetches and displays food orders.
+ * It manages the state for the number of orders, the orders waiting, and organizes
+ * the display of orders into two lines based on their status.
+ * Orders are fetched every 5 seconds.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 function OrdersDisplay() {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
@@ -9,7 +18,20 @@ function OrdersDisplay() {
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [ordersLine2, setOrdersLine2] = useState([]);
 
+  /**
+   * @function fetchOrders
+   * @description Fetches orders from the backend API, processes them, and sets the
+   * state for displaying the orders in the component.
+   */
   const fetchOrders = () => {
+    /**
+     * @function getNbrColumns
+     * @description Calculates the number of columns needed to display an order
+     * based on the number of food items, their details, and modifications.
+     *
+     * @param {Object} orderDetails - The details of the order.
+     * @returns {number} The number of columns needed to display the order.
+     */
     const getNbrColumns = (orderDetails) => {
       let nbrLines = 0;
       let nbrCol = 0;
@@ -43,12 +65,9 @@ function OrdersDisplay() {
         return response.json();
       })
       .then((ordersData) => {
-        
-        
         // Filter orders to display, only those that have at least one food that is not ready
-        
         const orderToDisplay = [];
-        
+
         ordersData.forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
@@ -65,7 +84,6 @@ function OrdersDisplay() {
         setNbrOrders(orderToDisplay.length);
 
         // Fetch food details for each order to display
-
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 10).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
@@ -92,7 +110,6 @@ function OrdersDisplay() {
         });
 
         // Create array of components to display
-
         Promise.all(fetchFoodDetailsPromises).then(() => {
           const ordersLineComponents = orderToDisplay.slice(0, 10).map(
             (orderDetails) => ({
