@@ -5,6 +5,12 @@ import OrdersDisplayPasse from '../../Components/OrdersDisplay/OrdersDisplayPass
 import LeftSection from "../../Components/LeftSection/LeftSection";
 import './DashboardPasse.css';
 
+/**
+ * @function formatDate
+ * @description Formats a Date object into a string in the format DD/MM/YYYY - HH:MM.
+ * @param {Date} date - The date to format.
+ * @returns {string} The formatted date string.
+ */
 const formatDate = (date) => {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -14,6 +20,11 @@ const formatDate = (date) => {
   return `${day}/${month}/${year} - ${hours}:${minutes}`;
 };
 
+/**
+ * @function DashboardPasse
+ * @description One of the main pages of the KDS, it is the dashboard of the passe, displaying the current time and orders with food ready.
+ * @returns {JSX.Element} The rendered dashboard component.
+ */
 function DashboardPasse() {
   const [currentTime, setCurrentTime] = useState(new Date());
 

@@ -3,13 +3,37 @@ import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * @component OrdersDisplayPasse
+ * @description Displays orders based on their status (ready or pending).
+ * It fetches orders from the backend and organizes them for display.
+ *
+ * @param {Object} props - The component props.
+ * @param {string} props.status - The status of the orders to display ('ready' or 'pending').
+ *
+ * @example
+ * <OrdersDisplayPasse status="ready" />
+ */
 function OrdersDisplayPasse({ status }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
 
+  /**
+   * @function fetchOrders
+   * @description Fetches orders from the backend API, processes them, and sets the
+   * state for displaying the orders in the component.
+   */
   const fetchOrders = () => {
+    /**
+     * @function getNbrColumns
+     * @description Calculates the number of columns needed to display an order
+     * based on the number of food items, their details, and modifications.
+     *
+     * @param {Object} orderDetails - The details of the order.
+     * @returns {number} The number of columns needed to display the order.
+     */
     const getNbrColumns = (orderDetails) => {
       let nbrLines = 0;
       let nbrCol = 0;
@@ -32,23 +56,21 @@ function OrdersDisplayPasse({ status }) {
 
     fetch(
       `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
-      , {headers: {
+      , { headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }})
+      } })
       .then((response) => {
         if (response.status === 401) {
-          navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+          navigate("/", { state: { error: "Unauthorized access. Please log in." } });
           throw new Error("Unauthorized access. Please log in.");
         }
         return response.json();
       })
       .then((ordersData) => {
-        
-        
-        // Filter orders to display, only those that have at least one food that is not ready
-        
+
+        // Filter orders to display based on the provided status
         const orderToDisplay = [];
-        
+
         ordersData.forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
@@ -56,27 +78,26 @@ function OrdersDisplayPasse({ status }) {
               foodPart.push(food);
             }
           });
-          if (status == "ready" && foodPart.every((food) => food.is_ready)) {
+          if (status === "ready" && foodPart.every((food) => food.is_ready)) {
             orderToDisplay.push(order);
-          } else if (status == "pending" && foodPart.some((food) => food.is_ready) && !foodPart.every((food) => food.is_ready)) {
+          } else if (status === "pending" && foodPart.some((food) => food.is_ready) && !foodPart.every((food) => food.is_ready)) {
             orderToDisplay.push(order);
           }
         });
 
-        // Used to display the number of orders waiting
+        // Update the number of orders to display
         setNbrOrders(orderToDisplay.length);
 
         // Fetch food details for each order to display
-
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 5).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
-            , {headers: {
+            , { headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
-            }})
+            } })
             .then((response) => {
               if (response.status === 401) {
-                navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                navigate("/", { state: { error: "Unauthorized access. Please log in." } });
                 throw new Error("Unauthorized access. Please log in.");
               }
               return response.json();
