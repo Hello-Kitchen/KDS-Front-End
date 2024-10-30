@@ -6,6 +6,12 @@ import "./index.css";
 
 import PosRouter from './Pages/PosRouter';
 
+/**
+ * @function main
+ * @description The main entry point of the React application. It renders the PosRouter component into the root DOM element,
+ * which handles all routing for the application.
+ * @returns {void}
+ */
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <PosRouter />
