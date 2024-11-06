@@ -18,10 +18,10 @@ export default [
       },
     },
     rules: {
-      "camelcase": 
-      ["error", 
-        {"ignoreDestructuring": true, allow: ["location", "is_ready", "food_ordered"]}
-      ], 
+      "camelcase":
+      ["error",
+        {"ignoreDestructuring": true, allow: ["location", "is_ready", "food_ordered", "mods_ingredients"]}
+      ],
       "semi": ["error"]
     },
     settings: {

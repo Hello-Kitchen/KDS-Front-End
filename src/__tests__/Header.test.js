@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, test, describe, expect } from '@testing-library/react';
 import Header from '../Components/Header/Header';
 
 describe('Header Component', () => {
@@ -12,10 +12,10 @@ describe('Header Component', () => {
         expect(screen.getByText('rightText')).toBeInTheDocument();
 
         texts[2] = 'notRightText';
-        rerender(<Header textLeft={texts[0]} textCenter={texts[1]} textRight={texts[2]} />)
+        rerender(<Header textLeft={texts[0]} textCenter={texts[1]} textRight={texts[2]} />);
         expect(screen.getByText('leftText')).toBeInTheDocument();
         expect(screen.getByText('centerText')).toBeInTheDocument();
         expect(screen.queryByText('rightText')).not.toBeInTheDocument();
         expect(screen.getByText('notRightText')).toBeInTheDocument();
-    })
+    });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, jest, test, expect, describe, beforeAll, afterAll } from '@testing-library/react';
 import SingleOrderDisplay from '../Components/OrdersDisplay/SingleOrderDisplay';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ jest.mock('react-spinners', () => ({
 }));
 
 describe('SingleOrderDisplay Component', () => {
-    const now = new Date(Date.now())
+    const now = new Date(Date.now());
   const mockOrderDetails = {
     "channel": "En salle",
       "number": "Table 60",
@@ -55,7 +55,7 @@ describe('SingleOrderDisplay Component', () => {
         "hours":now.getHours(),"minutes":now.getMinutes(),"seconds":now.getSeconds(),
       },
       "id": 108
-    }
+    };
 
     beforeAll(() => {
         // Mock the fetch function
@@ -86,9 +86,9 @@ describe('SingleOrderDisplay Component', () => {
         expect(screen.getByText(/Oeuf/)).toBeInTheDocument(),
         expect(screen.getByText('1x Glace des gourmands')).toBeInTheDocument(),
         expect(screen.getByText(/Vanille/)).toBeInTheDocument(),
-        expect(screen.getByText(/Fraise/)).toBeInTheDocument()
+        expect(screen.getByText(/Fraise/)).toBeInTheDocument();
     });
-    })
+    });
 
   // test('renders waiting time and updates correctly', async () => {
   //   jest.useFakeTimers();
