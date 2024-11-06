@@ -1,5 +1,13 @@
 import React from "react";
 
+/**
+ * @component LeftSection
+ * @description A functional component that displays two vertical text labels
+ * indicating the status of food orders: "PRÊT A ENVOYER" and "BIENTOT PRÊT".
+ * It is used for the passe.
+ *
+ * @returns {JSX.Element} The rendered component.
+ */
 const LeftSection = () => {
     return (
         <div className="bg-kitchen-blue flex flex-col justify-around items-center h-full">

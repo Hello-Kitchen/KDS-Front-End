@@ -5,6 +5,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import logo from "./Logo_Hello_Kitchen.png";
 import bcrypt from "bcryptjs-react";
 
+/**
+ * @function Login
+ * @description Renders the login page for users to enter their credentials.
+ * Handles authentication and navigation upon successful login.
+ * @returns {JSX.Element} The login page.
+ */
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -18,11 +24,16 @@ const Login = () => {
         }
     }, [location]);
 
+    /**
+     * @function handleSubmit
+     * @description Handles the form submission, hashes the password, and sends a login request to the backend.
+     * Updates local storage with the access token upon successful login.
+     * @param {Event} e - The event object representing the form submission.
+     */
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const hasedPassword = bcrypt.hashSync(password, `${process.env.REACT_APP_SALT_HASH}`);
-
 
         fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login?idRestaurant=${process.env.REACT_APP_NBR_RESTAURANT}&username=${username}&password=${hasedPassword}`)
             .then(response => {
