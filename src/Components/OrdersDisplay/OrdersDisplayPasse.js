@@ -68,7 +68,9 @@ function OrdersDisplayPasse({ status }) {
       })
       .then((ordersData) => {
 
-        // Filter orders to display based on the provided status
+
+        // Filter orders to display, only those that have at least one food that is not ready
+
         const orderToDisplay = [];
 
         ordersData.forEach((order) => {

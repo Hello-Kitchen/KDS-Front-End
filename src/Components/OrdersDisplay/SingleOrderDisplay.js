@@ -69,12 +69,10 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
       })
       .catch(error => console.error(error));
   };
-
   useEffect(() => {
     if (orderDetails) {
       setOrderDetail(orderDetails);
       calculateWaitingTime(orderDetails.date);
-
       const interval = setInterval(() => {
         setWaitingTime(calculateWaitingTime(orderDetails.date));
       }, 1000);

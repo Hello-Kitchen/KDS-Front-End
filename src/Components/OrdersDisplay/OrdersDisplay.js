@@ -35,7 +35,7 @@ function OrdersDisplay() {
     const getNbrColumns = (orderDetails) => {
       let nbrLines = 0;
       let nbrCol = 0;
-
+      
       orderDetails.food_ordered.map((food) => {
         nbrLines += 1;
         food.details.map(() => {
@@ -65,7 +65,10 @@ function OrdersDisplay() {
         return response.json();
       })
       .then((ordersData) => {
+
+
         // Filter orders to display, only those that have at least one food that is not ready
+
         const orderToDisplay = [];
 
         ordersData.forEach((order) => {
@@ -123,7 +126,6 @@ function OrdersDisplay() {
               nbrCol: getNbrColumns(orderDetails),
             })
           );
-
           let ordersLine1 = [];
           let ordersLine2 = [];
           let currentLine1Cols = 0;

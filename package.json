@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
     "bcryptjs-react": "^2.4.6",
@@ -21,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "echo \"Error: no test specified\" && exit 0",
+    "test": "jest",
     "eject": "react-scripts eject",
     "format": "eslint src/** --no-warn-ignored",
     "formatFix": "eslint src/** --fix --no-warn-ignored"
@@ -39,11 +37,23 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-react": "^7.25.7",
     "@eslint/compat": "^1.1.0",
     "@eslint/js": "^8.56.0",
-    "eslint": "^8.56.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "eslint": "^9.14.0",
+    "eslint-plugin-jest": "^28.9.0",
     "eslint-plugin-react": "^7.34.3",
     "globals": "^15.6.0",
+    "jest": "^27.5.1",
     "tailwindcss": "^3.4.4"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-dom"
+    ]
   }
 }
