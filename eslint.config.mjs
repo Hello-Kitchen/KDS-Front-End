@@ -23,7 +23,7 @@ export default [
         "error",
         {
           "ignoreDestructuring": true,
-          allow: ["location", "is_ready", "food_ordered", "mods_ingredients", "v7_startTransition", "v7_relativeSplatPath"],
+          allow: ["location", "is_ready", "food_ordered", "mods_ingredients", "v7_startTransition", "v7_relativeSplatPath", "access_token"],
         },
       ],
       "semi": ["error"]
