@@ -15,12 +15,16 @@ export default [
       globals: {
         ...globals.node,
         ...globals.browser,
+        ...globals.jest,
       },
     },
     rules: {
-      "camelcase":
-      ["error",
-        {"ignoreDestructuring": true, allow: ["location", "is_ready", "food_ordered", "mods_ingredients"]}
+      "camelcase": [
+        "error",
+        {
+          "ignoreDestructuring": true,
+          allow: ["location", "is_ready", "food_ordered", "mods_ingredients"],
+        },
       ],
       "semi": ["error"]
     },

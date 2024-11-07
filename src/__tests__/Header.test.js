@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, test, describe, expect } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Header from '../Components/Header/Header';
 
 describe('Header Component', () => {

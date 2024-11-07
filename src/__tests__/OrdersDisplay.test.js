@@ -1,23 +1,15 @@
+/* eslint-disable react/display-name, react/prop-types */
+
 import React from 'react';
-import { render, screen, waitFor, jest, test, expect, describe, beforeEach, afterEach } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import OrdersDisplay from '../Components/OrdersDisplay/OrdersDisplay';
 import { MemoryRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
-jest.mock('../Components/OrdersDisplay/SingleOrderDisplay', () => {
-  const SingleOrderDisplay = ({ orderDetails }) => (
-    <div data-testid={`order-${orderDetails.number}`}>
-      {orderDetails.number}
-    </div>
-  );
-  SingleOrderDisplay.displayName = "SingleOrderDisplay";
-  SingleOrderDisplay.propTypes = {
-    orderDetails: PropTypes.shape({
-      number: PropTypes.string.isRequired,
-    }).isRequired,
-  };
-  return SingleOrderDisplay;
-});
+jest.mock('../Components/OrdersDisplay/SingleOrderDisplay', () => ({ orderDetails }) => (
+  <div data-testid={`order-${orderDetails.number}`}>
+    {orderDetails.number}
+  </div>
+));
 
 describe('OrdersDisplay', () => {
   beforeEach(() => {

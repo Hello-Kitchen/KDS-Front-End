@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, jest, test, expect, describe } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Footer from '../Components/Footer/Footer';
 describe('Footer Component', () => {
     test('renders buttons based on buttons prop', () => {
