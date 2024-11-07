@@ -66,7 +66,7 @@ describe('OrdersDisplay', () => {
           ]
         })
       }));
-    render(<MemoryRouter><OrdersDisplay /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplay /></MemoryRouter>);
 
     await waitFor(() => {
       expect(screen.getByTestId('order-Table 60')).toBeInTheDocument();
@@ -81,7 +81,7 @@ describe('OrdersDisplay', () => {
   test('handles fetch errors gracefully', async () => {
     global.fetch.mockImplementationOnce(() => Promise.reject('API error'));
 
-    render(<MemoryRouter><OrdersDisplay /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplay /></MemoryRouter>);
 
     await waitFor(() => expect(console.error).toHaveBeenCalledWith('Error fetching orders:', 'API error'));
 
@@ -143,7 +143,7 @@ describe('OrdersDisplay', () => {
     });
 
 
-    render(<MemoryRouter><OrdersDisplay /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplay /></MemoryRouter>);
 
     // Wait for the orders to be fetched
     await waitFor(() => screen.getAllByTestId(/^order/));
@@ -206,7 +206,7 @@ describe('OrdersDisplay', () => {
     });
 
 
-    render(<MemoryRouter><OrdersDisplay /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplay /></MemoryRouter>);
 
     // Wait for the fetch to complete
     await waitFor(() => expect(screen.getAllByTestId(/^order/).length).toBeGreaterThan(0));

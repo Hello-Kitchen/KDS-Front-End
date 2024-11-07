@@ -72,7 +72,7 @@ describe('SingleOrderDisplay Component', () => {
       });
 
   test('renders order details correctly', async () => {
-    render(<MemoryRouter><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
 
     // Check that order details are displayed
     await waitFor(() => {
@@ -92,7 +92,7 @@ describe('SingleOrderDisplay Component', () => {
 
   // test('renders waiting time and updates correctly', async () => {
   //   jest.useFakeTimers();
-  //   render(<MemoryRouter><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
+  //   render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
 
   //   // Initial waiting time (since the order was created just now)
   //   await waitFor(() => {
@@ -122,7 +122,7 @@ describe('SingleOrderDisplay Component', () => {
   //     })
   //   );
 
-  //   render(<MemoryRouter><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
+  //   render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
 
   //   // Ensure the food is initially not ready
   //   const foodItem = screen.getByText('1x Burger du chef');
