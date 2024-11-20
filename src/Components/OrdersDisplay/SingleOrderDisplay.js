@@ -115,7 +115,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
     if (orderDetails && orderDetails.food_ordered) {
       const now = Date.now();
       const shouldUpdate = Array.from(lastUpdateTime.entries()).every(
-        ([_, time]) => now - time > 5000
+        ([, time]) => now - time > 5000
       );
 
       if (shouldUpdate) {
