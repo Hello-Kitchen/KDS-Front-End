@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BeatLoader } from 'react-spinners';
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { BeatLoader } from "react-spinners";
+import { useNavigate } from "react-router-dom";
 
 /**
  * @function SingleOrderDisplay
@@ -14,19 +14,11 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState(orderDetails);
-  const [updatingFoodIds, setUpdatingFoodIds] = useState(new Set());
-  const [lastUpdateTime, setLastUpdateTime] = useState(new Map());
-  const [previousStates, setPreviousStates] = useState(new Map());
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  // Update current time every second
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [waitingTime, setWaitingTime] = useState({
+    hours: "--",
+    minutes: "--",
+    seconds: "--",
+  });
 
   /**
    * @function calculateWaitingTime
@@ -35,7 +27,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
    * @returns {Object} The calculated waiting time in hours, minutes, and seconds.
    */
   const calculateWaitingTime = (orderDate) => {
-    const waitTime = new Date(currentTime - new Date(orderDate));
+    const waitTime = new Date(Date.now() - new Date(orderDate));
     return {
       hours: String(waitTime.getHours()).padStart(2, "0"),
       minutes: String(waitTime.getMinutes()).padStart(2, "0"),
@@ -49,103 +41,47 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
    * @param {string} idFood - The ID of the food item to be updated.
    */
   const updateStatus = (idFood) => {
-    // Save previous state
-    setPreviousStates(prev => new Map(prev).set(idFood, {...orderDetail}));
-    
-    // Mark as updating
-    setUpdatingFoodIds(prev => new Set(prev).add(idFood));
-    setLastUpdateTime(prev => new Map(prev).set(idFood, Date.now()));
-
-    // Optimistic update
+    let notReadyFood = undefined; // Placeholder, logic for notReadyFood needs to be defined.
     let updatedFood = orderDetail.food_ordered.map(food => {
       if (food.id === idFood) {
         return {...food, is_ready: !food.is_ready};
+      } else {
+        return food;
       }
-      return food;
     });
-
+    if (notReadyFood) {
+      updatedFood.push(notReadyFood);
+    }
     setOrderDetail(prevOrderDetail => ({
       ...prevOrderDetail,
       food_ordered: updatedFood
     }));
-
-    // API Request
     fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, {
       method: 'PUT',
-      headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'Content-Type': 'application/json'
-      }
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
-    .then(response => {
-      if (response.status === 401) {
-        navigate("/", { state: { error: "Unauthorized access. Please log in." } });
-        throw new Error("Unauthorized access. Please log in.");
-      }
-      if (!response.ok) {
-        throw new Error('Update failed');
-      }
-      return response.json();
-    })
-    .catch(error => {
-      console.error('Error updating status:', error);
-      // Rollback in case of error
-      const previousState = previousStates.get(idFood);
-      if (previousState) {
-        setOrderDetail(previousState);
-      }
-    })
-    .finally(() => {
-      // Clean up states
-      setUpdatingFoodIds(prev => {
-        const next = new Set(prev);
-        next.delete(idFood);
-        return next;
-      });
-      setPreviousStates(prev => {
-        const next = new Map(prev);
-        next.delete(idFood);
-        return next;
-      });
-    });
+      .then((response) => {
+        if (response.status === 401) {
+          navigate("/", { state: { error: "Unauthorized access. Please log in." } });
+          throw new Error("Unauthorized access. Please log in.");
+        }
+        return response.json();
+      })
+      .catch(error => console.error(error));
   };
-
-  // Handle periodic refresh
   useEffect(() => {
-    if (orderDetails && orderDetails.food_ordered) {
-      const now = Date.now();
-      const shouldUpdate = Array.from(lastUpdateTime.entries()).every(
-        ([, time]) => now - time > 5000
-      );
-
-      if (shouldUpdate) {
-        setOrderDetail(orderDetails);
-      }
+    if (orderDetails) {
+      setOrderDetail(orderDetails);
+      calculateWaitingTime(orderDetails.date);
+      const interval = setInterval(() => {
+        setWaitingTime(calculateWaitingTime(orderDetails.date));
+      }, 1000);
+      return () => clearInterval(interval);
     }
   }, [orderDetails]);
 
-  // Component rendering with loading state management
-  const renderFoodItem = (food) => (
-    <span 
-      onClick={() => !updatingFoodIds.has(food.id) && updateStatus(food.id)} 
-      className={`
-        cursor-pointer
-        ${food.is_ready ? "text-slate-500 italic" : ""} 
-        ${updatingFoodIds.has(food.id) ? "opacity-50" : ""}
-      `}
-    >
-      {updatingFoodIds.has(food.id) ? (
-        <>
-          {food.quantity}x {food.name} <BeatLoader size={8} />
-        </>
-      ) : (
-        `${food.quantity}x ${food.name} `
-      )}
-    </span>
-  );
-
   return (
-    <div className="h-full" data-testid={`order-${orderDetail.number}`}>
+    <div className={`col-span-${span}`}>
       {orderDetails ? (
         <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
@@ -154,23 +90,23 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
               <p className="text-sm">{orderDetails.channel}</p>
             </div>
             <div className="text-right p-2 text-lg">
-              {calculateWaitingTime(orderDetails.date).hours > 1 && calculateWaitingTime(orderDetails.date).seconds % 2 ? (
+              {waitingTime.hours > 1 && waitingTime.seconds % 2 ? (
                 <p className="font-semibold text-xl text-white border-2 bg-red-500 border-red-500 text-center rounded-lg">
-                  {calculateWaitingTime(orderDetails.date).hours}:{calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
+                  {waitingTime.hours}:{waitingTime.minutes}:{waitingTime.seconds}
                 </p>
-              ) : calculateWaitingTime(orderDetails.date).hours > 1 ? (
+              ) : waitingTime.hours > 1 ? (
                 <p className="font-semibold text-xl text-red-500 border-2 bg-white border-red-500 text-center rounded-lg">
-                  {calculateWaitingTime(orderDetails.date).hours}:{calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
+                  {waitingTime.hours}:{waitingTime.minutes}:{waitingTime.seconds}
                 </p>
               ) : (
                 <p
                   className={
-                    calculateWaitingTime(orderDetails.date).minutes > 15
+                    waitingTime.minutes > 15
                       ? "font-semibold text-lg text-red-500"
                       : "font-semibold text-lg"
                   }
                 >
-                  {calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
+                  {waitingTime.minutes}:{waitingTime.seconds}
                 </p>
               )}
               <p className="text-sm">
@@ -182,7 +118,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
-                  {renderFoodItem(food)}
+                  <span onClick={() => updateStatus(food.id)} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>{food.quantity + "x " + food.name + " "}</span>
                   {food.is_ready && <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 bg-green-500`}>     </span>}
                   <ol>
                     {food.details.map((detail, index) => <li key={index} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>→ {detail}</li>)}
@@ -241,8 +177,8 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
     </div>
   );
 }
+
 SingleOrderDisplay.propTypes = {
   orderDetails: PropTypes.object.isRequired,
   span: PropTypes.number.isRequired,
 };
-
