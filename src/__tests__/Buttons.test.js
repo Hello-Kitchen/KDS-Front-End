@@ -1,65 +1,44 @@
 import React from "react";
 import { render, screen, fireEvent } from '@testing-library/react';
-import buttonComponents from '../Components/Buttons/Buttons';
+import ButtonSet from '../Components/Buttons/Buttons'; // Importing ButtonSet
 
-const {
-    servie: ButtonServie,
-    precedent: ButtonPrecedent,
-    suivant: ButtonSuivant,
-    rappel: ButtonRappel,
-    statistique: ButtonStatistiques,
-    reglage: ButtonReglages,
-    activer: ButtonPower
-} = buttonComponents;
+describe('ButtonSet Component', () => {
+    // Mock the setConfig function
+    const setConfigMock = jest.fn();
 
-describe('Button Components', () => {
+    test('renders all buttons with correct text', () => {
+        const buttons = ['servie', 'precedent', 'suivant', 'rappel', 'statistique', 'reglage', 'activer'];
 
-    test('renders ButtonServie with correct text', () => {
-        render(<ButtonServie />);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} />);
+
+        // Check that each button's text is present
         expect(screen.getByText("SERVIE")).toBeInTheDocument();
-    });
-
-    test('renders ButtonPrecedent with correct text', () => {
-        render(<ButtonPrecedent />);
         expect(screen.getByText("PRECEDENT")).toBeInTheDocument();
-    });
-
-    test('renders ButtonSuivant with correct text', () => {
-        render(<ButtonSuivant />);
         expect(screen.getByText("SUIVANT")).toBeInTheDocument();
-    });
-
-    test('renders ButtonRappel with correct text', () => {
-        render(<ButtonRappel />);
         expect(screen.getByText("RAPPEL")).toBeInTheDocument();
-    });
-
-    test('renders ButtonStatistiques with correct text', () => {
-        render(<ButtonStatistiques />);
         expect(screen.getByText("STATISTIQUES")).toBeInTheDocument();
-    });
-
-    test('renders ButtonReglages with correct text', () => {
-        render(<ButtonReglages />);
         expect(screen.getByText("RÉGLAGES")).toBeInTheDocument();
+        expect(screen.getByText("ACTIVER")).toBeInTheDocument();
     });
 
     test('ButtonPower toggles configuration on click', () => {
-        const setConfigMock = jest.fn();
-
-        render(<ButtonPower setConfig={setConfigMock} />);
+        const buttons = ['activer'];
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} />);
 
         const buttonElement = screen.getByText("ACTIVER");
 
+        // Fire a click event on the power button
         fireEvent.click(buttonElement);
 
+        // Verify that setConfigMock was called
         expect(setConfigMock).toHaveBeenCalledTimes(1);
-        expect(setConfigMock).toHaveBeenCalledWith(expect.any(Function));
 
+        // Verify that the function passed to setConfig was called with the previous configuration
         const previousConfig = { enable: true };
         const toggleFunction = setConfigMock.mock.calls[0][0];
         const newConfig = toggleFunction(previousConfig);
 
+        // Ensure that the config is toggled correctly
         expect(newConfig.enable).toBe(false);
     });
 
