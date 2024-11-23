@@ -74,7 +74,7 @@ const notconnected = () => (
  *
  * @return {JSX.Element} The footer with the specified buttons and connection state.
  */
-function Footer({ buttons, setConfig }) {
+function Footer({ buttons, navigationPrev, navigationAfter, setConfig }) {
     const connect = true; ///< Flag indicating connection status. Set to true by default.
     const Etat = connect ? connected : notconnected; ///< Component to render based on connection status.
 
@@ -82,10 +82,16 @@ function Footer({ buttons, setConfig }) {
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between gap-0.5'>
             {buttons.map((buttonKey, i) => {
                 const ButtonComponent = Object.prototype.hasOwnProperty.call(buttonComponents, buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
-                if (buttonKey === "activer")
-                    return <ButtonComponent key={i} setConfig={setConfig} />;
-                else
-                    return <ButtonComponent key={i} />;
+                switch (buttonKey) {
+                    case "activer":
+                        return <ButtonComponent key={i} setConfig={setConfig} />;
+                    case "suivant":
+                        return <ButtonComponent key={i} nav={navigationAfter} />;
+                    case "precedent":
+                        return <ButtonComponent key={i} nav={navigationPrev} />;
+                    default:
+                        return <ButtonComponent key={i} />;
+                }   
             })}
             <Etat />
         </div>
@@ -94,7 +100,9 @@ function Footer({ buttons, setConfig }) {
 
 Footer.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of buttons to be rendered.
-    setConfig: PropTypes.func.isRequired, ///< Function to handle configuration changes.
+    navigationPrev: PropTypes.func, ///< Function to handle button clicks.
+    navigationAfter: PropTypes.func, ///< Function to handle button clicks.
+    setConfig: PropTypes.func, ///< Function to handle configuration changes.
 };
 
 export default Footer;

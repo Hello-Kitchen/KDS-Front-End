@@ -20,12 +20,12 @@ describe('Button Components', () => {
     });
 
     test('renders ButtonPrecedent with correct text', () => {
-        render(<ButtonPrecedent />);
+        render(<ButtonPrecedent nav={() => {}} />);
         expect(screen.getByText("PRECEDENT")).toBeInTheDocument();
     });
 
     test('renders ButtonSuivant with correct text', () => {
-        render(<ButtonSuivant />);
+        render(<ButtonSuivant nav={() => {}} />);
         expect(screen.getByText("SUIVANT")).toBeInTheDocument();
     });
 

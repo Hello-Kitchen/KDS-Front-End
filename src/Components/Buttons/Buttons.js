@@ -27,8 +27,8 @@ const ButtonServie = () => (
  *
  * @return {JSX.Element} A button component displaying the "PRECEDENT" label.
  */
-const ButtonPrecedent = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
+const ButtonPrecedent = ({ nav }) => (
+    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5' onClick={nav}>
         <IoIosArrowDropleftCircle color='#F2E5A2' size={50} />
         <div className='text-24px font-bold text-white'>PRECEDENT</div>
     </div>
@@ -41,8 +41,8 @@ const ButtonPrecedent = () => (
  *
  * @return {JSX.Element} A button component displaying the "SUIVANT" label.
  */
-const ButtonSuivant = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
+const ButtonSuivant = ({ nav }) => (
+    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5' onClick={nav}>
         <IoIosArrowDroprightCircle color='#F2E5A2' size={50} />
         <div className='text-24px font-bold text-white'>SUIVANT</div>
     </div>
@@ -149,6 +149,14 @@ const buttonComponents = {
 // Define PropTypes for ButtonPower
 ButtonPower.propTypes = {
     setConfig: PropTypes.func.isRequired,
+};
+
+ButtonPrecedent.propTypes = {
+    nav: PropTypes.func.isRequired,
+};
+
+ButtonSuivant.propTypes = {
+    nav: PropTypes.func.isRequired,
 };
 
 export default buttonComponents;

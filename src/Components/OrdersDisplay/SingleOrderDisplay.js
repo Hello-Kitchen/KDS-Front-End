@@ -8,9 +8,11 @@ import PropTypes from "prop-types";
  * @description Component representing an order with various details.
  * @param {Object} orderDetails - Details of the order to be displayed.
  * @param {number} span - The number of columns the order should span in the grid.
+ * @param {number} index - Index of the order into array.
+ * @param {number} selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @returns {JSX.Element} The rendered component.
  */
-export default function SingleOrderDisplay({ orderDetails, span }) {
+export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder }) {
   const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState(orderDetails);
@@ -19,6 +21,8 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   const [previousStates, setPreviousStates] = useState(new Map());
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // console.log("index: ", index)
+  // console.log("selectOrder: ", selectOrder)
   // Update current time every second
   useEffect(() => {
     const interval = setInterval(() => {
@@ -145,9 +149,9 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   );
 
   return (
-    <div className="h-full" data-testid={`order-${orderDetail.number}`}>
+    <div className={`h-full`}>
       {orderDetails ? (
-        <div>
+        <div className={`${selectOrder === index ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-300'}`}>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
             <div className="p-2 text-left">
               <p className="font-semibold text-lg">{orderDetails.number}</p>
@@ -244,5 +248,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
 SingleOrderDisplay.propTypes = {
   orderDetails: PropTypes.object.isRequired,
   span: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
+  selectOrder: PropTypes.number.isRequired
 };
 

@@ -27,6 +27,8 @@ const formatDate = (date) => {
  */
 function DashboardPasse() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
+  const [nbrOrder, setNbrOrder] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,15 +38,33 @@ function DashboardPasse() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleNavigationPrev = () => {
+    setCurrentOrderIndex((prevIndex) => {
+      const newIndex = (prevIndex - 1 + nbrOrder) % nbrOrder;
+      return newIndex;
+    });
+  };
+
+  const handleNavigationAfter = () => {
+    setCurrentOrderIndex((prevIndex) => {
+      const newIndex = (prevIndex + 1) % nbrOrder;
+      return newIndex;
+    });
+  };
+
   return (
     <div style={{ width: "100%", height: "100%", flexDirection: "column" }}>
       <Header textLeft="time" textCenter="Passe" textRight={formatDate(currentTime)} />
       <div className='w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'>
         <div className="col-span-1 row-span-2"><LeftSection /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} /></div>
+        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} /></div>
+        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} /></div>
       </div>
-      <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} />
+      <Footer
+        buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
+        navigationPrev={handleNavigationPrev}
+        navigationAfter={handleNavigationAfter}
+      />
     </div>
   );
 }

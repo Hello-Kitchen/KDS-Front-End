@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 /**
  * @component OrdersDisplay
@@ -8,10 +9,13 @@ import { useNavigate } from "react-router-dom";
  * It manages the state for the number of orders, the orders waiting, and organizes
  * the display of orders into two lines based on their status.
  * Orders are fetched every 5 seconds.
+ * 
+ * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
+ * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay() {
+function OrdersDisplay({ selectOrder, setNbrOrder }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -115,12 +119,14 @@ function OrdersDisplay() {
         // Create array of components to display
         Promise.all(fetchFoodDetailsPromises).then(() => {
           const ordersLineComponents = orderToDisplay.slice(0, 10).map(
-            (orderDetails) => ({
+            (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
                   key={orderDetails.number}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
+                  index={index}
+                  selectOrder={selectOrder}
                 />
               ),
               nbrCol: getNbrColumns(orderDetails),
@@ -132,6 +138,7 @@ function OrdersDisplay() {
           let currentLine2Cols = 0;
           let waitingOrdersQueue = [];
 
+          setNbrOrder(ordersLineComponents.length);
           ordersLineComponents.forEach((order) => {
             if (
               currentLine1Cols + order.nbrCol <= 5 &&
@@ -189,6 +196,39 @@ function OrdersDisplay() {
     return () => clearInterval(intervalId);
   }, []);
 
+  useEffect(() => {
+    const newOrdersLineComponents = ordersLine1.map((order) => ({
+      component: (
+        <SingleOrderDisplay
+          key={order.props.orderDetails.number}
+          orderDetails={order.props.orderDetails}
+          span={order.props.span}
+          index={order.props.index}
+          selectOrder={selectOrder}
+        />
+      )
+    })
+    );
+    let array = [];
+    newOrdersLineComponents.forEach((component) => { array.push(component.component); });
+    setOrdersLine1(array);
+    const newOrdersLineComponents2 = ordersLine2.map((order) => ({
+      component: (
+        <SingleOrderDisplay
+          key={order.props.orderDetails.number}
+          orderDetails={order.props.orderDetails}
+          span={order.props.span}
+          index={order.props.index}
+          selectOrder={selectOrder}
+        />
+      )
+    })
+    );
+    array = [];
+    newOrdersLineComponents2.forEach((component) => { array.push(component.component); });
+    setOrdersLine2(array);
+  }, [selectOrder]);
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
@@ -210,5 +250,10 @@ function OrdersDisplay() {
     </div>
   );
 }
+
+OrdersDisplay.propTypes = {
+  selectOrder: PropTypes.number.isRequired,
+  setNbrOrder: PropTypes.func
+};
 
 export default OrdersDisplay;
