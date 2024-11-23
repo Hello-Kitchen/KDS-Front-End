@@ -1,0 +1,29 @@
+name: Pull Request
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  check-target-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if PR targets a protected branch
+        run: |
+          PROTECTED_BRANCH="main"
+          if [ "${{ github.event.pull_request.base.ref }}" == "$PROTECTED_BRANCH" ]; then
+            echo "Pull requests to $PROTECTED_BRANCH are not allowed."
+            exit 1
+          fi
+          echo "Pull request target is allowed."
+  development:
+    name: "Development workflow"
+    needs: check-target-branch
+    uses: ./.github/workflows/dev.yaml
