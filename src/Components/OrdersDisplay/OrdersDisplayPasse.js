@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
+  const selectOrderRef = useRef(selectOrder);
 
   /**
      * @function getNbrColumns
@@ -132,7 +133,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
-                  selectOrder={selectOrder}
+                  selectOrder={selectOrderRef.current}
                 />
               ),
               nbrCol: getNbrColumns(orderDetails),
@@ -201,6 +202,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
     let array = [];
     newOrdersLineComponents.forEach((component) => { array.push(component.component); });
     setOrdersLine1(array);
+    selectOrderRef.current = selectOrder;
   }, [selectOrder]);
 
   return (

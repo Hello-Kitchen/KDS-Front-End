@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -21,6 +21,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [ordersLine2, setOrdersLine2] = useState([]);
+  const selectOrderRef = useRef(selectOrder);
 
   /**
    * @function fetchOrders
@@ -126,7 +127,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
-                  selectOrder={selectOrder}
+                  selectOrder={selectOrderRef.current}
                 />
               ),
               nbrCol: getNbrColumns(orderDetails),
@@ -227,6 +228,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
     array = [];
     newOrdersLineComponents2.forEach((component) => { array.push(component.component); });
     setOrdersLine2(array);
+    selectOrderRef.current = selectOrder;
   }, [selectOrder]);
 
   return (

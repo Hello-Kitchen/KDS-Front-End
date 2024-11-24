@@ -21,8 +21,6 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   const [previousStates, setPreviousStates] = useState(new Map());
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  // console.log("index: ", index)
-  // console.log("selectOrder: ", selectOrder)
   // Update current time every second
   useEffect(() => {
     const interval = setInterval(() => {
@@ -151,7 +149,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   return (
     <div className={`h-full`}>
       {orderDetails ? (
-        <div className={`${selectOrder === index ? 'border-2 border-blue-500 shadow-lg' : 'border border-gray-300'}`}>
+        <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
             <div className="p-2 text-left">
               <p className="font-semibold text-lg">{orderDetails.number}</p>
@@ -182,7 +180,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
               </p>
             </div>
           </div>
-          <div className={`px-3 py-1 border-2 border-t-0 rounded-b-lg ${orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}`} style={{ columnCount: span }}>
+          <div className={`${selectOrder === index ? 'border-4 border-orange-500 shadow-lg' : ''} px-3 py-1 border-2 border-t-0 rounded-b-lg ${orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}`} style={{ columnCount: span }}>
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
