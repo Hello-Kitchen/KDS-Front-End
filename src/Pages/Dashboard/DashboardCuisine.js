@@ -3,6 +3,7 @@ import Footer from '../../Components/Footer/Footer';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
+import StatisticsView from '../../Components/ModalViews/StatisticsView';
 
 /**
  * @function formatDate
@@ -28,6 +29,11 @@ const formatDate = (date) => {
  */
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [displayStatistics, setDisplayStatistics] = useState(false);
+
+  const handleDisplayStatistics = () => {
+    setDisplayStatistics(!displayStatistics);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -41,10 +47,18 @@ function DashboardCuisine({ config, setConfig }) {
     return (
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
-        <div className='w-full h-lb'>
-          <OrdersDisplay />
-        </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} />
+          <div className='w-full h-lb'>
+            {displayStatistics ? (
+              <StatisticsView />
+            ) : (
+              <OrdersDisplay />
+            )}
+          </div>
+        <Footer 
+          buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
+          setConfig={setConfig}
+          handleDisplayStatistics={handleDisplayStatistics}
+        />
       </div>
     );
   } else {

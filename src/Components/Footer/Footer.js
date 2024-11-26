@@ -74,7 +74,7 @@ const notconnected = () => (
  *
  * @return {JSX.Element} The footer with the specified buttons and connection state.
  */
-function Footer({ buttons, setConfig }) {
+function Footer({ buttons, setConfig, handleDisplayStatistics }) {
     const connect = true; ///< Flag indicating connection status. Set to true by default.
     const Etat = connect ? connected : notconnected; ///< Component to render based on connection status.
 
@@ -84,6 +84,8 @@ function Footer({ buttons, setConfig }) {
                 const ButtonComponent = Object.prototype.hasOwnProperty.call(buttonComponents, buttonKey) ? buttonComponents[buttonKey] : ButtonEmpty;
                 if (buttonKey === "activer")
                     return <ButtonComponent key={i} setConfig={setConfig} />;
+                else if (buttonKey === "statistique")
+                    return <ButtonComponent key={i} handleDisplayStatistics={handleDisplayStatistics} />;
                 else
                     return <ButtonComponent key={i} />;
             })}
@@ -95,6 +97,7 @@ function Footer({ buttons, setConfig }) {
 Footer.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of buttons to be rendered.
     setConfig: PropTypes.func.isRequired, ///< Function to handle configuration changes.
+    handleDisplayStatistics: PropTypes.func.isRequired, ///< Function to handle display settings.
 };
 
 export default Footer;

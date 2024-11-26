@@ -76,8 +76,8 @@ const ButtonRappel = () => (
  *
  * @return {JSX.Element} A button component displaying the "STATISTIQUES" label.
  */
-const ButtonStatistiques = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
+const ButtonStatistiques = ({ handleDisplayStatistics }) => (
+    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5' onClick={handleDisplayStatistics}>
         <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="imageStat" patternUnits="userSpaceOnUse" width="24" height="24">
@@ -149,6 +149,11 @@ const buttonComponents = {
 // Define PropTypes for ButtonPower
 ButtonPower.propTypes = {
     setConfig: PropTypes.func.isRequired,
+};
+
+// Define PropTypes for ButtonStatistiques
+ButtonStatistiques.propTypes = {
+    handleDisplayStatistics: PropTypes.func.isRequired,
 };
 
 export default buttonComponents;
