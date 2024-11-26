@@ -40,7 +40,7 @@ function DashboardCuisine({ config, setConfig }) {
    */
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {

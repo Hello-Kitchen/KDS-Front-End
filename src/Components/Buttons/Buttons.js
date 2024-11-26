@@ -25,6 +25,10 @@ const CustomImage = ({ url }) => {
     );
 };
 
+CustomImage.propTypes = {
+    url: PropTypes.string.isRequired
+};
+
 // Map icon names to actual icon components
 const icons = {
     checkmark: IoIosCheckmarkCircle,
@@ -112,6 +116,8 @@ GenericButton.propTypes = {
     activeTab: PropTypes.string.isRequired,
     updateActiveTab: PropTypes.func.isRequired,
     invertOnClick: PropTypes.bool.isRequired,
+    imageUrl: PropTypes.string,
+    setConfig: PropTypes.func,
 };
 
 /**
