@@ -86,10 +86,10 @@ const GenericButton = ({
 
     return (
         label === "" ? (
-            <div className="flex-1 bg-kitchen-blue"></div>
+            <div className="flex-1 bg-kitchen-blue select-none"></div>
         ) : (
             <div
-                className={`flex-1 p-0.5 flex flex-col justify-center items-center border-r-[1px] border-l-[1px] border-kitchen-yellow cursor-pointer
+                className={`flex-1 p-0.5 flex flex-col justify-center items-center border-r-[1px] border-l-[1px] border-kitchen-yellow cursor-pointer select-none
                     ${isActive ? 'bg-kitchen-yellow text-kitchen-blue shadow-inner-top-lg' : 'bg-kitchen-blue text-white'}
                 `}
                 onMouseDown={invertOnClick ? handleMouseDown : undefined}
