@@ -21,15 +21,28 @@ const formatDate = (date) => {
 
 /**
  * @function DashboardCuisine
- * @description One of the main pages of the KDS, it is the dashboard of the kitchen, displaying the current time and orders.
- * @param {Object} config - Configuration object that determines the state of the kitchen.
- * @param {Function} setConfig - Function to update the configuration state.
- * @returns {JSX.Element} The rendered dashboard component.
+ * @description Represents the dashboard for the kitchen display system (KDS), showing the current time, orders, and controls.
+ *
+ * @param {Object} config - The configuration object that determines the state of the kitchen.
+ * @param {Function} setConfig - Function to update the configuration state of the kitchen.
+ *
+ * @returns {JSX.Element} The rendered dashboard component, showing different UI based on the `config.enable` state.
  */
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
   const [nbrOrder, setNbrOrder] = useState(0);
+  const [activeTab, setActiveTab] = useState("");
+
+  /**
+   * @function updateActiveTab
+   * @description Updates the active tab for navigation.
+   *
+   * @param {string} newTab - The new tab to set as active.
+   */
+  const updateActiveTab = (newTab) => {
+    setActiveTab(newTab);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,11 +73,7 @@ function DashboardCuisine({ config, setConfig }) {
         <div className='w-full h-lb'>
           <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} />
         </div>
-        <Footer 
-          buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
-          navigationPrev={handleNavigationPrev}
-          navigationAfter={handleNavigationAfter}
-        />
+        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab}/>
       </div>
     );
   } else {
@@ -79,7 +88,7 @@ function DashboardCuisine({ config, setConfig }) {
         <Footer 
           buttons={["activer", "", "", "", "", "reglage"]} 
           setConfig={setConfig} 
-        />
+        activeTab={activeTab} updateActiveTab={updateActiveTab}/>
       </div>
     );
   }

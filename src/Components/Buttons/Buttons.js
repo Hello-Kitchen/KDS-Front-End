@@ -1,154 +1,189 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 
 /**
- * !! This will most likely be refactored !!
- */
-
-/**
- * @brief ButtonServie component renders a button with a checkmark icon labeled "SERVIE".
+ * @brief Renders a custom image inside a circle.
  *
- * This button is not currently used, it only displays "SERVIE".
- *
- * @return {JSX.Element} A button component displaying the "SERVIE" label.
- */
-const ButtonServie = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
-        <IoIosCheckmarkCircle color='#F2E5A2' size={50} />
-        <div className='text-24px font-bold text-white'>SERVIE</div>
-    </div>
-);
-
-/**
- * @brief ButtonPrecedent component renders a button with a left arrow icon labeled "PRECEDENT".
- *
- * This button is not currently used, it only displays "PRECEDENT".
- *
- * @return {JSX.Element} A button component displaying the "PRECEDENT" label.
- */
-const ButtonPrecedent = ({ nav }) => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5' onClick={nav}>
-        <IoIosArrowDropleftCircle color='#F2E5A2' size={50} />
-        <div className='text-24px font-bold text-white'>PRECEDENT</div>
-    </div>
-);
-
-/**
- * @brief ButtonSuivant component renders a button with a right arrow icon labeled "SUIVANT".
- *
- * This button is not currently used, it only displays "SUIVANT".
- *
- * @return {JSX.Element} A button component displaying the "SUIVANT" label.
- */
-const ButtonSuivant = ({ nav }) => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5' onClick={nav}>
-        <IoIosArrowDroprightCircle color='#F2E5A2' size={50} />
-        <div className='text-24px font-bold text-white'>SUIVANT</div>
-    </div>
-);
-
-/**
- * @brief ButtonRappel component renders a button with a custom image icon labeled "RAPPEL".
- *
- * This button is not currently used, it only displays "RAPPEL"
- *
- * @return {JSX.Element} A button component displaying the "RAPPEL" label.
- */
-const ButtonRappel = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
-        <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="imageRecall" patternUnits="userSpaceOnUse" width="24" height="24">
-                    <image href="./recall.jpg" x="0" y="0" width="24" height="24" />
-                </pattern>
-            </defs>
-            <circle r="10" cx="12" cy="12" fill="url(#imageRecall)" />
-        </svg>
-        <div className='text-24px font-bold text-white'>RAPPEL</div>
-    </div>
-);
-
-/**
- * @brief ButtonStatistiques component renders a button with a statistics icon labeled "STATISTIQUES".
- *
- * This button is not currently used, it only displays "STATISTIQUES"
- *
- * @return {JSX.Element} A button component displaying the "STATISTIQUES" label.
- */
-const ButtonStatistiques = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
-        <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="imageStat" patternUnits="userSpaceOnUse" width="24" height="24">
-                    <image href="./analytic.jpg" x="0" y="0" width="24" height="24" />
-                </pattern>
-            </defs>
-            <circle r="10" cx="12" cy="12" fill="url(#imageStat)" />
-        </svg>
-        <div className='text-24px font-bold text-white'>STATISTIQUES</div>
-    </div>
-);
-
-/**
- * @brief ButtonReglages component renders a button with a settings icon labeled "RÉGLAGES".
- *
- * This button is not currently used, it only displays "RÉGLAGES".
- *
- * @return {JSX.Element} A button component displaying the "RÉGLAGES" label.
- */
-const ButtonReglages = () => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5'>
-        <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="imageSetting" patternUnits="userSpaceOnUse" width="24" height="24">
-                    <image href="./setting.jpg" x="0" y="0" width="24" height="24" />
-                </pattern>
-            </defs>
-            <circle r="10" cx="12" cy="12" fill="url(#imageSetting)" />
-        </svg>
-        <div className='text-24px font-bold text-white'>RÉGLAGES</div>
-    </div>
-);
-
-/**
- * @brief ButtonPower component renders a button with a power icon labeled "ACTIVER".
- *
- * This button toggles the state of the kitchen.
+ * This component takes a URL and uses it as a pattern inside an SVG circle.
  *
  * @param {Object} props Component properties.
- * @param {function} props.setConfig Function to toggle the enable state.
+ * @param {string} props.url The URL of the image to be displayed.
  *
- * @return {JSX.Element} A button component that toggles the enable state.
+ * @return {JSX.Element} An SVG circle element with the image as a background.
  */
-const ButtonPower = ({ setConfig }) => (
-    <div className='w-1/6 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5 cursor-pointer' onClick={() => { setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable })); }}>
+const CustomImage = ({ url }) => {
+    return (
         <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <pattern id="imagePower" patternUnits="userSpaceOnUse" width="24" height="24">
-                    <image href="./power.jpg" x="0" y="0" width="24" height="24" />
+                <pattern id={`imagePattern${url}`} patternUnits="userSpaceOnUse" width="24" height="24">
+                    <image href={url} x="0" y="0" width="24" height="24" />
                 </pattern>
             </defs>
-            <circle r="10" cx="12" cy="12" fill="url(#imagePower)" />
+            <circle r="10" cx="12" cy="12" fill={`url(#imagePattern${url})`} />
         </svg>
-        <div className='text-24px font-bold text-white'>ACTIVER</div>
-    </div>
-);
-
-// Define the available button components
-const buttonComponents = {
-    servie: ButtonServie,
-    precedent: ButtonPrecedent,
-    suivant: ButtonSuivant,
-    rappel: ButtonRappel,
-    statistique: ButtonStatistiques,
-    reglage: ButtonReglages,
-    activer: ButtonPower,
+    );
 };
 
-// Define PropTypes for ButtonPower
-ButtonPower.propTypes = {
-    setConfig: PropTypes.func.isRequired,
+CustomImage.propTypes = {
+    url: PropTypes.string.isRequired
+};
+
+// Map icon names to actual icon components
+const icons = {
+    checkmark: IoIosCheckmarkCircle,
+    leftArrow: IoIosArrowDropleftCircle,
+    rightArrow: IoIosArrowDroprightCircle,
+};
+
+/**
+ * @brief Renders a generic button with an icon and a label.
+ *
+ * This component renders a button that can display either a predefined icon or a custom image.
+ * An optional `onClick` function can be passed to handle button interactions.
+ *
+ * @param {Object} props Component properties.
+ * @param {string} props.icon Icon type, can be a predefined icon name (e.g., 'checkmark') or 'null' to render a custom image.
+ * @param {string} props.label Label to display below the icon.
+ * @param {string} [props.imageUrl] Optional URL for the custom image (used when icon is 'null').
+ * @param {function} [props.setConfig] Optional function to toggle configuration (passed for specific buttons like 'activer').
+ * @param {string} props.activeTab The currently active tab.
+ * @param {function} props.updateActiveTab Function to update the active tab.
+ * @param {boolean} props.invertOnClick Whether to invert the color on button click.
+ *
+ * @return {JSX.Element} A button component with an icon or image and a label.
+ */
+const GenericButton = ({
+    icon,
+    label,
+    imageUrl,
+    setConfig,
+    activeTab,
+    updateActiveTab,
+    invertOnClick
+}) => {
+    const [isInverted, setIsInverted] = useState(false);
+
+    const handleMouseDown = () => {
+        setIsInverted(true);
+    };
+
+    const handleMouseUp = () => {
+        setIsInverted(false);
+    };
+
+    const handleClick = () => {
+        if (setConfig) {
+            setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));
+        }
+
+        if (!invertOnClick) {
+            activeTab === label ? updateActiveTab("") : updateActiveTab(label);
+        }
+    };
+
+    const isActive = activeTab === label || isInverted;
+
+    return (
+        label === "" ? (
+            <div className="flex-1 bg-kitchen-blue select-none"></div>
+        ) : (
+            <div
+                className={`flex-1 p-0.5 flex flex-col justify-center items-center border-r-[1px] border-l-[1px] border-kitchen-yellow cursor-pointer select-none
+                    ${isActive ? 'bg-kitchen-yellow text-kitchen-blue shadow-inner-top-lg' : 'bg-kitchen-blue text-white'}
+                `}
+                onMouseDown={invertOnClick ? handleMouseDown : undefined}
+                onMouseUp={invertOnClick ? handleMouseUp : undefined}
+                onClick={handleClick}
+            >
+                {icon !== 'null' ? (
+                    React.createElement(icons[icon], { size: 50, color: isActive ? '#499CA6' : '#F2E5A2' })
+                ) : (
+                    imageUrl && <CustomImage url={isActive ? `./active-${imageUrl}` : `./${imageUrl}`} />
+                )}
+                <div className={`text-24px font-bold ${isActive ? 'text-kitchen-blue' : 'text-white'}`}>
+                    {label}
+                </div>
+            </div>
+        )
+    );
+};
+
+GenericButton.propTypes = {
+    icon: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
+    activeTab: PropTypes.string.isRequired,
+    updateActiveTab: PropTypes.func.isRequired,
+    invertOnClick: PropTypes.bool.isRequired,
+    imageUrl: PropTypes.string,
+    setConfig: PropTypes.func,
+};
+
+/**
+ * @brief Defines the button data, including icon, label, and any custom behavior.
+ *
+ * The data is used to generate buttons dynamically with varying configurations.
+ * Each button is identified by a unique key.
+ */
+const buttonData = {
+    servie: { icon: 'checkmark', label: 'SERVIE' },
+    precedent: { icon: 'leftArrow', label: 'PRÉCÉDENT' },
+    suivant: { icon: 'rightArrow', label: 'SUIVANT' },
+    rappel: { icon: 'null', imageUrl: 'recall.jpg', label: 'RAPPEL' },
+    statistique: { icon: 'null', imageUrl: 'analytic.jpg', label: 'STATISTIQUES' },
+    reglage: { icon: 'null', imageUrl: 'setting.jpg', label: 'RÉGLAGES' },
+    activer: { icon: 'null', imageUrl: 'power.jpg', label: 'ACTIVER', onClick: (setConfig) => () => setConfig(prev => ({ ...prev, enable: !prev.enable })) },
+};
+
+/**
+ * @brief Renders a set of buttons based on the provided keys.
+ *
+ * This component dynamically generates buttons based on a list of keys, mapping each key
+ * to the corresponding button data. It passes the `setConfig` function to buttons that need it.
+ *
+ * @param {Object} props - Component properties.
+ * @param {string[]} props.buttons - An array of button keys to render.
+ * @param {function} props.setConfig - Function to handle configuration toggling, passed to relevant buttons.
+ * @param {string} props.activeTab - The currently active tab.
+ * @param {function} props.updateActiveTab - A function to update the active tab.
+ *
+ * @return {JSX.Element} A set of rendered buttons.
+ */
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab }) {
+
+    return (
+        <div className="flex w-full">
+            {buttons.map((key, i) => {
+                const buttonInfo = buttonData[key]; // Retrieve the button data based on key
+
+                if (!buttonInfo) {
+                    return <div key={i} className='flex-1 bg-kitchen-blue'></div>;
+                }
+
+                const { icon, label, imageUrl } = buttonInfo;
+                return (
+                    <GenericButton
+                        key={i}
+                        icon={icon}
+                        label={label}
+                        imageUrl={imageUrl}
+                        setConfig={key === 'activer' ? setConfig : null} // Only pass setConfig if it's the power button
+                        activeTab={activeTab}
+                        updateActiveTab={updateActiveTab}
+                        invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
+                    />
+                );
+            })}
+        </div>
+    );
+}
+
+ButtonSet.propTypes = {
+    buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of buttons to be rendered.
+    setConfig: PropTypes.func.isRequired, ///< Function to handle configuration changes.
+    activeTab: PropTypes.string.isRequired, ///< Currently active tab
+    updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
 };
 
 ButtonPrecedent.propTypes = {
@@ -159,4 +194,4 @@ ButtonSuivant.propTypes = {
     nav: PropTypes.func.isRequired,
 };
 
-export default buttonComponents;
+export default ButtonSet;
