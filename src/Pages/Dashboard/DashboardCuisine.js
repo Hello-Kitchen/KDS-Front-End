@@ -3,6 +3,7 @@ import Footer from '../../Components/Footer/Footer';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
+import SettingsView from '../../ModalViews/SettingsView';
 
 /**
  * @function formatDate
@@ -28,6 +29,12 @@ const formatDate = (date) => {
  */
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [displaySettings, setDisplaySettings] = useState(false);
+
+  const handleSettingsDisplay = () => {
+    console.log("Settings display");
+    setDisplaySettings(!displaySettings);
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,9 +49,13 @@ function DashboardCuisine({ config, setConfig }) {
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          <OrdersDisplay />
+          {displaySettings ? (
+            <SettingsView />
+          ) : (
+            <OrdersDisplay />
+          )}
         </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} />
+        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} handleSettingsDisplay={handleSettingsDisplay} />
       </div>
     );
   } else {

@@ -40,7 +40,7 @@ describe('Button Components', () => {
     });
 
     test('renders ButtonReglages with correct text', () => {
-        render(<ButtonReglages />);
+        render(<ButtonReglages handleSettingsDisplay={() => {}} />);
         expect(screen.getByText("RÉGLAGES")).toBeInTheDocument();
     });
 
