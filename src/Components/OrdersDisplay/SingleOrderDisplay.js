@@ -180,7 +180,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
               </p>
             </div>
           </div>
-          <div className={`${selectOrder === index ? 'border-4 border-orange-500 shadow-lg' : ''} px-3 py-1 border-2 border-t-0 rounded-b-lg ${orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}`} style={{ columnCount: span }}>
+          <div className={`px-3 py-1 border-4 border-t-0 rounded-b-lg ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
