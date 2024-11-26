@@ -47,7 +47,6 @@ function DashboardCuisine({ config, setConfig }) {
   }
 
   const handleSettingsDisplay = () => {
-    console.log("Settings display");
     setDisplaySettings(!displaySettings);
   }
 
@@ -74,7 +73,7 @@ function DashboardCuisine({ config, setConfig }) {
               handleTouchscreenMode={handleTouchscreenMode}
             />
           ) : (
-            <OrdersDisplay />
+            <OrdersDisplay orderAnnoncement={orderAnnoncement} />
           )}
         </div>
         <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} handleSettingsDisplay={handleSettingsDisplay} />

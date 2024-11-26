@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
 import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 /**
  * @component OrdersDisplay
@@ -8,15 +9,19 @@ import { useNavigate } from "react-router-dom";
  * It manages the state for the number of orders, the orders waiting, and organizes
  * the display of orders into two lines based on their status.
  * Orders are fetched every 5 seconds.
+ * @param {Boolean} orderAnnoncement - A boolean to determine if an order announcement is active.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay() {
+function OrdersDisplay({orderAnnoncement}) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [ordersLine2, setOrdersLine2] = useState([]);
+  const previousNbrOrders = useRef(0);
+
+  const audio = new Audio("audio/newOrder.mp3");
 
   /**
    * @function fetchOrders
@@ -82,6 +87,14 @@ function OrdersDisplay() {
             orderToDisplay.push(order);
           }
         });
+
+        if (orderAnnoncement && orderToDisplay.length > previousNbrOrders.current) {
+          audio.play().catch((error) => {
+            console.error("Erreur lors de la lecture du son :", error);
+          });
+        }
+
+        previousNbrOrders.current = orderToDisplay.length;
 
         // Used to display the number of orders waiting
         setNbrOrders(orderToDisplay.length);
@@ -210,5 +223,13 @@ function OrdersDisplay() {
     </div>
   );
 }
+
+OrdersDisplay.defaultProps = {
+  orderAnnoncement: false,
+};
+
+OrdersDisplay.PropTypes = {
+  orderAnnoncement: PropTypes.bool,
+};
 
 export default OrdersDisplay;
