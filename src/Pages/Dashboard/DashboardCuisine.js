@@ -73,7 +73,7 @@ function DashboardCuisine({ config, setConfig }) {
         <div className='w-full h-lb'>
           <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} />
         </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab}/>
+        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={handleNavigationPrev} navigationAfter={handleNavigationAfter}/>
       </div>
     );
   } else {
@@ -88,7 +88,9 @@ function DashboardCuisine({ config, setConfig }) {
         <Footer 
           buttons={["activer", "", "", "", "", "reglage"]} 
           setConfig={setConfig} 
-        activeTab={activeTab} updateActiveTab={updateActiveTab}/>
+          activeTab={activeTab} 
+          updateActiveTab={updateActiveTab}
+          />
       </div>
     );
   }

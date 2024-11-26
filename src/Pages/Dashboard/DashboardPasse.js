@@ -29,6 +29,17 @@ function DashboardPasse() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
   const [nbrOrder, setNbrOrder] = useState(0);
+  const [activeTab, setActiveTab] = useState("");
+
+  /**
+   * @function updateActiveTab
+   * @description Updates the active tab for navigation.
+   *
+   * @param {string} newTab - The new tab to set as active.
+   */
+  const updateActiveTab = (newTab) => {
+    setActiveTab(newTab);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,6 +75,8 @@ function DashboardPasse() {
         buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
         navigationPrev={handleNavigationPrev}
         navigationAfter={handleNavigationAfter}
+        activeTab={activeTab} 
+        updateActiveTab={updateActiveTab}
       />
     </div>
   );

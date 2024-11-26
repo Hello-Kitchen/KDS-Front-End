@@ -58,17 +58,19 @@ const NotConnected = () => (
  * @param {Object} props - Component properties.
  * @param {string[]} props.buttons - An array of button identifiers to be rendered.
  * @param {function} props.setConfig - A function to manage configuration, especially toggling the active state.
+ * @param {function} props.navigationPrev - A function to navigate to the prev order.
+ * @param {function} props.navigationAfter - A function to navigate to the next order.
  * @param {string} props.activeTab - The currently active tab.
  * @param {function} props.updateActiveTab - A function to update the active tab state.
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter }) {
     const isConnected = true; // Connection status, assumed to be true for now
     const ConnectionStatus = isConnected ? Connected : NotConnected;
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab}/>
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} />
             <ConnectionStatus />
         </div>
     );
@@ -79,8 +81,8 @@ Footer.propTypes = {
     navigationPrev: PropTypes.func, ///< Function to handle button clicks.
     navigationAfter: PropTypes.func, ///< Function to handle button clicks.
     setConfig: PropTypes.func, ///< Function to handle configuration changes.
-    activeTab: PropTypes.string.isRequired, ///< Currently active tab
-    updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
+    activeTab: PropTypes.string, ///< Currently active tab
+    updateActiveTab: PropTypes.func, ///< Function to handle tab changes
 };
 
 export default Footer;

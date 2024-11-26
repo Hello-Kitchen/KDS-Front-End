@@ -50,6 +50,8 @@ const icons = {
  * @param {string} props.activeTab The currently active tab.
  * @param {function} props.updateActiveTab Function to update the active tab.
  * @param {boolean} props.invertOnClick Whether to invert the color on button click.
+ * @param {function} props.navigationPrev - A function to navigate to the prev order.
+ * @param {function} props.navigationAfter - A function to navigate to the next order.
  *
  * @return {JSX.Element} A button component with an icon or image and a label.
  */
@@ -60,7 +62,9 @@ const GenericButton = ({
     setConfig,
     activeTab,
     updateActiveTab,
-    invertOnClick
+    invertOnClick,
+    navigationPrev,
+    navigationAfter
 }) => {
     const [isInverted, setIsInverted] = useState(false);
 
@@ -76,6 +80,12 @@ const GenericButton = ({
         if (setConfig) {
             setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));
         }
+
+        if (label === "SUIVANT")
+            navigationAfter()
+    
+        if (label === "PRÉCÉDENT")
+            navigationPrev()
 
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
@@ -118,6 +128,8 @@ GenericButton.propTypes = {
     invertOnClick: PropTypes.bool.isRequired,
     imageUrl: PropTypes.string,
     setConfig: PropTypes.func,
+    navigationPrev: PropTypes.func, ///< Function to handle navigation order
+    navigationAfter: PropTypes.func, ///< Function to handle navigation order
 };
 
 /**
@@ -126,7 +138,7 @@ GenericButton.propTypes = {
  * The data is used to generate buttons dynamically with varying configurations.
  * Each button is identified by a unique key.
  */
-const buttonData = {
+let buttonData = {
     servie: { icon: 'checkmark', label: 'SERVIE' },
     precedent: { icon: 'leftArrow', label: 'PRÉCÉDENT' },
     suivant: { icon: 'rightArrow', label: 'SUIVANT' },
@@ -145,12 +157,14 @@ const buttonData = {
  * @param {Object} props - Component properties.
  * @param {string[]} props.buttons - An array of button keys to render.
  * @param {function} props.setConfig - Function to handle configuration toggling, passed to relevant buttons.
+ * @param {function} props.navigationPrev - A function to navigate to the prev order.
+ * @param {function} props.navigationAfter - A function to navigate to the next order.
  * @param {string} props.activeTab - The currently active tab.
  * @param {function} props.updateActiveTab - A function to update the active tab.
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter }) {
 
     return (
         <div className="flex w-full">
@@ -172,6 +186,8 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab }) {
                         activeTab={activeTab}
                         updateActiveTab={updateActiveTab}
                         invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
+                        navigationPrev={navigationPrev}
+                        navigationAfter={navigationAfter}
                     />
                 );
             })}
@@ -181,17 +197,11 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab }) {
 
 ButtonSet.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of buttons to be rendered.
-    setConfig: PropTypes.func.isRequired, ///< Function to handle configuration changes.
+    setConfig: PropTypes.func, ///< Function to handle configuration changes.
     activeTab: PropTypes.string.isRequired, ///< Currently active tab
     updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
-};
-
-ButtonPrecedent.propTypes = {
-    nav: PropTypes.func.isRequired,
-};
-
-ButtonSuivant.propTypes = {
-    nav: PropTypes.func.isRequired,
+    navigationPrev: PropTypes.func, ///< Function to handle navigation order
+    navigationAfter: PropTypes.func, ///< Function to handle navigation order
 };
 
 export default ButtonSet;
