@@ -23,7 +23,7 @@ describe('Footer Component', () => {
         // Add a new button
         buttons.push('statistique');
         rerender(
-            <Footer buttons={buttons} setConfig={mockSetConfig} navigationPrev={() => {}} navigationAfter={() => {}}activeTab="" updateActiveTab={updateActiveTabMock} />
+            <Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} />
         );
 
         // Check that the new button is rendered
@@ -33,9 +33,7 @@ describe('Footer Component', () => {
     test('renders unknown button', () => {
         const buttons = ['unknownButton'];
 
-        render(<Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} />);
-
-        render(<Footer buttons={buttons} setConfig={mockSetConfig} navigationPrev={() => {}} navigationAfter={() => {}}/>);
+        render(<Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>);
         expect(screen.queryByText('SERVIE')).not.toBeInTheDocument();
         expect(screen.queryByText('PRÉCÉDENT')).not.toBeInTheDocument();
         expect(screen.queryByText('SUIVANT')).not.toBeInTheDocument();
@@ -45,7 +43,7 @@ describe('Footer Component', () => {
 
     test('renders connection status as connected', () => {
         render(
-            <Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} />
+            <Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>
         );
 
         // Check if the connected icon and text appear
@@ -56,7 +54,7 @@ describe('Footer Component', () => {
     test('renders connection status as disconnected', () => {
         // Temporarily set the connection status to false
         render(
-            <Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} />
+            <Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>
         );
 
         // Check if the disconnected icon and text appear

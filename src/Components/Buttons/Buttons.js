@@ -82,10 +82,10 @@ const GenericButton = ({
         }
 
         if (label === "SUIVANT")
-            navigationAfter()
+            navigationAfter();
     
         if (label === "PRÉCÉDENT")
-            navigationPrev()
+            navigationPrev();
 
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
