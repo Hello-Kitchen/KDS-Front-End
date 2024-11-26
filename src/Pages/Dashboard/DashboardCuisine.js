@@ -30,6 +30,21 @@ const formatDate = (date) => {
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [displaySettings, setDisplaySettings] = useState(false);
+  const [orderAnnoncement, setOrderAnnoncement] = useState(false);
+  const [orderReading, setOrderReading] = useState(false);
+  const [touchscreenMode, setTouchscreenMode] = useState(true);
+
+  const handleOrderAnnoncement = () => {
+    setOrderAnnoncement(!orderAnnoncement);
+  }
+
+  const handleOrderReading = () => {
+    setOrderReading(!orderReading);
+  }
+
+  const handleTouchscreenMode = () => {
+    setTouchscreenMode(!touchscreenMode);
+  }
 
   const handleSettingsDisplay = () => {
     console.log("Settings display");
@@ -50,7 +65,14 @@ function DashboardCuisine({ config, setConfig }) {
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
           {displaySettings ? (
-            <SettingsView />
+            <SettingsView
+              orderAnnoncement={orderAnnoncement}
+              handleOrderAnnoncement={handleOrderAnnoncement}
+              orderReading={orderReading}
+              handleOrderReading={handleOrderReading}
+              touchscreenMode={touchscreenMode}
+              handleTouchscreenMode={handleTouchscreenMode}
+            />
           ) : (
             <OrdersDisplay />
           )}
