@@ -11,7 +11,7 @@ import ButtonSet from '../Buttons/Buttons';
  * @return {JSX.Element} A JSX element representing the connected state with an icon and details.
  */
 const Connected = () => (
-    <div className='w-etat bg-kitchen-blue flex flex-col justify-center items-center'>
+    <div className='w-etat bg-kitchen-blue flex flex-col justify-center items-center border-r-[1px] border-l-[1px] border-kitchen-yellow'>
         <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="imageConnected" patternUnits="userSpaceOnUse" width="24" height="24">
@@ -34,7 +34,7 @@ const Connected = () => (
  * @return {JSX.Element} A JSX element representing the disconnected state with an icon and details.
  */
 const NotConnected = () => (
-    <div className='w-etat bg-kitchen-blue flex flex-col justify-center items-center'>
+    <div className='w-etat bg-kitchen-blue flex flex-col justify-center items-center border-r-[1px] border-l-[1px] border-kitchen-yellow'>
         <svg viewBox="0 0 24 24" height="50" width="50" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <pattern id="imageNotConnected" patternUnits="userSpaceOnUse" width="24" height="24">
@@ -58,16 +58,17 @@ const NotConnected = () => (
  * @param {Object} props - Component properties.
  * @param {string[]} props.buttons - An array of button identifiers to be rendered.
  * @param {function} props.setConfig - A function to manage configuration, especially toggling the active state.
+ * @param {string} props.activeTab - The currently active tab.
+ * @param {function} props.updateActiveTab - A function to update the active tab state.
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab }) {
     const isConnected = true; // Connection status, assumed to be true for now
     const ConnectionStatus = isConnected ? Connected : NotConnected;
-
     return (
-        <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between gap-0.5'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} />
+        <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab}/>
             <ConnectionStatus />
         </div>
     );
@@ -76,6 +77,8 @@ function Footer({ buttons, setConfig }) {
 Footer.propTypes = {
     buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of buttons to be rendered.
     setConfig: PropTypes.func.isRequired, ///< Function to handle configuration changes.
+    activeTab: PropTypes.string.isRequired, ///< Currently active tab
+    updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
 };
 
 export default Footer;

@@ -29,7 +29,10 @@ module.exports = {
         'kitchen-orange': '#F2762E',
         'kitchen-red': '#D91604',
         'kitchen-beige': '#D98282',
-      }
+      },
+      boxShadow: {
+        'inner-top-lg': 'inset 0 5px 5px rgba(0, 0, 0, 0.3)'
+      },
     },
   },
   plugins: [

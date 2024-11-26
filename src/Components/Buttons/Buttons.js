@@ -1,18 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
-
-/**
- * @brief Renders an empty button as a placeholder.
- *
- * This component is used when no specific button is assigned.
- *
- * @return {JSX.Element} A JSX element representing an empty button.
- */
-const ButtonEmpty = () => (
-    <div className='w-1/6 bg-kitchen-blue'>
-    </div>
-);
 
 /**
  * @brief Renders a custom image inside a circle.
@@ -34,7 +22,7 @@ const CustomImage = ({ url }) => {
             </defs>
             <circle r="10" cx="12" cy="12" fill={`url(#imagePattern${url})`} />
         </svg>
-    )
+    );
 };
 
 // Map icon names to actual icon components
@@ -55,31 +43,75 @@ const icons = {
  * @param {string} props.label Label to display below the icon.
  * @param {string} [props.imageUrl] Optional URL for the custom image (used when icon is 'null').
  * @param {function} [props.setConfig] Optional function to toggle configuration (passed for specific buttons like 'activer').
+ * @param {string} props.activeTab The currently active tab.
+ * @param {function} props.updateActiveTab Function to update the active tab.
+ * @param {boolean} props.invertOnClick Whether to invert the color on button click.
  *
  * @return {JSX.Element} A button component with an icon or image and a label.
  */
-const GenericButton = ({ icon, label, imageUrl, setConfig }) => {
+const GenericButton = ({
+    icon,
+    label,
+    imageUrl,
+    setConfig,
+    activeTab,
+    updateActiveTab,
+    invertOnClick
+}) => {
+    const [isInverted, setIsInverted] = useState(false);
+
+    const handleMouseDown = () => {
+        setIsInverted(true);
+    };
+
+    const handleMouseUp = () => {
+        setIsInverted(false);
+    };
+
+    const handleClick = () => {
+        if (setConfig) {
+            setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));
+        }
+
+        if (!invertOnClick) {
+            activeTab === label ? updateActiveTab("") : updateActiveTab(label);
+        }
+    };
+
+    const isActive = activeTab === label || isInverted;
+
     return (
-        label === "" ?
-        <div className='flex-1 bg-kitchen-blue'></div> :
-        <div
-            className='flex-1 bg-kitchen-blue p-0.5 flex flex-col justify-center items-center gap-1.5 cursor-pointer'
-            onClick={setConfig ? () => setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable })) : null}
-        >
-            {icon !== 'null' ? (
-                React.createElement(icons[icon], { size: 50, color: '#F2E5A2' }) // Render icon if defined
-            ) : (
-                imageUrl && <CustomImage url={imageUrl} /> // Otherwise, render the custom image if provided
-            )}
-            <div className='text-24px font-bold text-white'>{label}</div>
-        </div>
-    )
+        label === "" ? (
+            <div className="flex-1 bg-kitchen-blue"></div>
+        ) : (
+            <div
+                className={`flex-1 p-0.5 flex flex-col justify-center items-center border-r-[1px] border-l-[1px] border-kitchen-yellow cursor-pointer
+                    ${isActive ? 'bg-kitchen-yellow text-kitchen-blue shadow-inner-top-lg' : 'bg-kitchen-blue text-white'}
+                `}
+                onMouseDown={invertOnClick ? handleMouseDown : undefined}
+                onMouseUp={invertOnClick ? handleMouseUp : undefined}
+                onClick={handleClick}
+            >
+                {icon !== 'null' ? (
+                    React.createElement(icons[icon], { size: 50, color: isActive ? '#499CA6' : '#F2E5A2' })
+                ) : (
+                    imageUrl && <CustomImage url={isActive ? `./active-${imageUrl}` : `./${imageUrl}`} />
+                )}
+                <div className={`text-24px font-bold ${isActive ? 'text-kitchen-blue' : 'text-white'}`}>
+                    {label}
+                </div>
+            </div>
+        )
+    );
 };
 
 GenericButton.propTypes = {
-    icon: PropTypes.string.isRequired, ///< The icon name or 'null' if custom image is used.
-    label: PropTypes.string.isRequired, ///< The label text to display below the icon.
-    onClick: PropTypes.func, ///< Optional onClick handler for the button.
+    icon: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
+    activeTab: PropTypes.string.isRequired,
+    updateActiveTab: PropTypes.func.isRequired,
+    invertOnClick: PropTypes.bool.isRequired,
 };
 
 /**
@@ -90,12 +122,12 @@ GenericButton.propTypes = {
  */
 const buttonData = {
     servie: { icon: 'checkmark', label: 'SERVIE' },
-    precedent: { icon: 'leftArrow', label: 'PRECEDENT' },
+    precedent: { icon: 'leftArrow', label: 'PRÉCÉDENT' },
     suivant: { icon: 'rightArrow', label: 'SUIVANT' },
-    rappel: { icon: 'null', imageUrl: './recall.jpg', label: 'RAPPEL' },
-    statistique: { icon: 'null', imageUrl: './analytic.jpg', label: 'STATISTIQUES' },
-    reglage: { icon: 'null', imageUrl: './setting.jpg', label: 'RÉGLAGES' },
-    activer: { icon: 'null', imageUrl: './power.jpg', label: 'ACTIVER', onClick: (setConfig) => () => setConfig(prev => ({ ...prev, enable: !prev.enable })) },
+    rappel: { icon: 'null', imageUrl: 'recall.jpg', label: 'RAPPEL' },
+    statistique: { icon: 'null', imageUrl: 'analytic.jpg', label: 'STATISTIQUES' },
+    reglage: { icon: 'null', imageUrl: 'setting.jpg', label: 'RÉGLAGES' },
+    activer: { icon: 'null', imageUrl: 'power.jpg', label: 'ACTIVER', onClick: (setConfig) => () => setConfig(prev => ({ ...prev, enable: !prev.enable })) },
 };
 
 /**
@@ -107,21 +139,22 @@ const buttonData = {
  * @param {Object} props - Component properties.
  * @param {string[]} props.buttons - An array of button keys to render.
  * @param {function} props.setConfig - Function to handle configuration toggling, passed to relevant buttons.
+ * @param {string} props.activeTab - The currently active tab.
+ * @param {function} props.updateActiveTab - A function to update the active tab.
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab }) {
+
     return (
-        <div className="flex w-full gap-0.5">
+        <div className="flex w-full">
             {buttons.map((key, i) => {
                 const buttonInfo = buttonData[key]; // Retrieve the button data based on key
 
-                // Fallback to render an empty button if no data is found for the key
                 if (!buttonInfo) {
                     return <div key={i} className='flex-1 bg-kitchen-blue'></div>;
                 }
 
-                // Destructure icon and label safely now that we know buttonInfo exists
                 const { icon, label, imageUrl } = buttonInfo;
                 return (
                     <GenericButton
@@ -130,6 +163,9 @@ function ButtonSet({ buttons, setConfig }) {
                         label={label}
                         imageUrl={imageUrl}
                         setConfig={key === 'activer' ? setConfig : null} // Only pass setConfig if it's the power button
+                        activeTab={activeTab}
+                        updateActiveTab={updateActiveTab}
+                        invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
                     />
                 );
             })}
@@ -138,8 +174,10 @@ function ButtonSet({ buttons, setConfig }) {
 }
 
 ButtonSet.propTypes = {
-    buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of button keys to render.
-    setConfig: PropTypes.func.isRequired, ///< Function to toggle configuration, passed to relevant buttons.
+    buttons: PropTypes.arrayOf(PropTypes.string).isRequired, ///< List of buttons to be rendered.
+    setConfig: PropTypes.func.isRequired, ///< Function to handle configuration changes.
+    activeTab: PropTypes.string.isRequired, ///< Currently active tab
+    updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
 };
 
 export default ButtonSet;
