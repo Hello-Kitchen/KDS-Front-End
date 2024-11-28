@@ -22,17 +22,32 @@ const formatDate = (date) => {
 
 /**
  * @function DashboardCuisine
- * @description One of the main pages of the KDS, it is the dashboard of the kitchen, displaying the current time and orders.
- * @param {Object} config - Configuration object that determines the state of the kitchen.
- * @param {Function} setConfig - Function to update the configuration state.
- * @returns {JSX.Element} The rendered dashboard component.
+ * @description Represents the dashboard for the kitchen display system (KDS), showing the current time, orders, and controls.
+ *
+ * @param {Object} config - The configuration object that determines the state of the kitchen.
+ * @param {Function} setConfig - Function to update the configuration state of the kitchen.
+ *
+ * @returns {JSX.Element} The rendered dashboard component, showing different UI based on the `config.enable` state.
  */
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
+  const [nbrOrder, setNbrOrder] = useState(0);
+  const [activeTab, setActiveTab] = useState("");
   const [displaySettings, setDisplaySettings] = useState(false);
   const [orderAnnoncement, setOrderAnnoncement] = useState(false);
   const [orderReading, setOrderReading] = useState(false);
   const [touchscreenMode, setTouchscreenMode] = useState(true);
+
+  /**
+   * @function updateActiveTab
+   * @description Updates the active tab for navigation.
+   *
+   * @param {string} newTab - The new tab to set as active.
+   */
+  const updateActiveTab = (newTab) => {
+    setActiveTab(newTab);
+  };
 
   const handleOrderAnnoncement = () => {
     setOrderAnnoncement(!orderAnnoncement);
@@ -58,6 +73,20 @@ function DashboardCuisine({ config, setConfig }) {
     return () => clearInterval(interval);
   }, []);
 
+  const handleNavigationPrev = () => {
+    setCurrentOrderIndex((prevIndex) => {
+      const newIndex = (prevIndex - 1 + nbrOrder) % nbrOrder;
+      return newIndex;
+    });
+  };
+
+  const handleNavigationAfter = () => {
+    setCurrentOrderIndex((prevIndex) => {
+      const newIndex = (prevIndex + 1) % nbrOrder;
+      return newIndex;
+    });
+  };
+
   if (config.enable) {
     return (
       <div style={{ width: "100%", height: "100%" }}>
@@ -65,18 +94,25 @@ function DashboardCuisine({ config, setConfig }) {
         <div className='w-full h-lb'>
           {displaySettings ? (
             <SettingsView
-              orderAnnoncement={orderAnnoncement}
-              handleOrderAnnoncement={handleOrderAnnoncement}
-              orderReading={orderReading}
-              handleOrderReading={handleOrderReading}
-              touchscreenMode={touchscreenMode}
-              handleTouchscreenMode={handleTouchscreenMode}
+            orderAnnoncement={orderAnnoncement}
+            handleOrderAnnoncement={handleOrderAnnoncement}
+            orderReading={orderReading}
+            handleOrderReading={handleOrderReading}
+            touchscreenMode={touchscreenMode}
+            handleTouchscreenMode={handleTouchscreenMode}
             />
           ) : (
-            <OrdersDisplay orderAnnoncement={orderAnnoncement} />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}  />
           )}
         </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} handleSettingsDisplay={handleSettingsDisplay} />
+        <Footer
+          buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
+          activeTab={activeTab}
+          updateActiveTab={updateActiveTab}
+          navigationPrev={handleNavigationPrev}
+          navigationAfter={handleNavigationAfter}
+          handleSettingsDisplay={handleSettingsDisplay}
+        />
       </div>
     );
   } else {
@@ -88,7 +124,12 @@ function DashboardCuisine({ config, setConfig }) {
             <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
           </div>
         </div>
-        <Footer buttons={["activer", "", "", "", "", "reglage"]} setConfig={setConfig} />
+        <Footer 
+          buttons={["activer", "", "", "", "", "reglage"]} 
+          setConfig={setConfig} 
+          activeTab={activeTab} 
+          updateActiveTab={updateActiveTab}
+          />
       </div>
     );
   }

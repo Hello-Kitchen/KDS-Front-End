@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -10,23 +10,20 @@ import { useNavigate } from "react-router-dom";
  *
  * @param {Object} props - The component props.
  * @param {string} props.status - The status of the orders to display ('ready' or 'pending').
+ * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
+ * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
  *
  * @example
- * <OrdersDisplayPasse status="ready" />
+ * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
+  const selectOrderRef = useRef(selectOrder);
 
   /**
-   * @function fetchOrders
-   * @description Fetches orders from the backend API, processes them, and sets the
-   * state for displaying the orders in the component.
-   */
-  const fetchOrders = () => {
-    /**
      * @function getNbrColumns
      * @description Calculates the number of columns needed to display an order
      * based on the number of food items, their details, and modifications.
@@ -34,31 +31,40 @@ function OrdersDisplayPasse({ status }) {
      * @param {Object} orderDetails - The details of the order.
      * @returns {number} The number of columns needed to display the order.
      */
-    const getNbrColumns = (orderDetails) => {
-      let nbrLines = 0;
-      let nbrCol = 0;
+  const getNbrColumns = (orderDetails) => {
+    let nbrLines = 0;
+    let nbrCol = 0;
 
-      orderDetails.food_ordered.map((food) => {
+    orderDetails.food_ordered.map((food) => {
+      nbrLines += 1;
+      food.details.map(() => {
         nbrLines += 1;
-        food.details.map(() => {
-          nbrLines += 1;
-        });
-        food.mods_ingredients.map(() => {
-          nbrLines += 1;
-        });
-        if (food.note) {
-          nbrLines += 1;
-        }
       });
-      nbrCol = Math.ceil(nbrLines / 10);
-      return nbrCol;
-    };
+      food.mods_ingredients.map(() => {
+        nbrLines += 1;
+      });
+      if (food.note) {
+        nbrLines += 1;
+      }
+    });
+    nbrCol = Math.ceil(nbrLines / 10);
+    return nbrCol;
+  };
+
+  /**
+   * @function fetchOrders
+   * @description Fetches orders from the backend API, processes them, and sets the
+   * state for displaying the orders in the component.
+   */
+  const fetchOrders = () => {
 
     fetch(
       `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
-      , { headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      } })
+      , {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      })
       .then((response) => {
         if (response.status === 401) {
           navigate("/", { state: { error: "Unauthorized access. Please log in." } });
@@ -94,9 +100,11 @@ function OrdersDisplayPasse({ status }) {
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 5).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
-            , { headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            } })
+            , {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              }
+            })
             .then((response) => {
               if (response.status === 401) {
                 navigate("/", { state: { error: "Unauthorized access. Please log in." } });
@@ -118,12 +126,14 @@ function OrdersDisplayPasse({ status }) {
 
         Promise.all(fetchFoodDetailsPromises).then(() => {
           const ordersLineComponents = orderToDisplay.slice(0, 5).map(
-            (orderDetails) => ({
+            (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
                   key={orderDetails.number}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
+                  index={index}
+                  selectOrder={selectOrderRef.current}
                 />
               ),
               nbrCol: getNbrColumns(orderDetails),
@@ -155,6 +165,8 @@ function OrdersDisplayPasse({ status }) {
           processWaitingOrders();
 
           setOrdersLine1(ordersLine1);
+          if (setNbrOrder !== undefined)
+            setNbrOrder(ordersLine1.length);
         });
       })
       .catch((error) => {
@@ -173,6 +185,25 @@ function OrdersDisplayPasse({ status }) {
 
     return () => clearInterval(intervalId);
   }, [status]);
+
+  useEffect(() => {
+    const newOrdersLineComponents = ordersLine1.map((order) => ({
+      component: (
+        <SingleOrderDisplay
+          key={order.props.orderDetails.number}
+          orderDetails={order.props.orderDetails}
+          span={order.props.span}
+          index={order.props.index}
+          selectOrder={selectOrder}
+        />
+      )
+    })
+    );
+    let array = [];
+    newOrdersLineComponents.forEach((component) => { array.push(component.component); });
+    setOrdersLine1(array);
+    selectOrderRef.current = selectOrder;
+  }, [selectOrder]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
@@ -195,6 +226,8 @@ function OrdersDisplayPasse({ status }) {
 
 OrdersDisplayPasse.propTypes = {
   status: PropTypes.string.isRequired,
+  selectOrder: PropTypes.number.isRequired,
+  setNbrOrder: PropTypes.func
 };
 
 export default OrdersDisplayPasse;

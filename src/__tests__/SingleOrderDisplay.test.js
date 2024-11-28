@@ -72,7 +72,7 @@ describe('SingleOrderDisplay Component', () => {
       });
 
   test('renders order details correctly', async () => {
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><SingleOrderDisplay orderDetails={mockOrderDetails} span={2} index={0} selectOrder={0}/></MemoryRouter>);
 
     // Check that order details are displayed
     await waitFor(() => {
