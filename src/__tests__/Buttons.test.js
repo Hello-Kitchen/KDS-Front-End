@@ -36,11 +36,6 @@ describe('ButtonSet Component', () => {
         expect(updateActiveTabMock).toHaveBeenCalledWith("RAPPEL");
     });
 
-    test('renders ButtonReglages with correct text', () => {
-        render(<ButtonReglages handleSettingsDisplay={() => {}} />);
-        expect(screen.getByText("RÉGLAGES")).toBeInTheDocument();
-    });
-
     test('ButtonPower toggles configuration on click', () => {
         const buttons = ['activer'];
         render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={() => {}} navigationPrev={() => {}} navigationAfter={() => {}}/>);

@@ -265,15 +265,15 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder}) {
   );
 }
 
+
+OrdersDisplay.propTypes = {
+  orderAnnoncement: PropTypes.bool, //< A boolean to determine if an order announcement is active.
+  selectOrder: PropTypes.number.isRequired, //< Index of the order be selected with button "suivant" and "precedent".
+  setNbrOrder: PropTypes.func //< Function for set the number of order for the selection.
+};
+
 OrdersDisplay.defaultProps = {
   orderAnnoncement: false,
 };
-
-OrdersDisplay.PropTypes = {
-  orderAnnoncement: PropTypes.bool,
-  selectOrder: PropTypes.number.isRequired,
-  setNbrOrder: PropTypes.func
-};
-
 
 export default OrdersDisplay;

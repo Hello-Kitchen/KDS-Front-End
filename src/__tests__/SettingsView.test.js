@@ -1,8 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SettingsView from '../ModalViews/SettingsView';
-import { IoIosArrowForward } from "react-icons/io";
-import SettingsSwitch from "../Components/Buttons/SettingsSwitch";
 
 describe('SettingsView', () => {
     const mockHandleOrderAnnoncement = jest.fn();

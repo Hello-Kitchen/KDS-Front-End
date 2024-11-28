@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { IoIosArrowForward } from "react-icons/io";
 import SettingsSwitch from "../Components/Buttons/SettingsSwitch";
@@ -35,14 +35,14 @@ const SettingsView = ({
                 {screenOn &&
                     <div className="space-y-5">
                         <div className="flex flex-row justify-between px-3" onClick={() => {setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));}}>
-                            <div className="">Eteindre l'écran</div>
+                            <div className="">Eteindre l&apos;écran</div>
                             <IoIosArrowForward />
                         </div>
                         <div className="border-white border-[0.5px]"/>
                     </div>
                 }
                 <div className="flex flex-row justify-between px-3">
-                    <div className="">Tonalité d'annonce</div>
+                    <div className="">Tonalité d&apos;annonce</div>
                     <SettingsSwitch
                         value={orderAnnoncement}
                         onChange={handleOrderAnnoncement}
@@ -79,13 +79,18 @@ const SettingsView = ({
     );
 };
 
-SettingsView.propsTypes = {
-    orderAnnoncement: PropTypes.bool.isRequired,
-    setOrderAnnoncement: PropTypes.func.isRequired,
-    orderReading: PropTypes.bool.isRequired,
-    setOrderReading: PropTypes.func.isRequired,
-    touchescreenMode: PropTypes.bool.isRequired,
-    setTouchescreenMode: PropTypes.func.isRequired,
+SettingsView.propTypes = {
+    orderAnnoncement: PropTypes.bool.isRequired, //< boolean - The current state of order announcement setting.
+    handleOrderAnnoncement: PropTypes.func.isRequired, //< function - The function to handle changes to order announcement setting.
+    setOrderAnnoncement: PropTypes.func.isRequired, //< function - The function to handle changes to order announcement setting.
+    orderReading: PropTypes.bool.isRequired, //< boolean - The current state of order reading setting.
+    handleOrderReading: PropTypes.func.isRequired, //< function - The function to handle changes to order reading setting.
+    setOrderReading: PropTypes.func.isRequired, //< function - The function to handle changes to order reading setting.
+    touchscreenMode: PropTypes.bool.isRequired, //< boolean - The current state of touchscreen mode setting.
+    handleTouchscreenMode: PropTypes.func.isRequired, //< function - The function to handle changes to touchscreen mode setting.
+    setTouchescreenMode: PropTypes.func.isRequired, //< function - The function to handle changes to touchscreen mode setting.
+    setConfig: PropTypes.func.isRequired, //< function - The function to set the configuration.
+    screenOn: PropTypes.bool.isRequired //< boolean - The current state of the screen.
 };
 
 export default SettingsView;
