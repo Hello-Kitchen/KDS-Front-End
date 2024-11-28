@@ -1,66 +1,98 @@
 import React from "react";
 import { render, screen, fireEvent } from '@testing-library/react';
-import buttonComponents from '../Components/Buttons/Buttons';
+import ButtonSet from '../Components/Buttons/Buttons'; 
 
-const {
-    servie: ButtonServie,
-    precedent: ButtonPrecedent,
-    suivant: ButtonSuivant,
-    rappel: ButtonRappel,
-    statistique: ButtonStatistiques,
-    reglage: ButtonReglages,
-    activer: ButtonPower
-} = buttonComponents;
+describe('ButtonSet Component', () => {
+    // Mock the setConfig function
+    const setConfigMock = jest.fn();
+    const updateActiveTabMock = jest.fn();
 
-describe('Button Components', () => {
+    test('renders all buttons with correct text', () => {
+        const buttons = ['servie', 'precedent', 'suivant', 'rappel', 'statistique', 'reglage', 'activer'];
 
-    test('renders ButtonServie with correct text', () => {
-        render(<ButtonServie />);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} />);
+
+        // Check that each button's text is present
         expect(screen.getByText("SERVIE")).toBeInTheDocument();
-    });
-
-    test('renders ButtonPrecedent with correct text', () => {
-        render(<ButtonPrecedent />);
-        expect(screen.getByText("PRECEDENT")).toBeInTheDocument();
-    });
-
-    test('renders ButtonSuivant with correct text', () => {
-        render(<ButtonSuivant />);
+        expect(screen.getByText("PRÉCÉDENT")).toBeInTheDocument();
         expect(screen.getByText("SUIVANT")).toBeInTheDocument();
-    });
-
-    test('renders ButtonRappel with correct text', () => {
-        render(<ButtonRappel />);
         expect(screen.getByText("RAPPEL")).toBeInTheDocument();
-    });
-
-    test('renders ButtonStatistiques with correct text', () => {
-        render(<ButtonStatistiques />);
         expect(screen.getByText("STATISTIQUES")).toBeInTheDocument();
+        expect(screen.getByText("RÉGLAGES")).toBeInTheDocument();
+        expect(screen.getByText("ACTIVER")).toBeInTheDocument();
     });
 
-    test('renders ButtonReglages with correct text', () => {
-        render(<ButtonReglages />);
-        expect(screen.getByText("RÉGLAGES")).toBeInTheDocument();
+    test('Button click triggers updateActiveTab', () => {
+        const buttons = ['servie', 'precedent', 'suivant', 'rappel'];
+
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} />);
+
+        const buttonElement = screen.getByText("RAPPEL");
+
+        // Fire a click event on the SERVIE button
+        fireEvent.click(buttonElement);
+
+        // Verify that updateActiveTab was called with the correct argument
+        expect(updateActiveTabMock).toHaveBeenCalledWith("RAPPEL");
     });
 
     test('ButtonPower toggles configuration on click', () => {
-        const setConfigMock = jest.fn();
-
-        render(<ButtonPower setConfig={setConfigMock} />);
+        const buttons = ['activer'];
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={() => {}} navigationPrev={() => {}} navigationAfter={() => {}}/>);
 
         const buttonElement = screen.getByText("ACTIVER");
 
+        // Fire a click event on the power button
         fireEvent.click(buttonElement);
 
+        // Verify that setConfigMock was called
         expect(setConfigMock).toHaveBeenCalledTimes(1);
-        expect(setConfigMock).toHaveBeenCalledWith(expect.any(Function));
 
+        // Verify that the function passed to setConfig was called with the previous configuration
         const previousConfig = { enable: true };
         const toggleFunction = setConfigMock.mock.calls[0][0];
         const newConfig = toggleFunction(previousConfig);
 
+        // Ensure that the config is toggled correctly
         expect(newConfig.enable).toBe(false);
+    });
+
+    test('Button click applies color inversion for invertOnClick=true', () => {
+        const buttons = ['servie', 'precedent'];
+
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>);
+
+        const buttonElement = screen.getByText("SERVIE");
+
+        // Initially, it should have a default color class
+        expect(buttonElement).toHaveClass('text-white'); // Replace with actual default class
+
+        // Fire mouse down event to simulate color inversion
+        fireEvent.mouseDown(buttonElement);
+
+        // The class should change indicating color inversion (assuming bg-kitchen-yellow is the active color)
+        expect(buttonElement).toHaveClass('text-kitchen-blue');
+
+        // After click, the button color should toggle back (or remain active)
+        fireEvent.mouseUp(buttonElement);
+
+        expect(buttonElement).toHaveClass('text-white'); // Ensure it's back to the default color
+    });
+
+    test('Button click triggers updateActiveTab for different buttons', () => {
+        const buttons = ['rappel', 'statistique', 'reglage'];
+
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}s/>);
+
+        // Fire click events on each of the buttons
+        fireEvent.click(screen.getByText("RAPPEL"));
+        expect(updateActiveTabMock).toHaveBeenCalledWith("RAPPEL");
+
+        fireEvent.click(screen.getByText("STATISTIQUES"));
+        expect(updateActiveTabMock).toHaveBeenCalledWith("STATISTIQUES");
+
+        fireEvent.click(screen.getByText("RÉGLAGES"));
+        expect(updateActiveTabMock).toHaveBeenCalledWith("RÉGLAGES");
     });
 
 });

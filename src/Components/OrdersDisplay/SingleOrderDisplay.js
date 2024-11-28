@@ -8,9 +8,11 @@ import PropTypes from "prop-types";
  * @description Component representing an order with various details.
  * @param {Object} orderDetails - Details of the order to be displayed.
  * @param {number} span - The number of columns the order should span in the grid.
+ * @param {number} index - Index of the order into array.
+ * @param {number} selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @returns {JSX.Element} The rendered component.
  */
-export default function SingleOrderDisplay({ orderDetails, span }) {
+export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder }) {
   const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState(orderDetails);
@@ -145,7 +147,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
   );
 
   return (
-    <div className="h-full" data-testid={`order-${orderDetail.number}`}>
+    <div className={`h-full`}>
       {orderDetails ? (
         <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
@@ -178,7 +180,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
               </p>
             </div>
           </div>
-          <div className={`px-3 py-1 border-2 border-t-0 rounded-b-lg ${orderDetails.channel === "En salle" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}`} style={{ columnCount: span }}>
+          <div className={`px-3 py-1 border-4 border-t-0 rounded-b-lg ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
@@ -244,5 +246,7 @@ export default function SingleOrderDisplay({ orderDetails, span }) {
 SingleOrderDisplay.propTypes = {
   orderDetails: PropTypes.object.isRequired,
   span: PropTypes.number.isRequired,
+  index: PropTypes.number.isRequired,
+  selectOrder: PropTypes.number.isRequired
 };
 
