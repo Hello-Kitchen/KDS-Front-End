@@ -1,6 +1,6 @@
 import Header from '../../Components/Header/Header';
 import Footer from '../../Components/Footer/Footer';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, act } from 'react';
 import PropTypes from 'prop-types';
 import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
 import SettingsView from '../../ModalViews/SettingsView';
@@ -94,12 +94,14 @@ function DashboardCuisine({ config, setConfig }) {
         <div className='w-full h-lb'>
           {displaySettings ? (
             <SettingsView
-            orderAnnoncement={orderAnnoncement}
-            handleOrderAnnoncement={handleOrderAnnoncement}
-            orderReading={orderReading}
-            handleOrderReading={handleOrderReading}
-            touchscreenMode={touchscreenMode}
-            handleTouchscreenMode={handleTouchscreenMode}
+              orderAnnoncement={orderAnnoncement}
+              handleOrderAnnoncement={handleOrderAnnoncement}
+              orderReading={orderReading}
+              handleOrderReading={handleOrderReading}
+              touchscreenMode={touchscreenMode}
+              handleTouchscreenMode={handleTouchscreenMode}
+              setConfig={setConfig}
+              screenOn={true}
             />
           ) : (
             <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}  />
@@ -120,16 +122,30 @@ function DashboardCuisine({ config, setConfig }) {
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="Tps moyen: --:--" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          <div className='w-full h-full flex justify-center items-center bg-[#BABABA]'>
-            <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
-          </div>
+          {displaySettings ? (
+            <SettingsView
+              orderAnnoncement={orderAnnoncement}
+              handleOrderAnnoncement={handleOrderAnnoncement}
+              orderReading={orderReading}
+              handleOrderReading={handleOrderReading}
+              touchscreenMode={touchscreenMode}
+              handleTouchscreenMode={handleTouchscreenMode}
+              setConfig={setConfig}
+              screenOn={false}
+            />
+          ) : (
+            <div className='w-full h-full flex justify-center items-center bg-[#BABABA]'>
+              <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
+            </div>
+          )}
         </div>
         <Footer 
           buttons={["activer", "", "", "", "", "reglage"]} 
           setConfig={setConfig} 
           activeTab={activeTab} 
           updateActiveTab={updateActiveTab}
-          />
+          handleSettingsDisplay={handleSettingsDisplay}
+        />
       </div>
     );
   }

@@ -14,6 +14,8 @@ import PropTypes from 'prop-types';
  * @param {function} props.handleOrderReading - The function to handle changes to order reading setting.
  * @param {boolean} props.touchscreenMode - The current state of touchscreen mode setting.
  * @param {function} props.handleTouchscreenMode - The function to handle changes to touchscreen mode setting.
+ * @param {function} props.setConfig - The function to set the configuration.
+ * @param {boolean} props.screenOn - The current state of the screen.
  * @returns {JSX.Element} The rendered component.
  */
 const SettingsView = ({
@@ -22,17 +24,23 @@ const SettingsView = ({
     orderReading, 
     handleOrderReading,
     touchscreenMode, 
-    handleTouchscreenMode
+    handleTouchscreenMode,
+    setConfig,
+    screenOn
 }) => {
 
     return (
         <div className='w-full h-full bg-kitchen-blue border-kitchen-yellow border-y-2'>
             <div className="flex flex-col text-white text-3xl font-bold space-y-5 px-3 pt-5">
-                <div className="flex flex-row justify-between px-3">
-                    <div className="">Eteindre l'écran</div>
-                    <IoIosArrowForward />
-                </div>
-                <div className="border-white border-[0.5px]"/>
+                {screenOn &&
+                    <div className="space-y-5">
+                        <div className="flex flex-row justify-between px-3" onClick={() => {setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));}}>
+                            <div className="">Eteindre l'écran</div>
+                            <IoIosArrowForward />
+                        </div>
+                        <div className="border-white border-[0.5px]"/>
+                    </div>
+                }
                 <div className="flex flex-row justify-between px-3">
                     <div className="">Tonalité d'annonce</div>
                     <SettingsSwitch
