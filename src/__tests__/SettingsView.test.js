@@ -6,6 +6,7 @@ describe('SettingsView', () => {
     const mockHandleOrderAnnoncement = jest.fn();
     const mockHandleOrderReading = jest.fn();
     const mockHandleTouchscreenMode = jest.fn();
+    const mockSetConfig = jest.fn();
 
     const defaultProps = {
         orderAnnoncement: true,
@@ -14,6 +15,8 @@ describe('SettingsView', () => {
         handleOrderReading: mockHandleOrderReading,
         touchscreenMode: true,
         handleTouchscreenMode: mockHandleTouchscreenMode,
+        setConfig: mockSetConfig,
+        screenOn: true
     };
 
     beforeEach(() => {

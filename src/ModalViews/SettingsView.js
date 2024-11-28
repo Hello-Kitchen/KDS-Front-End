@@ -82,13 +82,10 @@ const SettingsView = ({
 SettingsView.propTypes = {
     orderAnnoncement: PropTypes.bool.isRequired, //< boolean - The current state of order announcement setting.
     handleOrderAnnoncement: PropTypes.func.isRequired, //< function - The function to handle changes to order announcement setting.
-    setOrderAnnoncement: PropTypes.func.isRequired, //< function - The function to handle changes to order announcement setting.
     orderReading: PropTypes.bool.isRequired, //< boolean - The current state of order reading setting.
     handleOrderReading: PropTypes.func.isRequired, //< function - The function to handle changes to order reading setting.
-    setOrderReading: PropTypes.func.isRequired, //< function - The function to handle changes to order reading setting.
     touchscreenMode: PropTypes.bool.isRequired, //< boolean - The current state of touchscreen mode setting.
     handleTouchscreenMode: PropTypes.func.isRequired, //< function - The function to handle changes to touchscreen mode setting.
-    setTouchescreenMode: PropTypes.func.isRequired, //< function - The function to handle changes to touchscreen mode setting.
     setConfig: PropTypes.func.isRequired, //< function - The function to set the configuration.
     screenOn: PropTypes.bool.isRequired //< boolean - The current state of the screen.
 };
