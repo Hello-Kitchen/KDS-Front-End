@@ -29,6 +29,7 @@ module.exports = {
         'kitchen-orange': '#F2762E',
         'kitchen-red': '#D91604',
         'kitchen-beige': '#D98282',
+        'select-orange': '#FF9900'
       },
       boxShadow: {
         'inner-top-lg': 'inset 0 5px 5px rgba(0, 0, 0, 0.3)'
@@ -49,6 +50,9 @@ module.exports = {
         },
         '.border-l': {
           borderLeftColor: 'kitchen-blue',
+        },
+        '.box-border': {
+          boxSizing: 'border-box',
         },
       });
     },

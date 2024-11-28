@@ -30,6 +30,8 @@ const formatDate = (date) => {
  */
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
+  const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
 
   /**
@@ -50,14 +52,28 @@ function DashboardCuisine({ config, setConfig }) {
     return () => clearInterval(interval);
   }, []);
 
+  const handleNavigationPrev = () => {
+    setCurrentOrderIndex((prevIndex) => {
+      const newIndex = (prevIndex - 1 + nbrOrder) % nbrOrder;
+      return newIndex;
+    });
+  };
+
+  const handleNavigationAfter = () => {
+    setCurrentOrderIndex((prevIndex) => {
+      const newIndex = (prevIndex + 1) % nbrOrder;
+      return newIndex;
+    });
+  };
+
   if (config.enable) {
     return (
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          <OrdersDisplay />
+          <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} />
         </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab}/>
+        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={handleNavigationPrev} navigationAfter={handleNavigationAfter}/>
       </div>
     );
   } else {
@@ -69,7 +85,12 @@ function DashboardCuisine({ config, setConfig }) {
             <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
           </div>
         </div>
-        <Footer buttons={["activer", "", "", "", "", "reglage"]} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab}/>
+        <Footer 
+          buttons={["activer", "", "", "", "", "reglage"]} 
+          setConfig={setConfig} 
+          activeTab={activeTab} 
+          updateActiveTab={updateActiveTab}
+          />
       </div>
     );
   }
