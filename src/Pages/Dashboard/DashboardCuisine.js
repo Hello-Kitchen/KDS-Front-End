@@ -91,7 +91,7 @@ function DashboardCuisine({ config, setConfig }) {
           updateActiveTab={updateActiveTab}
           navigationPrev={handleNavigationPrev}
           navigationAfter={handleNavigationAfter}
-        /><Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={handleNavigationPrev} navigationAfter={handleNavigationAfter}/>
+        />
       </div>
     );
   } else {
