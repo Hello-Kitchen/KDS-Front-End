@@ -30,6 +30,7 @@ function DashboardPasse() {
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
+  const [activeRecall, setActiveRecall] = useState(false);
 
   /**
    * @function updateActiveTab
@@ -40,6 +41,16 @@ function DashboardPasse() {
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
   };
+
+  /**
+   * @function updateActiveRecall
+   * @description Updates the active recall for order.
+   *
+   * @param {boolean} newRecall - The new recall to set as active or not.
+   */
+  const updateActiveRecall = (newRecall) => {
+    setActiveRecall(newRecall);
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,6 +88,8 @@ function DashboardPasse() {
         navigationAfter={handleNavigationAfter}
         activeTab={activeTab} 
         updateActiveTab={updateActiveTab}
+        activeRecall={activeRecall}
+        updateActiveRecall={updateActiveRecall}
       />
     </div>
   );

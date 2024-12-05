@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import OrderCarousel from './OrderCarousel';
 
 /**
  * @component OrdersDisplay
@@ -12,10 +13,11 @@ import PropTypes from "prop-types";
  * 
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
+ * @param {boolean} props.activeRecall - The currently active recall.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({ selectOrder, setNbrOrder }) {
+function OrdersDisplay({ selectOrder, setNbrOrder, activeRecall }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -123,7 +125,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
-                  key={orderDetails.number}
+                  key={index}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
@@ -201,7 +203,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
     const newOrdersLineComponents = ordersLine1.map((order) => ({
       component: (
         <SingleOrderDisplay
-          key={order.props.orderDetails.number}
+          key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
           index={order.props.index}
@@ -216,7 +218,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
     const newOrdersLineComponents2 = ordersLine2.map((order) => ({
       component: (
         <SingleOrderDisplay
-          key={order.props.orderDetails.number}
+          key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
           index={order.props.index}
@@ -238,6 +240,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
       </div>
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
         {ordersLine2}
+        {activeRecall && <OrderCarousel />}
       </div>
       {nbrOrdersWaiting === 1 && (
         <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">
@@ -255,7 +258,8 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
 
 OrdersDisplay.propTypes = {
   selectOrder: PropTypes.number.isRequired,
-  setNbrOrder: PropTypes.func
+  setNbrOrder: PropTypes.func,
+  activeRecall: PropTypes.bool,
 };
 
 export default OrdersDisplay;

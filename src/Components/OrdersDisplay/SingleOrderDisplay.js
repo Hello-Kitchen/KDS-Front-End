@@ -87,7 +87,6 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
       if (!response.ok) {
         throw new Error('Update failed');
       }
-      return response.json();
     })
     .catch(error => {
       console.error('Error updating status:', error);
@@ -147,7 +146,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   );
 
   return (
-    <div className={`h-full`}>
+    <div className={``}>
       {orderDetails ? (
         <div>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">

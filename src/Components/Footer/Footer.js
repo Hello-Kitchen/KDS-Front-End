@@ -62,15 +62,17 @@ const NotConnected = () => (
  * @param {function} props.navigationAfter - A function to navigate to the next order.
  * @param {string} props.activeTab - The currently active tab.
  * @param {function} props.updateActiveTab - A function to update the active tab state.
+ * @param {boolean} props.activeRecall - The currently active recall.
+ * @param {function} props.updateActiveRecall - A function to update the active recall.
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, activeRecall, updateActiveRecall }) {
     const isConnected = true; // Connection status, assumed to be true for now
     const ConnectionStatus = isConnected ? Connected : NotConnected;
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} />
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} />
             <ConnectionStatus />
         </div>
     );
@@ -83,6 +85,8 @@ Footer.propTypes = {
     setConfig: PropTypes.func, ///< Function to handle configuration changes.
     activeTab: PropTypes.string, ///< Currently active tab
     updateActiveTab: PropTypes.func, ///< Function to handle tab changes
+    activeRecall: PropTypes.bool, ///< Currently active recall
+    updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
 
 export default Footer;

@@ -129,7 +129,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
-                  key={orderDetails.number}
+                  key={index}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
@@ -190,7 +190,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
     const newOrdersLineComponents = ordersLine1.map((order) => ({
       component: (
         <SingleOrderDisplay
-          key={order.props.orderDetails.number}
+          key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
           index={order.props.index}

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
 
+
 /**
  * @function formatDate
  * @description Formats a Date object into a string in the format DD/MM/YYYY - HH:MM.
@@ -33,6 +34,7 @@ function DashboardCuisine({ config, setConfig }) {
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
+  const [activeRecall, setActiveRecall] = useState(false);
 
   /**
    * @function updateActiveTab
@@ -43,6 +45,16 @@ function DashboardCuisine({ config, setConfig }) {
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
   };
+
+  /**
+   * @function updateActiveRecall
+   * @description Updates the active recall for order.
+   *
+   * @param {boolean} newRecall - The new recall to set as active or not.
+   */
+  const updateActiveRecall = (newRecall) => {
+    setActiveRecall(newRecall);
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -71,9 +83,9 @@ function DashboardCuisine({ config, setConfig }) {
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} />
+          <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} activeRecall={activeRecall} />
         </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={handleNavigationPrev} navigationAfter={handleNavigationAfter}/>
+        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} navigationPrev={handleNavigationPrev} navigationAfter={handleNavigationAfter}/>
       </div>
     );
   } else {

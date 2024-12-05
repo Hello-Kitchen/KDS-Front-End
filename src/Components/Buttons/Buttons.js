@@ -52,6 +52,8 @@ const icons = {
  * @param {boolean} props.invertOnClick Whether to invert the color on button click.
  * @param {function} props.navigationPrev - A function to navigate to the prev order.
  * @param {function} props.navigationAfter - A function to navigate to the next order.
+ * @param {boolean} props.activeRecall - The currently active recall.
+ * @param {function} props.updateActiveRecall - A function to update the active recall.
  *
  * @return {JSX.Element} A button component with an icon or image and a label.
  */
@@ -64,7 +66,9 @@ const GenericButton = ({
     updateActiveTab,
     invertOnClick,
     navigationPrev,
-    navigationAfter
+    navigationAfter,
+    activeRecall,
+    updateActiveRecall
 }) => {
     const [isInverted, setIsInverted] = useState(false);
 
@@ -86,6 +90,12 @@ const GenericButton = ({
     
         if (label === "PRÉCÉDENT")
             navigationPrev();
+
+        if (label === "RAPPEL")
+            updateActiveRecall(!activeRecall)
+
+        if (label !== "RAPPEL" && activeRecall === true)
+            updateActiveRecall(false)
 
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
@@ -130,6 +140,8 @@ GenericButton.propTypes = {
     setConfig: PropTypes.func,
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    activeRecall: PropTypes.bool, ///< Currently active recall
+    updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
 
 /**
@@ -161,10 +173,12 @@ let buttonData = {
  * @param {function} props.navigationAfter - A function to navigate to the next order.
  * @param {string} props.activeTab - The currently active tab.
  * @param {function} props.updateActiveTab - A function to update the active tab.
+ * @param {boolean} props.activeRecall - The currently active recall.
+ * @param {function} props.updateActiveRecall - A function to update the active recall.
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, activeRecall, updateActiveRecall }) {
 
     return (
         <div className="flex w-full">
@@ -188,6 +202,8 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
                         navigationPrev={navigationPrev}
                         navigationAfter={navigationAfter}
+                        activeRecall={activeRecall}
+                        updateActiveRecall={updateActiveRecall}
                     />
                 );
             })}
@@ -202,6 +218,8 @@ ButtonSet.propTypes = {
     updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    activeRecall: PropTypes.bool, ///< Currently active recall
+    updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
 
 export default ButtonSet;
