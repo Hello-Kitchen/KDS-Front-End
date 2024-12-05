@@ -65,12 +65,12 @@ const NotConnected = () => (
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay }) {
     const isConnected = true; // Connection status, assumed to be true for now
     const ConnectionStatus = isConnected ? Connected : NotConnected;
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} />
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} handleSettingsDisplay={handleSettingsDisplay} />
             <ConnectionStatus />
         </div>
     );
@@ -83,6 +83,7 @@ Footer.propTypes = {
     setConfig: PropTypes.func, ///< Function to handle configuration changes.
     activeTab: PropTypes.string, ///< Currently active tab
     updateActiveTab: PropTypes.func, ///< Function to handle tab changes
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
 };
 
 export default Footer;

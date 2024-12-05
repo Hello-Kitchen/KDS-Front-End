@@ -64,7 +64,8 @@ const GenericButton = ({
     updateActiveTab,
     invertOnClick,
     navigationPrev,
-    navigationAfter
+    navigationAfter,
+    handleSettingsDisplay
 }) => {
     const [isInverted, setIsInverted] = useState(false);
 
@@ -86,6 +87,9 @@ const GenericButton = ({
     
         if (label === "PRÉCÉDENT")
             navigationPrev();
+
+        if (label === "RÉGLAGES")
+            handleSettingsDisplay();
 
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
@@ -130,6 +134,7 @@ GenericButton.propTypes = {
     setConfig: PropTypes.func,
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
 };
 
 /**
@@ -164,7 +169,7 @@ let buttonData = {
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay }) {
 
     return (
         <div className="flex w-full">
@@ -188,6 +193,7 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
                         navigationPrev={navigationPrev}
                         navigationAfter={navigationAfter}
+                        handleSettingsDisplay={handleSettingsDisplay}
                     />
                 );
             })}
@@ -202,6 +208,7 @@ ButtonSet.propTypes = {
     updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
 };
 
 export default ButtonSet;

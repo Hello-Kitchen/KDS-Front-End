@@ -3,6 +3,7 @@ import Footer from '../../Components/Footer/Footer';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
+import SettingsView from '../../ModalViews/SettingsView';
 
 /**
  * @function formatDate
@@ -33,6 +34,10 @@ function DashboardCuisine({ config, setConfig }) {
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
+  const [displaySettings, setDisplaySettings] = useState(false);
+  const [orderAnnoncement, setOrderAnnoncement] = useState(false);
+  const [orderReading, setOrderReading] = useState(false);
+  const [touchscreenMode, setTouchscreenMode] = useState(true);
 
   /**
    * @function updateActiveTab
@@ -42,6 +47,22 @@ function DashboardCuisine({ config, setConfig }) {
    */
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
+  };
+
+  const handleOrderAnnoncement = () => {
+    setOrderAnnoncement(!orderAnnoncement);
+  };
+
+  const handleOrderReading = () => {
+    setOrderReading(!orderReading);
+  };
+
+  const handleTouchscreenMode = () => {
+    setTouchscreenMode(!touchscreenMode);
+  };
+
+  const handleSettingsDisplay = () => {
+    setDisplaySettings(!displaySettings);
   };
 
   useEffect(() => {
@@ -71,9 +92,29 @@ function DashboardCuisine({ config, setConfig }) {
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} />
+          {displaySettings ? (
+            <SettingsView
+              orderAnnoncement={orderAnnoncement}
+              handleOrderAnnoncement={handleOrderAnnoncement}
+              orderReading={orderReading}
+              handleOrderReading={handleOrderReading}
+              touchscreenMode={touchscreenMode}
+              handleTouchscreenMode={handleTouchscreenMode}
+              setConfig={setConfig}
+              screenOn={true}
+            />
+          ) : (
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}  />
+          )}
         </div>
-        <Footer buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={handleNavigationPrev} navigationAfter={handleNavigationAfter}/>
+        <Footer
+          buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
+          activeTab={activeTab}
+          updateActiveTab={updateActiveTab}
+          navigationPrev={handleNavigationPrev}
+          navigationAfter={handleNavigationAfter}
+          handleSettingsDisplay={handleSettingsDisplay}
+        />
       </div>
     );
   } else {
@@ -81,16 +122,30 @@ function DashboardCuisine({ config, setConfig }) {
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="Tps moyen: --:--" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          <div className='w-full h-full flex justify-center items-center bg-[#BABABA]'>
-            <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
-          </div>
+          {displaySettings ? (
+            <SettingsView
+              orderAnnoncement={orderAnnoncement}
+              handleOrderAnnoncement={handleOrderAnnoncement}
+              orderReading={orderReading}
+              handleOrderReading={handleOrderReading}
+              touchscreenMode={touchscreenMode}
+              handleTouchscreenMode={handleTouchscreenMode}
+              setConfig={setConfig}
+              screenOn={false}
+            />
+          ) : (
+            <div className='w-full h-full flex justify-center items-center bg-[#BABABA]'>
+              <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
+            </div>
+          )}
         </div>
         <Footer 
           buttons={["activer", "", "", "", "", "reglage"]} 
           setConfig={setConfig} 
           activeTab={activeTab} 
           updateActiveTab={updateActiveTab}
-          />
+          handleSettingsDisplay={handleSettingsDisplay}
+        />
       </div>
     );
   }
