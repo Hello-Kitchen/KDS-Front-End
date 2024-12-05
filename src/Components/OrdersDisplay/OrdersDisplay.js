@@ -12,16 +12,20 @@ import PropTypes from "prop-types";
  * 
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
+ * @param {Boolean} orderAnnoncement - A boolean to determine if an order announcement is active.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({ selectOrder, setNbrOrder }) {
+function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder}) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [ordersLine2, setOrdersLine2] = useState([]);
+  const previousNbrOrders = useRef(0);
   const selectOrderRef = useRef(selectOrder);
+
+  const audio = new Audio("audio/newOrder.mp3");
 
   /**
    * @function fetchOrders
@@ -87,6 +91,14 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
             orderToDisplay.push(order);
           }
         });
+
+        if (orderAnnoncement && orderToDisplay.length > previousNbrOrders.current) {
+          audio.play().catch((error) => {
+            console.error("Erreur lors de la lecture du son :", error);
+          });
+        }
+
+        previousNbrOrders.current = orderToDisplay.length;
 
         // Used to display the number of orders waiting
         setNbrOrders(orderToDisplay.length);
@@ -253,9 +265,15 @@ function OrdersDisplay({ selectOrder, setNbrOrder }) {
   );
 }
 
+
 OrdersDisplay.propTypes = {
-  selectOrder: PropTypes.number.isRequired,
-  setNbrOrder: PropTypes.func
+  orderAnnoncement: PropTypes.bool, //< A boolean to determine if an order announcement is active.
+  selectOrder: PropTypes.number.isRequired, //< Index of the order be selected with button "suivant" and "precedent".
+  setNbrOrder: PropTypes.func //< Function for set the number of order for the selection.
+};
+
+OrdersDisplay.defaultProps = {
+  orderAnnoncement: false,
 };
 
 export default OrdersDisplay;

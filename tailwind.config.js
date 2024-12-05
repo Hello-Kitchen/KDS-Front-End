@@ -28,6 +28,7 @@ module.exports = {
         'kitchen-yellow': '#F2E5A2',
         'kitchen-green': '#62B73A',
         'kitchen-orange': '#F2762E',
+        'kitchen-green': '#62B73A',
         'kitchen-red': '#D91604',
         'kitchen-beige': '#D98282',
         'select-orange': '#FF9900'
@@ -37,6 +38,17 @@ module.exports = {
       },
     },
   },
+  /**
+   * Safelist is used to force the colors to be in the final css file to be used in dynamic classes
+   */
+  safelist: [
+    'text-kitchen-green',
+    'text-kitchen-red',
+    'text-kitchen-blue',
+    'bg-kitchen-green',
+    'bg-kitchen-red',
+    'bg-kitchen-blue',
+  ],
   plugins: [
     function ({ addUtilities }) {
       addUtilities({

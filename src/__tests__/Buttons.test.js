@@ -82,8 +82,7 @@ describe('ButtonSet Component', () => {
     test('Button click triggers updateActiveTab for different buttons', () => {
         const buttons = ['rappel', 'statistique', 'reglage'];
 
-        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} handleDisplayStatistics={() => {}}/>);
-
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} handleDisplayStatistics={() => {}} handleSettingsDisplay={() => {}}/>);
         // Fire click events on each of the buttons
         fireEvent.click(screen.getByText("RAPPEL"));
         expect(updateActiveTabMock).toHaveBeenCalledWith("RAPPEL");

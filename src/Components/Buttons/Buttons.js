@@ -66,7 +66,8 @@ const GenericButton = ({
     invertOnClick,
     navigationPrev,
     navigationAfter,
-    handleDisplayStatistics
+    handleDisplayStatistics,
+    handleSettingsDisplay
 }) => {
     const [isInverted, setIsInverted] = useState(false);
 
@@ -91,6 +92,8 @@ const GenericButton = ({
 
         if (label === "STATISTIQUES")
             handleDisplayStatistics();
+        if (label === "RÉGLAGES")
+            handleSettingsDisplay();
 
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
@@ -136,6 +139,7 @@ GenericButton.propTypes = {
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
     handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
 };
 
 /**
@@ -170,8 +174,7 @@ let buttonData = {
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics }) {
-
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -195,6 +198,7 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         navigationPrev={navigationPrev}
                         navigationAfter={navigationAfter}
                         handleDisplayStatistics={handleDisplayStatistics}
+                        handleSettingsDisplay={handleSettingsDisplay}
                     />
                 );
             })}
@@ -210,6 +214,7 @@ ButtonSet.propTypes = {
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
     handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
 };
 
 export default ButtonSet;
