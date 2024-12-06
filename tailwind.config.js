@@ -26,6 +26,7 @@ module.exports = {
       colors: {
         'kitchen-blue': '#499CA6',
         'kitchen-yellow': '#F2E5A2',
+        'kitchen-green': '#62B73A',
         'kitchen-orange': '#F2762E',
         'kitchen-green': '#62B73A',
         'kitchen-red': '#D91604',

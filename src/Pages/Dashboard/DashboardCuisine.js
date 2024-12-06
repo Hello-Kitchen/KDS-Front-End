@@ -3,6 +3,7 @@ import Footer from '../../Components/Footer/Footer';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
+import StatisticsView from '../../Components/ModalViews/StatisticsView';
 import SettingsView from '../../ModalViews/SettingsView';
 
 /**
@@ -31,6 +32,7 @@ const formatDate = (date) => {
  */
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [displayStatistics, setDisplayStatistics] = useState(false);
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
@@ -38,6 +40,10 @@ function DashboardCuisine({ config, setConfig }) {
   const [orderAnnoncement, setOrderAnnoncement] = useState(false);
   const [orderReading, setOrderReading] = useState(false);
   const [touchscreenMode, setTouchscreenMode] = useState(true);
+
+  const handleDisplayStatistics = () => {
+    setDisplayStatistics(!displayStatistics);
+  };
 
   /**
    * @function updateActiveTab
@@ -92,7 +98,9 @@ function DashboardCuisine({ config, setConfig }) {
       <div style={{ width: "100%", height: "100%" }}>
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
-          {displaySettings ? (
+          {displayStatistics ? (
+            <StatisticsView />
+          ) : displaySettings ? (
             <SettingsView
               orderAnnoncement={orderAnnoncement}
               handleOrderAnnoncement={handleOrderAnnoncement}
@@ -104,11 +112,13 @@ function DashboardCuisine({ config, setConfig }) {
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}  />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} />
           )}
         </div>
-        <Footer
+        <Footer 
           buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
+          setConfig={setConfig}
+          handleDisplayStatistics={handleDisplayStatistics}
           activeTab={activeTab}
           updateActiveTab={updateActiveTab}
           navigationPrev={handleNavigationPrev}
