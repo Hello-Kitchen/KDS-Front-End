@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ButtonSet from '../Buttons/Buttons';
 
@@ -66,8 +67,42 @@ const NotConnected = () => (
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
 function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay }) {
-    const isConnected = true; // Connection status, assumed to be true for now
+    const [isConnected, setIsConnected] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkServerHealth = async () => {
+            try {
+                const response = await fetch(
+                    `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/ping`,
+                );
+
+                // if (response.status === 401) {
+                //     navigate("/", { state: { error: "Unauthorized access. Please log in." } });
+                //     throw new Error("Unauthorized access. Please log in.");
+                // }
+
+                if (response.status === 200) {
+                    setIsConnected(true);
+                } else {
+                    setIsConnected(false);
+                }
+            } catch (error) {
+                console.error("Error checking server health:", error);
+                setIsConnected(false);
+            }
+        };
+
+        const intervalId = setInterval(checkServerHealth, 15000);
+
+        checkServerHealth();
+
+        return () => clearInterval(intervalId);
+    }, [navigate]);
+
     const ConnectionStatus = isConnected ? Connected : NotConnected;
+
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
             <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} handleSettingsDisplay={handleSettingsDisplay} />
