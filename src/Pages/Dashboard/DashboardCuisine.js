@@ -32,6 +32,7 @@ const formatDate = (date) => {
 function DashboardCuisine({ config, setConfig }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
+  const [currentOrderId, setCurrentOrderId] = useState(undefined);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
   const [displaySettings, setDisplaySettings] = useState(false);
@@ -104,7 +105,7 @@ function DashboardCuisine({ config, setConfig }) {
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}  />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} />
           )}
         </div>
         <Footer
@@ -114,6 +115,7 @@ function DashboardCuisine({ config, setConfig }) {
           navigationPrev={handleNavigationPrev}
           navigationAfter={handleNavigationAfter}
           handleSettingsDisplay={handleSettingsDisplay}
+          currentOrderId={currentOrderId}
         />
       </div>
     );
@@ -139,10 +141,10 @@ function DashboardCuisine({ config, setConfig }) {
             </div>
           )}
         </div>
-        <Footer 
-          buttons={["activer", "", "", "", "", "reglage"]} 
-          setConfig={setConfig} 
-          activeTab={activeTab} 
+        <Footer
+          buttons={["activer", "", "", "", "", "reglage"]}
+          setConfig={setConfig}
+          activeTab={activeTab}
           updateActiveTab={updateActiveTab}
           handleSettingsDisplay={handleSettingsDisplay}
         />

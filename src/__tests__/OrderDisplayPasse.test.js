@@ -66,7 +66,7 @@ describe('OrdersDisplayPasse', () => {
           ]
         })
       }));
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status="ready" /></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status="ready" onSelectOrderId={() => {}} /></MemoryRouter>);
 
     // Wait for the fetch to complete and data to be rendered
     await waitFor(() => {
@@ -90,8 +90,7 @@ describe('OrdersDisplayPasse', () => {
 
     // Capture console.error
     console.error = jest.fn();
-
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='ready'/></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='ready' onSelectOrderId={() => {}}/></MemoryRouter>);
 
     await waitFor(() => expect(console.error).toHaveBeenCalledWith('Error fetching orders:', 'API error'));
 
@@ -151,7 +150,7 @@ describe('OrdersDisplayPasse', () => {
       });
     });
 
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='ready'/></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='ready' onSelectOrderId={() => {}}/></MemoryRouter>);
 
     // Wait for the orders to be fetched
     await waitFor(() => screen.getAllByTestId(/^order/));
@@ -213,7 +212,7 @@ describe('OrdersDisplayPasse', () => {
       });
     });
 
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='ready'/></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='ready' onSelectOrderId={() => {}}/></MemoryRouter>);
 
     // Wait for the fetch to complete
     await waitFor(() => expect(screen.getAllByTestId(/^order/).length).toBeGreaterThan(0));
@@ -292,7 +291,7 @@ describe('OrdersDisplayPasse', () => {
       });
     });
 
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='pending'/></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='pending' onSelectOrderId={() => {}}/></MemoryRouter>);
 
     // Wait for the orders to be fetched
     await waitFor(() => screen.getAllByTestId(/^order/));
@@ -370,7 +369,7 @@ describe('OrdersDisplayPasse', () => {
       });
     });
 
-    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='pending'/></MemoryRouter>);
+    render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><OrdersDisplayPasse status='pending' onSelectOrderId={() => {}}/></MemoryRouter>);
 
     // Wait for the fetch to complete
     await waitFor(() => expect(screen.getAllByTestId(/^order/).length).toBeGreaterThan(0));

@@ -28,6 +28,7 @@ const formatDate = (date) => {
 function DashboardPasse() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [currentOrderIndex, setCurrentOrderIndex] = useState(0);
+  const [currentOrderId, setCurrentOrderId] = useState(undefined);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
 
@@ -68,15 +69,16 @@ function DashboardPasse() {
       <Header textLeft="time" textCenter="Passe" textRight={formatDate(currentTime)} />
       <div className='w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'>
         <div className="col-span-1 row-span-2"><LeftSection /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} /></div>
+        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} onSelectOrderId={setCurrentOrderId} /></div>
+        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} onSelectOrderId={setCurrentOrderId} /></div>
       </div>
       <Footer
         buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
         navigationPrev={handleNavigationPrev}
         navigationAfter={handleNavigationAfter}
-        activeTab={activeTab} 
+        activeTab={activeTab}
         updateActiveTab={updateActiveTab}
+        currentOrderId={currentOrderId}
       />
     </div>
   );
