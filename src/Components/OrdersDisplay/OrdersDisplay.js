@@ -9,14 +9,14 @@ import PropTypes from "prop-types";
  * It manages the state for the number of orders, the orders waiting, and organizes
  * the display of orders into two lines based on their status.
  * Orders are fetched every 5 seconds.
- * 
+ *
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
  * @param {Boolean} orderAnnoncement - A boolean to determine if an order announcement is active.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder}) {
+function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrderId}) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -44,7 +44,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder}) {
     const getNbrColumns = (orderDetails) => {
       let nbrLines = 0;
       let nbrCol = 0;
-      
+
       orderDetails.food_ordered.map((food) => {
         nbrLines += 1;
         food.details.map(() => {
@@ -243,6 +243,14 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder}) {
     selectOrderRef.current = selectOrder;
   }, [selectOrder]);
 
+  useEffect(() => {
+    const selectedOrder = ordersLine1.concat(ordersLine2)[selectOrder];
+    const selectedOrderId = selectedOrder ? selectedOrder.props.orderDetails.id : undefined;
+
+    onSelectOrderId(selectedOrderId);
+
+  }, [selectOrder, ordersLine1]);
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
@@ -269,7 +277,8 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder}) {
 OrdersDisplay.propTypes = {
   orderAnnoncement: PropTypes.bool, //< A boolean to determine if an order announcement is active.
   selectOrder: PropTypes.number.isRequired, //< Index of the order be selected with button "suivant" and "precedent".
-  setNbrOrder: PropTypes.func //< Function for set the number of order for the selection.
+  setNbrOrder: PropTypes.func, //< Function for set the number of order for the selection.
+  onSelectOrderId: PropTypes.func.isRequired,
 };
 
 OrdersDisplay.defaultProps = {

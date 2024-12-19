@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
  * @example
  * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -205,6 +205,14 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
     selectOrderRef.current = selectOrder;
   }, [selectOrder]);
 
+  useEffect(() => {
+    const selectedOrder = ordersLine1[selectOrder];
+    const selectedOrderId = selectedOrder ? selectedOrder.props.orderDetails.id : undefined;
+
+    onSelectOrderId(selectedOrderId);
+
+  }, [selectOrder, ordersLine1]);
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
@@ -227,7 +235,8 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
 OrdersDisplayPasse.propTypes = {
   status: PropTypes.string.isRequired,
   selectOrder: PropTypes.number.isRequired,
-  setNbrOrder: PropTypes.func
+  setNbrOrder: PropTypes.func,
+  onSelectOrderId: PropTypes.func
 };
 
 export default OrdersDisplayPasse;
