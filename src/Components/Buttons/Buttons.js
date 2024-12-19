@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from "react-router-dom";
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 
 /**
@@ -79,6 +80,7 @@ const GenericButton = ({
     };
 
     const handleServed = (id) => {
+        const navigate = useNavigate()
         fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${id}`
             , {headers: {
@@ -126,13 +128,13 @@ const GenericButton = ({
                                     throw new Error("Unauthorized access. Please log in.");
                                 }
                                 }
-                            )
+                            );
                         }
-                    })
+                    });
                 }
             }
-        )
-    }
+        );
+    };
 
     const handleClick = () => {
         if (setConfig) {
@@ -194,6 +196,7 @@ GenericButton.propTypes = {
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number
 };
 
 /**
