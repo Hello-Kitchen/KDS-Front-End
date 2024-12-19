@@ -80,7 +80,7 @@ const GenericButton = ({
     };
 
     const handleServed = (id) => {
-        const navigate = useNavigate()
+        const navigate = useNavigate();
             fetch(
                 `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${id}`
                 , {headers: {
@@ -204,7 +204,7 @@ GenericButton.propTypes = {
     currentOrderId: PropTypes.number
 };
 
-export { GenericButton }
+export { GenericButton };
 
 /**
  * @brief Defines the button data, including icon, label, and any custom behavior.

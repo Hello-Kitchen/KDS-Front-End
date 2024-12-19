@@ -183,4 +183,4 @@ describe('GenericButton Component', () => {
 
         expect(fetchCalls).toHaveLength(1);
     });
-})
+});
