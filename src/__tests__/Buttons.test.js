@@ -1,6 +1,10 @@
 import React from "react";
 import { render, screen, fireEvent } from '@testing-library/react';
-import ButtonSet from '../Components/Buttons/Buttons'; 
+import ButtonSet, { GenericButton } from '../Components/Buttons/Buttons';
+
+jest.mock("react-router-dom", () => ({
+    useNavigate: () => jest.fn(),
+}));
 
 describe('ButtonSet Component', () => {
     // Mock the setConfig function
@@ -58,7 +62,7 @@ describe('ButtonSet Component', () => {
     });
 
     test('Button click applies color inversion for invertOnClick=true', () => {
-        const buttons = ['servie', 'precedent'];
+        const buttons = ['servie', 'precedent', 'suivant'];
 
         render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>);
 
@@ -94,5 +98,89 @@ describe('ButtonSet Component', () => {
         fireEvent.click(screen.getByText("RÉGLAGES"));
         expect(updateActiveTabMock).toHaveBeenCalledWith("RÉGLAGES");
     });
-
 });
+
+describe('GenericButton Component', () => {
+
+    beforeEach(() => {
+        global.fetch = jest.fn();
+    });
+
+    test('Click on "SERVIE" updates the status of food if they\'re not ready', async () => {
+
+        // Mock the fetch call to return a successful response
+        global.fetch = jest.fn()
+        .mockImplementationOnce(() => Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+                food_ordered: [{ id: 1, is_ready: false }, { id: 2, is_ready: true }]
+            })
+        }))
+        .mockImplementation(() => Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+            })
+        }));
+
+        const { getByText } = render(
+          <GenericButton
+            label="SERVIE"
+            icon="checkmark"
+            activeTab=""
+            updateActiveTab={() => {}}
+            navigationPrev={() => {}}
+            navigationAfter={() => {}}
+            handleSettingsDisplay={() => {}}
+            currentOrderId={123} // Simulate an order ID
+            invertOnClick={true}
+          />
+        );
+
+        // Simulate clicking the SERVIE button
+        fireEvent.click(getByText('SERVIE'));
+
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        let fetchCall = global.fetch.mock.calls; // URL passée à fetch
+
+        expect(fetchCall[0][0]).toEqual(expect.stringContaining("/orders/123"));
+        // console.log(global.fetch.mock.calls)
+        // fetchCall = global.fetch.mock.calls[1][0]
+
+        expect(fetchCall[1][0]).toEqual(expect.stringContaining('/orders/status/1'));
+        expect(fetchCall[1][0]).not.toEqual(expect.stringContaining('/orders/status/2'));
+    });
+
+    test('Click on "SERVIE" deletes the order if it\'s ready', async () => {
+
+        global.fetch = jest.fn()
+        .mockImplementationOnce(() => Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+            food_ordered: [{ id: 1, is_ready: true }, { id: 2, is_ready: true }]
+            })
+        }));
+
+        const { getByText } = render(
+        <GenericButton
+            label="SERVIE"
+            icon="checkmark"
+            activeTab=""
+            updateActiveTab={() => {}}
+            navigationPrev={() => {}}
+            navigationAfter={() => {}}
+            handleSettingsDisplay={() => {}}
+            currentOrderId={123} // Simulate an order ID
+            invertOnClick={true}
+        />
+        );
+
+        fireEvent.click(getByText('SERVIE'));
+
+        let fetchCalls = global.fetch.mock.calls;
+
+        expect(fetchCalls[0][0]).toEqual(expect.stringContaining("/orders/123"));
+
+        expect(fetchCalls).toHaveLength(1);
+    });
+})
