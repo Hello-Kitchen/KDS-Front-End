@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Footer from '../Components/Footer/Footer';
+import { MemoryRouter } from 'react-router-dom';
 
 // Mock the setConfig function
 const mockSetConfig = jest.fn();
@@ -11,7 +12,7 @@ describe('Footer Component', () => {
         let buttons = ['servie', 'precedent', 'suivant'];
 
         const { rerender } = render(
-            <Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/></MemoryRouter>
         );
 
         // Verify buttons that are present
@@ -23,7 +24,7 @@ describe('Footer Component', () => {
         // Add a new button
         buttons.push('statistique');
         rerender(
-            <Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} />
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} /></MemoryRouter>
         );
 
         // Check that the new button is rendered
@@ -33,7 +34,7 @@ describe('Footer Component', () => {
     test('renders unknown button', () => {
         const buttons = ['unknownButton'];
 
-        render(<Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>);
+        render(<MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={buttons} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/></MemoryRouter>);
         expect(screen.queryByText('SERVIE')).not.toBeInTheDocument();
         expect(screen.queryByText('PRÉCÉDENT')).not.toBeInTheDocument();
         expect(screen.queryByText('SUIVANT')).not.toBeInTheDocument();
@@ -43,7 +44,7 @@ describe('Footer Component', () => {
 
     test('renders connection status as connected', () => {
         render(
-            <Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/></MemoryRouter>
         );
 
         // Check if the connected icon and text appear
@@ -54,7 +55,7 @@ describe('Footer Component', () => {
     test('renders connection status as disconnected', () => {
         // Temporarily set the connection status to false
         render(
-            <Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>
+            <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/></MemoryRouter>
         );
 
         // Check if the disconnected icon and text appear
