@@ -53,6 +53,7 @@ const icons = {
  * @param {boolean} props.invertOnClick Whether to invert the color on button click.
  * @param {function} props.navigationPrev - A function to navigate to the prev order.
  * @param {function} props.navigationAfter - A function to navigate to the next order.
+ * @param {function} props.handleDisplayStatistics - A function to handle display statistics.
  *
  * @return {JSX.Element} A button component with an icon or image and a label.
  */
@@ -66,6 +67,7 @@ const GenericButton = ({
     invertOnClick,
     navigationPrev,
     navigationAfter,
+    handleDisplayStatistics,
     handleSettingsDisplay,
     currentOrderId
 }) => {
@@ -155,6 +157,8 @@ const GenericButton = ({
         if (label === "PRÉCÉDENT")
             navigationPrev();
 
+        if (label === "STATISTIQUES")
+            handleDisplayStatistics();
         if (label === "RÉGLAGES")
             handleSettingsDisplay();
 
@@ -201,6 +205,7 @@ GenericButton.propTypes = {
     setConfig: PropTypes.func,
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
     currentOrderId: PropTypes.number
 };
@@ -239,8 +244,7 @@ let buttonData = {
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, currentOrderId }) {
-
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -263,6 +267,7 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
                         navigationPrev={navigationPrev}
                         navigationAfter={navigationAfter}
+                        handleDisplayStatistics={handleDisplayStatistics}
                         handleSettingsDisplay={handleSettingsDisplay}
                         currentOrderId={currentOrderId}
                     />
@@ -279,6 +284,7 @@ ButtonSet.propTypes = {
     updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
     currentOrderId: PropTypes.number, ///< Function to handle serving feature
 };

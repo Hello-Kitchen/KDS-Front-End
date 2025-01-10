@@ -7,6 +7,11 @@ import { MemoryRouter } from 'react-router-dom';
 const mockSetConfig = jest.fn();
 const updateActiveTabMock = jest.fn();
 
+beforeAll(() => {
+    global.fetch = jest.fn();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+});
+
 describe('Footer Component', () => {
     test('renders buttons based on buttons prop', () => {
         let buttons = ['servie', 'precedent', 'suivant'];
@@ -42,7 +47,13 @@ describe('Footer Component', () => {
         expect(screen.queryByText('RÉGLAGES')).not.toBeInTheDocument();
     });
 
-    test('renders connection status as connected', () => {
+    test('renders connection status as connected', async () => {
+        // Mock fetch to simulate a connected status
+        fetch.mockResolvedValueOnce({
+            status: 200,
+            json: async () => ({ message: 'Server is healthy' }),
+        });
+
         render(
             <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/></MemoryRouter>
         );
@@ -52,8 +63,13 @@ describe('Footer Component', () => {
         expect(screen.queryByText('N03')).toBeInTheDocument();
     });
 
-    test('renders connection status as disconnected', () => {
-        // Temporarily set the connection status to false
+    test('renders connection status as disconnected', async () => {
+        // Mock fetch to simulate a disconnected status (e.g., 500 Internal Server Error)
+        fetch.mockResolvedValueOnce({
+            status: 500,
+            json: async () => ({ message: 'Server error' }),
+        });
+
         render(
             <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}><Footer buttons={['servie', 'precedent', 'suivant']} setConfig={mockSetConfig} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/></MemoryRouter>
         );
