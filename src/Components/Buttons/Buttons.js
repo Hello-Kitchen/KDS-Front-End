@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from "react-router-dom";
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 
 /**
@@ -67,9 +68,11 @@ const GenericButton = ({
     navigationPrev,
     navigationAfter,
     handleDisplayStatistics,
-    handleSettingsDisplay
+    handleSettingsDisplay,
+    currentOrderId
 }) => {
     const [isInverted, setIsInverted] = useState(false);
+    const navigate = useNavigate();
 
     const handleMouseDown = () => {
         setIsInverted(true);
@@ -79,14 +82,78 @@ const GenericButton = ({
         setIsInverted(false);
     };
 
+    const handleServed = (id) => {
+            fetch(
+                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${id}`
+                , {headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                }})
+                .then((response) => {
+                if (response.status === 401) {
+                    navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                    throw new Error("Unauthorized access. Please log in.");
+                }
+                return response.json();
+                })
+                .then((order) => {
+                if (order.food_ordered.every(food => food.is_ready === true)) {
+                    fetch(
+                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/served/${order.id}`
+                        , {
+                            method: 'PUT',
+                            headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        }
+                        })
+                        .then((response) => {
+                        if (response.status === 401) {
+                            navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                            throw new Error("Unauthorized access. Please log in.");
+                        }
+                        })
+                        .catch((error) => {
+                            console.error('An error occurred:', error.message);
+                        });
+                } else {
+                    order.food_ordered.forEach((food) => {
+                        if (!food.is_ready) {
+                            fetch(
+                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${food.id}`
+                                , {
+                                    method: 'PUT',
+                                    headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                }
+                                })
+                                .then((response) => {
+                                if (response.status === 401) {
+                                    navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                                    throw new Error("Unauthorized access. Please log in.");
+                                }
+                                })
+                                .catch((error) => {
+                                    console.error('An error occurred:', error.message);
+                                });
+                        }
+                    });
+                }
+            }
+        )
+        .catch((error) => {
+            console.error('An error occurred:', error.message);
+        });
+    };
+
     const handleClick = () => {
         if (setConfig) {
             setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));
         }
+        if (label === "SERVIE")
+            handleServed(currentOrderId);
 
         if (label === "SUIVANT")
             navigationAfter();
-    
+
         if (label === "PRÉCÉDENT")
             navigationPrev();
 
@@ -140,7 +207,10 @@ GenericButton.propTypes = {
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
     handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number
 };
+
+export { GenericButton };
 
 /**
  * @brief Defines the button data, including icon, label, and any custom behavior.
@@ -174,7 +244,7 @@ let buttonData = {
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -199,6 +269,7 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         navigationAfter={navigationAfter}
                         handleDisplayStatistics={handleDisplayStatistics}
                         handleSettingsDisplay={handleSettingsDisplay}
+                        currentOrderId={currentOrderId}
                     />
                 );
             })}
@@ -215,6 +286,7 @@ ButtonSet.propTypes = {
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
     handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number, ///< Function to handle serving feature
 };
 
 export default ButtonSet;

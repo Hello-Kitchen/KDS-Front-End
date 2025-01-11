@@ -66,7 +66,7 @@ const NotConnected = () => (
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics, currentOrderId }) {
     const [isConnected, setIsConnected] = useState(false);
 
     const navigate = useNavigate();
@@ -105,7 +105,7 @@ function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev
 
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} />
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} currentOrderId={currentOrderId}/>
             <ConnectionStatus />
         </div>
     );
@@ -120,6 +120,7 @@ Footer.propTypes = {
     updateActiveTab: PropTypes.func, ///< Function to handle tab changes
     handleDisplayStatistics: PropTypes.func, ///< Function to handle statistics display
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number, ///< Function to handle serving feature
 };
 
 export default Footer;
