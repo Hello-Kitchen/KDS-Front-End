@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { BeatLoader } from 'react-spinners';
 import SingleOrderDisplay from './SingleOrderDisplay';
+import PropTypes from "prop-types";
 
 const LoadingCard = () => {
   return (
@@ -28,9 +30,10 @@ const NothingCard = () => {
 };
 
 const OrderCarousel = ({ label }) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [orders, setOrders] = useState([]);
-  const [isFetch, setIsFetch] = useState(false)
+  const [isFetch, setIsFetch] = useState(false);
 
   const nextOrder = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % orders.length);
@@ -106,12 +109,12 @@ const OrderCarousel = ({ label }) => {
             });
         });
 
-        Promise.all(fetchFoodDetailsPromises).then(() => { setOrders(ordersData); setIsFetch(true) })
+        Promise.all(fetchFoodDetailsPromises).then(() => { setOrders(ordersData); setIsFetch(true); });
       })
       .catch((error) => {
         console.error("Error fetching orders:", error);
       });
-  };
+  }
 
   useEffect(() => {
     if (label === "cuisine") {
@@ -131,7 +134,7 @@ const OrderCarousel = ({ label }) => {
 
   if (isFetch) {
     if (orders.length == 0) {
-      return <NothingCard />
+      return <NothingCard />;
     } else {
       return (
         <div className="h-full col-start-5">
@@ -144,8 +147,12 @@ const OrderCarousel = ({ label }) => {
       );
     }
   } else {
-    return <LoadingCard />
+    return <LoadingCard />;
   }
+};
+
+OrderCarousel.propTypes = {
+  label: PropTypes.string.isRequired,
 };
 
 export default OrderCarousel;

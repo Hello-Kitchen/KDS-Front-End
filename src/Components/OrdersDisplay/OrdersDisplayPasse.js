@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, act } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -211,17 +211,17 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) 
   useEffect(() => {
     if (nbrOrders >= 5) {
       if (activeRecall) {
-        setLastOrders(ordersLine1[ordersLine1.length])
+        setLastOrders(ordersLine1[ordersLine1.length]);
         setOrdersLine1((prevOrders) => prevOrders.slice(0, -1));
         setNbrOrdersWaiting(nbrOrdersWaiting + 1);
       }
       else {
         setOrdersLine1((prevOrders) => [...prevOrders, lastOrders]);
-        setLastOrders(undefined)
+        setLastOrders(undefined);
         setNbrOrdersWaiting(nbrOrdersWaiting - 1);
       }
     }
-  }, [activeRecall])
+  }, [activeRecall]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
@@ -246,7 +246,8 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) 
 OrdersDisplayPasse.propTypes = {
   status: PropTypes.string.isRequired,
   selectOrder: PropTypes.number.isRequired,
-  setNbrOrder: PropTypes.func
+  setNbrOrder: PropTypes.func,
+  activeRecall: PropTypes.bool,
 };
 
 export default OrdersDisplayPasse;

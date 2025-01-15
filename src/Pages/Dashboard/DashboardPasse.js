@@ -50,7 +50,7 @@ function DashboardPasse() {
    */
   const updateActiveRecall = (newRecall) => {
     setActiveRecall(newRecall);
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {

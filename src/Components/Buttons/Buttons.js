@@ -92,10 +92,10 @@ const GenericButton = ({
             navigationPrev();
 
         if (label === "RAPPEL")
-            updateActiveRecall(!activeRecall)
+            updateActiveRecall(!activeRecall);
 
         if (label !== "RAPPEL" && activeRecall === true)
-            updateActiveRecall(false)
+            updateActiveRecall(false);
 
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);

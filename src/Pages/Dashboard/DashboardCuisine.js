@@ -54,7 +54,7 @@ function DashboardCuisine({ config, setConfig }) {
    */
   const updateActiveRecall = (newRecall) => {
     setActiveRecall(newRecall);
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {

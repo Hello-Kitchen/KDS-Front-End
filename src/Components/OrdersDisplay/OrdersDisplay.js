@@ -237,17 +237,17 @@ function OrdersDisplay({ selectOrder, setNbrOrder, activeRecall }) {
   useEffect(() => {
     if (nbrOrders >= 10) {
       if (activeRecall) {
-        setLastOrders(ordersLine2[ordersLine2.length])
+        setLastOrders(ordersLine2[ordersLine2.length]);
         setOrdersLine2((prevOrders) => prevOrders.slice(0, -1));
         setNbrOrdersWaiting(nbrOrdersWaiting + 1);
       }
       else {
         setOrdersLine2((prevOrders) => [...prevOrders, lastOrders]);
-        setLastOrders(undefined)
+        setLastOrders(undefined);
         setNbrOrdersWaiting(nbrOrdersWaiting - 1);
       }
     }
-  }, [activeRecall])
+  }, [activeRecall]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
