@@ -23,6 +23,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) 
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
+  const [lastOrders, setLastOrders] = useState();
   const selectOrderRef = useRef(selectOrder);
 
   /**
@@ -208,12 +209,18 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) 
   }, [selectOrder]);
 
   useEffect(() => {
-    console.log(nbrOrdersWaiting)
-    console.log(activeRecall)
-    if (activeRecall)
-      setNbrOrdersWaiting(nbrOrdersWaiting - 1);
-    else
-      setNbrOrdersWaiting(nbrOrdersWaiting + 1);
+    if (nbrOrders >= 5) {
+      if (activeRecall) {
+        setLastOrders(ordersLine1[ordersLine1.length])
+        setOrdersLine1((prevOrders) => prevOrders.slice(0, -1));
+        setNbrOrdersWaiting(nbrOrdersWaiting + 1);
+      }
+      else {
+        setOrdersLine1((prevOrders) => [...prevOrders, lastOrders]);
+        setLastOrders(undefined)
+        setNbrOrdersWaiting(nbrOrdersWaiting - 1);
+      }
+    }
   }, [activeRecall])
 
   return (

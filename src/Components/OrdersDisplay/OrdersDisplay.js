@@ -23,6 +23,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder, activeRecall }) {
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [ordersLine2, setOrdersLine2] = useState([]);
+  const [lastOrders, setLastOrders] = useState();
   const selectOrderRef = useRef(selectOrder);
 
   /**
@@ -232,6 +233,21 @@ function OrdersDisplay({ selectOrder, setNbrOrder, activeRecall }) {
     setOrdersLine2(array);
     selectOrderRef.current = selectOrder;
   }, [selectOrder]);
+
+  useEffect(() => {
+    if (nbrOrders >= 10) {
+      if (activeRecall) {
+        setLastOrders(ordersLine2[ordersLine2.length])
+        setOrdersLine2((prevOrders) => prevOrders.slice(0, -1));
+        setNbrOrdersWaiting(nbrOrdersWaiting + 1);
+      }
+      else {
+        setOrdersLine2((prevOrders) => [...prevOrders, lastOrders]);
+        setLastOrders(undefined)
+        setNbrOrdersWaiting(nbrOrdersWaiting - 1);
+      }
+    }
+  }, [activeRecall])
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
