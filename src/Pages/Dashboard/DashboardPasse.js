@@ -80,7 +80,7 @@ function DashboardPasse() {
       <div className='w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'>
         <div className="col-span-1 row-span-2"><LeftSection /></div>
         <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} /></div>
+        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} activeRecall={activeRecall} /></div>
       </div>
       <Footer
         buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}

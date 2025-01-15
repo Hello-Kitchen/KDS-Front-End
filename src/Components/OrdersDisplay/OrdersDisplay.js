@@ -240,7 +240,7 @@ function OrdersDisplay({ selectOrder, setNbrOrder, activeRecall }) {
       </div>
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
         {ordersLine2}
-        {activeRecall && <OrderCarousel />}
+        {activeRecall && <OrderCarousel label="cuisine" />}
       </div>
       {nbrOrdersWaiting === 1 && (
         <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">

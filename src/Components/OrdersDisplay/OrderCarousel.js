@@ -1,7 +1,31 @@
 import React, { useEffect, useState } from 'react';
+import { BeatLoader } from 'react-spinners';
 import SingleOrderDisplay from './SingleOrderDisplay';
 
+const LoadingCard = () => {
+  return (
+    <div className="h-full col-start-5">
+      <div className='bg-slate-600 h-6 rounded-t-lg flex items-center content-center justify-between px-2'></div>
+      <div className="bg-gray-800 shadow-md p-4 flex flex-col items-center">
+        <BeatLoader size={8} />
+        <p className="mt-2 text-gray-600">Chargement des commandes...</p>
+      </div>
+      <div className='bg-slate-600 h-6 rounded-bl-lg rounded-br-lg flex items-center content-center justify-between px-2'></div>
+    </div>
+  );
+};
 
+const NothingCard = () => {
+  return (
+    <div className="h-full col-start-5">
+      <div className='bg-slate-600 h-6 rounded-t-lg flex items-center content-center justify-between px-2'></div>
+      <div className="bg-gray-800 shadow-md p-4 flex flex-col items-center">
+        <p className="mt-2 text-gray-600">Aucune commande a rappelle</p>
+      </div>
+      <div className='bg-slate-600 h-6 rounded-bl-lg rounded-br-lg flex items-center content-center justify-between px-2'></div>
+    </div>
+  );
+};
 
 const OrderCarousel = ({ label }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,10 +60,10 @@ const OrderCarousel = ({ label }) => {
     return nbrCol;
   };
 
-  function fetchOrdersKitchen () {
+  function fetchOrdersKitchen(status) {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?status=ready`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?status=${status}`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -90,23 +114,37 @@ const OrderCarousel = ({ label }) => {
   };
 
   useEffect(() => {
-    fetchOrdersKitchen();
+    if (label === "cuisine") {
+      fetchOrdersKitchen('ready');
 
-    const intervalId = setInterval(fetchOrdersKitchen, 5000);
+      const intervalId = setInterval(fetchOrdersKitchen('ready'), 5000);
 
-    return () => clearInterval(intervalId);
+      return () => clearInterval(intervalId);
+    } else if (label == "passe") {
+      fetchOrdersKitchen('served');
+
+      const intervalId = setInterval(fetchOrdersKitchen('served'), 5000);
+
+      return () => clearInterval(intervalId);
+    }
   }, []);
 
   if (isFetch) {
-    return (
-      <div className="h-full col-start-5">
-        <SingleOrderDisplay orderDetails={orders[currentIndex]} span={getNbrColumns(orders[currentIndex])} index={currentIndex} selectOrder={-1} />
-        <div className='bg-slate-600 h-6 rounded-bl-lg rounded-br-lg flex items-center content-center justify-between px-2'>
-          <img className='cursor-pointer' onClick={prevOrder} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3TOwqAMBRFwVi4Wr+FCzHrFRwRQcT+BQKZMsW5zUtKTVMUOqwYo+LZ40AfFT8xRcbnOuI3bGHxUgMd9s/IUvVIDjnTIh/tN7JgeB+bJkW7ADG4v+M8NFbCAAAAAElFTkSuQmCC" alt="back--v1" />
-          <img className='cursor-pointer' onClick={nextOrder} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaElEQVR4nO3UMQqDQBBA0cVrRIisBzBHDSmTi6UQFDzIS6GFpUWmWJh/gPnwmZlSkiQUPPDCLUrwtjOjjxBUbNGSO5ZDsmJoVjKecn3RtSPAcEq0/DWR4OE1dE3xib6BCc+wV5Ek5Qo/kzy/4z5ey24AAAAASUVORK5CYII=" alt="back--v1" />
+    if (orders.length == 0) {
+      return <NothingCard />
+    } else {
+      return (
+        <div className="h-full col-start-5">
+          <SingleOrderDisplay orderDetails={orders[currentIndex]} span={getNbrColumns(orders[currentIndex])} index={currentIndex} selectOrder={-1} />
+          <div className='bg-slate-600 h-6 rounded-bl-lg rounded-br-lg flex items-center content-center justify-between px-2'>
+            <img className='cursor-pointer' onClick={prevOrder} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3TOwqAMBRFwVi4Wr+FCzHrFRwRQcT+BQKZMsW5zUtKTVMUOqwYo+LZ40AfFT8xRcbnOuI3bGHxUgMd9s/IUvVIDjnTIh/tN7JgeB+bJkW7ADG4v+M8NFbCAAAAAElFTkSuQmCC" alt="back--v1" />
+            <img className='cursor-pointer' onClick={nextOrder} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaElEQVR4nO3UMQqDQBBA0cVrRIisBzBHDSmTi6UQFDzIS6GFpUWmWJh/gPnwmZlSkiQUPPDCLUrwtjOjjxBUbNGSO5ZDsmJoVjKecn3RtSPAcEq0/DWR4OE1dE3xib6BCc+wV5Ek5Qo/kzy/4z5ey24AAAAASUVORK5CYII=" alt="back--v1" />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+  } else {
+    return <LoadingCard />
   }
 };
 

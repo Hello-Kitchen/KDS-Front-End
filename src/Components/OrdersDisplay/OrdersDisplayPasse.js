@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, act } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import OrderCarousel from './OrderCarousel';
 
 /**
  * @component OrdersDisplayPasse
@@ -12,11 +13,12 @@ import { useNavigate } from "react-router-dom";
  * @param {string} props.status - The status of the orders to display ('ready' or 'pending').
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
+ * @param {boolean} props.activeRecall - The currently active recall.
  *
  * @example
  * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -205,10 +207,20 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder }) {
     selectOrderRef.current = selectOrder;
   }, [selectOrder]);
 
+  useEffect(() => {
+    console.log(nbrOrdersWaiting)
+    console.log(activeRecall)
+    if (activeRecall)
+      setNbrOrdersWaiting(nbrOrdersWaiting - 1);
+    else
+      setNbrOrdersWaiting(nbrOrdersWaiting + 1);
+  }, [activeRecall])
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
         {ordersLine1}
+        {activeRecall && <OrderCarousel label="passe" />}
       </div>
       {nbrOrdersWaiting === 1 && (
         <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">
