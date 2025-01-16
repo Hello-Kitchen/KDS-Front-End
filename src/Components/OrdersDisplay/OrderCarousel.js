@@ -66,7 +66,7 @@ const OrderCarousel = ({ label }) => {
   function fetchOrdersKitchen(status) {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?status=${status}`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?status=${status}&sort=time`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -82,7 +82,7 @@ const OrderCarousel = ({ label }) => {
       .then((ordersData) => {
 
         // Fetch food details for each order to display
-        const fetchFoodDetailsPromises = ordersData.slice(0, 5).map((order) => {
+        const fetchFoodDetailsPromises = ordersData.map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
             , {
@@ -138,10 +138,10 @@ const OrderCarousel = ({ label }) => {
     } else {
       return (
         <div className="h-full col-start-5">
-          <SingleOrderDisplay orderDetails={orders[currentIndex]} span={getNbrColumns(orders[currentIndex])} index={currentIndex} selectOrder={-1} />
-          <div className='bg-slate-600 h-6 rounded-bl-lg rounded-br-lg flex items-center content-center justify-between px-2'>
-            <img className='cursor-pointer' onClick={prevOrder} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAV0lEQVR4nO3TOwqAMBRFwVi4Wr+FCzHrFRwRQcT+BQKZMsW5zUtKTVMUOqwYo+LZ40AfFT8xRcbnOuI3bGHxUgMd9s/IUvVIDjnTIh/tN7JgeB+bJkW7ADG4v+M8NFbCAAAAAElFTkSuQmCC" alt="back--v1" />
-            <img className='cursor-pointer' onClick={nextOrder} src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAaElEQVR4nO3UMQqDQBBA0cVrRIisBzBHDSmTi6UQFDzIS6GFpUWmWJh/gPnwmZlSkiQUPPDCLUrwtjOjjxBUbNGSO5ZDsmJoVjKecn3RtSPAcEq0/DWR4OE1dE3xib6BCc+wV5Ek5Qo/kzy/4z5ey24AAAAASUVORK5CYII=" alt="back--v1" />
+          <SingleOrderDisplay orderDetails={orders[currentIndex]} span={getNbrColumns(orders[currentIndex])} index={currentIndex} selectOrder={-1} recall={true} />
+          <div className='bg-slate-600 h-8 rounded-bl-lg rounded-br-lg flex justify-center items-center justify-around'>
+            <img className='cursor-pointer' onClick={prevOrder} src={`${process.env.PUBLIC_URL}/left-arrow.png`} width="22" height="22"/>
+            <img className='cursor-pointer' onClick={nextOrder} src={`${process.env.PUBLIC_URL}/right-arrow.png`} width="22" height="22"/>
           </div>
         </div>
       );

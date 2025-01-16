@@ -10,9 +10,11 @@ import PropTypes from "prop-types";
  * @param {number} span - The number of columns the order should span in the grid.
  * @param {number} index - Index of the order into array.
  * @param {number} selectOrder - Index of the order be selected with button "suivant" and "precedent".
+ * @param {number} recall - Can specify whether the component is used for displaying a recall.
  * @returns {JSX.Element} The rendered component.
  */
-export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder }) {
+export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder, recall }) {
+  // if (recall) console.log("orderdetails = ", orderDetails);
   const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState(orderDetails);
@@ -179,7 +181,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
               </p>
             </div>
           </div>
-          <div className={`px-3 py-1 border-4 border-t-0 rounded-b-lg ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
+          <div className={`px-3 py-1 border-4 border-t-0 ${recall ? `` : `rounded-b-lg`} ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
@@ -246,6 +248,7 @@ SingleOrderDisplay.propTypes = {
   orderDetails: PropTypes.object.isRequired,
   span: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
-  selectOrder: PropTypes.number.isRequired
+  selectOrder: PropTypes.number.isRequired,
+  recall: PropTypes.bool
 };
 
