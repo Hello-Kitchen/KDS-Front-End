@@ -202,19 +202,19 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
                           </div>
                         </li>
                         <div>
-                          {food.note ? (
-                            <div className="flex flex-row pl-5">
-                              <div className="pl-5p-px text-white font-semibold bg-orange-500">
-                                NOTE
-                              </div>
-                              <div className="pl-1">{food.note}</div>
-                            </div>
-                          ) : (
-                            <div />
-                          )}
                         </div>
                       </div>
                     ))}
+                    {food.note ? (
+                      <div className="flex flex-row pl-5">
+                        <div className="pl-5p-px text-white font-semibold bg-orange-500">
+                          NOTE
+                        </div>
+                        <div className="pl-1">{food.note}</div>
+                      </div>
+                    ) : (
+                      <div />
+                    )}
                   </ol>
                 </li>
               )}

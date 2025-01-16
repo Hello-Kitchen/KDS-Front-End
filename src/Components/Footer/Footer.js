@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ButtonSet from '../Buttons/Buttons';
 
@@ -67,12 +68,46 @@ const NotConnected = () => (
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, activeRecall, updateActiveRecall }) {
-    const isConnected = true; // Connection status, assumed to be true for now
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics, currentOrderId, activeRecall, updateActiveRecall }) {
+    const [isConnected, setIsConnected] = useState(false);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkServerHealth = async () => {
+            try {
+                const response = await fetch(
+                    `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/ping`,
+                );
+
+                if (response.status === 401) {
+                    navigate("/", { state: { error: "Unauthorized access. Please log in." } });
+                    throw new Error("Unauthorized access. Please log in.");
+                }
+
+                if (response.status === 200) {
+                    setIsConnected(true);
+                } else {
+                    setIsConnected(false);
+                }
+            } catch (error) {
+                console.error("Error checking server health:", error);
+                setIsConnected(false);
+            }
+        };
+
+        const intervalId = setInterval(checkServerHealth, 15000);
+
+        checkServerHealth();
+
+        return () => clearInterval(intervalId);
+    }, [navigate]);
+
     const ConnectionStatus = isConnected ? Connected : NotConnected;
+
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} />
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} currentOrderId={currentOrderId}/>
             <ConnectionStatus />
         </div>
     );
@@ -85,6 +120,9 @@ Footer.propTypes = {
     setConfig: PropTypes.func, ///< Function to handle configuration changes.
     activeTab: PropTypes.string, ///< Currently active tab
     updateActiveTab: PropTypes.func, ///< Function to handle tab changes
+    handleDisplayStatistics: PropTypes.func, ///< Function to handle statistics display
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number, ///< Function to handle serving feature
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };

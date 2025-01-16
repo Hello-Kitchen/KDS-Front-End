@@ -18,7 +18,7 @@ import OrderCarousel from './OrderCarousel';
  * @example
  * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId, activeRecall }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -209,6 +209,14 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, activeRecall }) 
   }, [selectOrder]);
 
   useEffect(() => {
+    const selectedOrder = ordersLine1[selectOrder];
+    const selectedOrderId = selectedOrder ? selectedOrder.props.orderDetails.id : undefined;
+
+    onSelectOrderId(selectedOrderId);
+
+  }, [selectOrder, ordersLine1]);
+
+  useEffect(() => {
     if (nbrOrders >= 5) {
       if (activeRecall) {
         setLastOrders(ordersLine1[ordersLine1.length]);
@@ -247,6 +255,7 @@ OrdersDisplayPasse.propTypes = {
   status: PropTypes.string.isRequired,
   selectOrder: PropTypes.number.isRequired,
   setNbrOrder: PropTypes.func,
+  onSelectOrderId: PropTypes.func,
   activeRecall: PropTypes.bool,
 };
 

@@ -20,6 +20,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "eject": "react-scripts eject",
     "format": "eslint src/** --no-warn-ignored",
     "formatFix": "eslint src/** --fix --no-warn-ignored"
@@ -47,6 +48,7 @@
     "eslint-plugin-jest": "^28.9.0",
     "eslint-plugin-react": "^7.34.3",
     "globals": "^15.6.0",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "tailwindcss": "^3.4.4"
   },
@@ -54,6 +56,10 @@
     "testEnvironment": "jsdom",
     "setupFilesAfterEnv": [
       "@testing-library/jest-dom"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|scss)$": "identity-obj-proxy"
+    }
   }
 }

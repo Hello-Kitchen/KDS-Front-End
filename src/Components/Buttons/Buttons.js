@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from "react-router-dom";
 import { IoIosArrowDroprightCircle, IoIosArrowDropleftCircle, IoIosCheckmarkCircle } from "react-icons/io";
 
 /**
@@ -52,6 +53,7 @@ const icons = {
  * @param {boolean} props.invertOnClick Whether to invert the color on button click.
  * @param {function} props.navigationPrev - A function to navigate to the prev order.
  * @param {function} props.navigationAfter - A function to navigate to the next order.
+ * @param {function} props.handleDisplayStatistics - A function to handle display statistics.
  * @param {boolean} props.activeRecall - The currently active recall.
  * @param {function} props.updateActiveRecall - A function to update the active recall.
  *
@@ -67,10 +69,14 @@ const GenericButton = ({
     invertOnClick,
     navigationPrev,
     navigationAfter,
+    handleDisplayStatistics,
+    handleSettingsDisplay,
+    currentOrderId,
     activeRecall,
     updateActiveRecall
 }) => {
     const [isInverted, setIsInverted] = useState(false);
+    const navigate = useNavigate();
 
     const handleMouseDown = () => {
         setIsInverted(true);
@@ -80,16 +86,85 @@ const GenericButton = ({
         setIsInverted(false);
     };
 
+    const handleServed = (id) => {
+            fetch(
+                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${id}`
+                , {headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                }})
+                .then((response) => {
+                if (response.status === 401) {
+                    navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                    throw new Error("Unauthorized access. Please log in.");
+                }
+                return response.json();
+                })
+                .then((order) => {
+                if (order.food_ordered.every(food => food.is_ready === true)) {
+                    fetch(
+                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/served/${order.id}`
+                        , {
+                            method: 'PUT',
+                            headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        }
+                        })
+                        .then((response) => {
+                        if (response.status === 401) {
+                            navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                            throw new Error("Unauthorized access. Please log in.");
+                        }
+                        })
+                        .catch((error) => {
+                            console.error('An error occurred:', error.message);
+                        });
+                } else {
+                    order.food_ordered.forEach((food) => {
+                        if (!food.is_ready) {
+                            fetch(
+                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${food.id}`
+                                , {
+                                    method: 'PUT',
+                                    headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                }
+                                })
+                                .then((response) => {
+                                if (response.status === 401) {
+                                    navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                                    throw new Error("Unauthorized access. Please log in.");
+                                }
+                                })
+                                .catch((error) => {
+                                    console.error('An error occurred:', error.message);
+                                });
+                        }
+                    });
+                }
+            }
+        )
+        .catch((error) => {
+            console.error('An error occurred:', error.message);
+        });
+    };
+
     const handleClick = () => {
         if (setConfig) {
             setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));
         }
+        if (label === "SERVIE")
+            handleServed(currentOrderId);
 
         if (label === "SUIVANT")
             navigationAfter();
-    
+
         if (label === "PRÉCÉDENT")
             navigationPrev();
+
+        if (label === "STATISTIQUES")
+            handleDisplayStatistics();
+        if (label === "RÉGLAGES")
+            handleSettingsDisplay();
 
         if (label === "RAPPEL")
             updateActiveRecall(!activeRecall);
@@ -140,9 +215,14 @@ GenericButton.propTypes = {
     setConfig: PropTypes.func,
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number,
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
+
+export { GenericButton };
 
 /**
  * @brief Defines the button data, including icon, label, and any custom behavior.
@@ -178,8 +258,7 @@ let buttonData = {
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, activeRecall, updateActiveRecall }) {
-
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId, activeRecall, updateActiveRecall }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -202,6 +281,9 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         invertOnClick={["SERVIE","PRÉCÉDENT","SUIVANT"].includes(label) ? true : false}
                         navigationPrev={navigationPrev}
                         navigationAfter={navigationAfter}
+                        handleDisplayStatistics={handleDisplayStatistics}
+                        handleSettingsDisplay={handleSettingsDisplay}
+                        currentOrderId={currentOrderId}
                         activeRecall={activeRecall}
                         updateActiveRecall={updateActiveRecall}
                     />
@@ -218,6 +300,9 @@ ButtonSet.propTypes = {
     updateActiveTab: PropTypes.func.isRequired, ///< Function to handle tab changes
     navigationPrev: PropTypes.func, ///< Function to handle navigation order
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
+    handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
+    handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
+    currentOrderId: PropTypes.number, ///< Function to handle serving feature
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
