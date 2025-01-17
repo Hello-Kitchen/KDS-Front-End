@@ -59,7 +59,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
   const fetchOrders = () => {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time&status=${status}`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
