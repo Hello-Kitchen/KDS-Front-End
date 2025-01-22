@@ -258,34 +258,36 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 
   useEffect(() => {
     let currentOrder;
+    let text;
 
     if (selectOrder <= 4)
       currentOrder = ordersLine1[selectOrder];
     else 
       currentOrder = ordersLine2[selectOrder - 5];
     if (currentOrder) {
-      console.log("currentOrder: ", currentOrder.props.orderDetails);
-      let text = `Commande pour la table ${currentOrder.props.orderDetails.number}: `
-      for (food in currentOrder.props.orderDetails.food_ordered) {
+      text = `Commande pour la table ${currentOrder.props.orderDetails.number}: `
+      for (const food of currentOrder.props.orderDetails.food_ordered) {
+        text += ' Plat: '
         text += `${food.name}`;
         if (food.details.length > 0)
-          text += "details: ";
-        for (detail in food.details) {
+          text += " details:";
+        for (const detail of food.details) {
           text += `${detail}`;
         }
         if (food.mods_ingredients.length > 0)
-          text += 'ingredients: ';
-        for (ingredient in food.mods_ingredients) {
+          text += ' ingredients:';
+        for (const ingredient of food.mods_ingredients) {
           if (ingredient.type === 'DEL')
-            text += `Enlever: ${ingredient.ingredient}`
+            text += ` Enlever: ${ingredient.ingredient}`
           if (ingredient.type === 'ADD')
-            text += `Ajouter: ${ingredient.ingredient}`
+            text += ` Ajouter: ${ingredient.ingredient}`
         }
         if (food.note)
           text += `Note: ${food.note}`
 
       }
-      speak(`Commande pour la table ${currentOrder.props.orderDetails.number}: ${currentOrder.props.orderDetails.}`);
+      console.log(text);
+      speak(text);
     }
   }, [selectOrder]);
 
