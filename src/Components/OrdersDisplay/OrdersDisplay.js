@@ -27,9 +27,15 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 
   const audio = new Audio("audio/newOrder.mp3");
 
-  const speak = (text) => {
+  const speakWithPause = (text, pauseDuration = 1000) => {
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
+    
+    // Pause après la première partie
+    setTimeout(() => {
+      const pauseUtterance = new SpeechSynthesisUtterance(''); // Utterance vide pour la pause
+      window.speechSynthesis.speak(pauseUtterance);
+    }, pauseDuration);
   };
 
   /**
@@ -258,37 +264,38 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 
   useEffect(() => {
     let currentOrder;
-    let text;
+    let text = "";
 
     if (selectOrder <= 4)
       currentOrder = ordersLine1[selectOrder];
     else 
       currentOrder = ordersLine2[selectOrder - 5];
-    if (currentOrder) {
-      text = `Commande pour la table ${currentOrder.props.orderDetails.number}: `
-      for (const food of currentOrder.props.orderDetails.food_ordered) {
-        text += ' Plat: '
-        text += `${food.name}`;
-        if (food.details.length > 0)
-          text += " details:";
-        for (const detail of food.details) {
-          text += `${detail}`;
+      if (currentOrder) {
+        text = `Commande pour la table ${currentOrder.props.orderDetails.number}`;
+        speakWithPause(text);
+        
+        for (const food of currentOrder.props.orderDetails.food_ordered) {
+          text = `Plat: ${food.name}`;
+          speakWithPause(text);
+          
+          if (food.details.length > 0) {
+            text = "details: " + food.details.join(", ");
+            speakWithPause(text);
+          }
+          
+          if (food.mods_ingredients.length > 0) {
+            text = 'ingredients: ' + food.mods_ingredients.map(ingredient => {
+              return ingredient.type === 'DEL' ? `Enlever: ${ingredient.ingredient}` : `Ajouter: ${ingredient.ingredient}`;
+            }).join(", ");
+            speakWithPause(text);
+          }
+          
+          if (food.note) {
+            text = `Note: ${food.note}`;
+            speakWithPause(text);
+          }
         }
-        if (food.mods_ingredients.length > 0)
-          text += ' ingredients:';
-        for (const ingredient of food.mods_ingredients) {
-          if (ingredient.type === 'DEL')
-            text += ` Enlever: ${ingredient.ingredient}`
-          if (ingredient.type === 'ADD')
-            text += ` Ajouter: ${ingredient.ingredient}`
-        }
-        if (food.note)
-          text += `Note: ${food.note}`
-
       }
-      console.log(text);
-      speak(text);
-    }
   }, [selectOrder]);
 
   return (
