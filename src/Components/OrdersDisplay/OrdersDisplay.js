@@ -27,6 +27,11 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 
   const audio = new Audio("audio/newOrder.mp3");
 
+  const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+  };
+
   /**
    * @function fetchOrders
    * @description Fetches orders from the backend API, processes them, and sets the
@@ -250,6 +255,39 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
     onSelectOrderId(selectedOrderId);
 
   }, [selectOrder, ordersLine1]);
+
+  useEffect(() => {
+    let currentOrder;
+
+    if (selectOrder <= 4)
+      currentOrder = ordersLine1[selectOrder];
+    else 
+      currentOrder = ordersLine2[selectOrder - 5];
+    if (currentOrder) {
+      console.log("currentOrder: ", currentOrder.props.orderDetails);
+      let text = `Commande pour la table ${currentOrder.props.orderDetails.number}: `
+      for (food in currentOrder.props.orderDetails.food_ordered) {
+        text += `${food.name}`;
+        if (food.details.length > 0)
+          text += "details: ";
+        for (detail in food.details) {
+          text += `${detail}`;
+        }
+        if (food.mods_ingredients.length > 0)
+          text += 'ingredients: ';
+        for (ingredient in food.mods_ingredients) {
+          if (ingredient.type === 'DEL')
+            text += `Enlever: ${ingredient.ingredient}`
+          if (ingredient.type === 'ADD')
+            text += `Ajouter: ${ingredient.ingredient}`
+        }
+        if (food.note)
+          text += `Note: ${food.note}`
+
+      }
+      speak(`Commande pour la table ${currentOrder.props.orderDetails.number}: ${currentOrder.props.orderDetails.}`);
+    }
+  }, [selectOrder]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
