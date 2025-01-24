@@ -150,7 +150,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
     <div className={`h-full flex flex-col`}>
       {orderDetails ? (
         <div className={`h-full flex flex-col`}>
-          <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg flex-shrink-0" style={{ flexBasis: "20%" }}>
+          <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg flex-shrink-0">
             <div className="p-2 text-left">
               <p className="font-semibold text-lg">{orderDetails.number}</p>
               <p className="text-sm">{orderDetails.channel}</p>
