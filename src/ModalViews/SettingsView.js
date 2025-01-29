@@ -54,7 +54,7 @@ const SettingsView = ({
                 </div>
                 <div className="border-white border-[0.5px]"/>
                 <div className="flex flex-row justify-between px-3">
-                    <div className="">Lecture des commandes à l'arrivée</div>
+                    <div className="">Lecture des commandes à l&apos;arrivée</div>
                     <SettingsSwitch
                         value={orderReading}
                         onChange={handleOrderReading}

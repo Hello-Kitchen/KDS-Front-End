@@ -69,7 +69,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
         }
       }
     }
-  }
+  };
 
   /**
    * @function fetchOrders
@@ -142,7 +142,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
           });
 
           if (orderReading) {
-            for (i in orderToDisplay.length - previousNbrOrders.current)
+            for (const i in orderToDisplay.length - previousNbrOrders.current)
               prepareText(orderToDisplay[i]);
           }
         }
@@ -309,7 +309,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
       currentOrder = ordersLine1[selectOrder];
     else 
       currentOrder = ordersLine2[selectOrder - 5];
-    prepareText(currentOrder)
+    prepareText(currentOrder);
   }, [selectOrder]);
 
   return (
@@ -340,6 +340,8 @@ OrdersDisplay.propTypes = {
   selectOrder: PropTypes.number.isRequired, //< Index of the order be selected with button "suivant" and "precedent".
   setNbrOrder: PropTypes.func, //< Function for set the number of order for the selection.
   onSelectOrderId: PropTypes.func.isRequired,
+  orderSelect: PropTypes.bool,
+  orderReading: PropTypes.bool,
 };
 
 OrdersDisplay.defaultProps = {
