@@ -62,7 +62,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
   const fetchOrders = () => {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time&status=${status}`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -232,8 +232,8 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
   }, [activeRecall]);
 
   return (
-    <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
-      <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
+    <div className="relative w-full h-full grid grid-cols-1">
+      <div className="grid grid-cols-5 gap-4 mx-2 py-2 h-full">
         {ordersLine1}
         {activeRecall && <OrderCarousel label="passe" />}
       </div>
