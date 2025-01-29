@@ -40,6 +40,7 @@ function DashboardCuisine({ config, setConfig }) {
   const [displaySettings, setDisplaySettings] = useState(false);
   const [orderAnnoncement, setOrderAnnoncement] = useState(false);
   const [orderReading, setOrderReading] = useState(false);
+  const [orderSelect, setOrderSelect] = useState(false);
   const [touchscreenMode, setTouchscreenMode] = useState(true);
 
   const handleDisplayStatistics = () => {
@@ -62,6 +63,10 @@ function DashboardCuisine({ config, setConfig }) {
 
   const handleOrderReading = () => {
     setOrderReading(!orderReading);
+  };
+
+  const handleOrderSelect = () => {
+    setOrderSelect(!orderSelect);
   };
 
   const handleTouchscreenMode = () => {
@@ -107,13 +112,15 @@ function DashboardCuisine({ config, setConfig }) {
               handleOrderAnnoncement={handleOrderAnnoncement}
               orderReading={orderReading}
               handleOrderReading={handleOrderReading}
+              orderSelect={orderSelect}
+              handleOrderSelect={handleOrderSelect}
               touchscreenMode={touchscreenMode}
               handleTouchscreenMode={handleTouchscreenMode}
               setConfig={setConfig}
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}onSelectOrderId={setCurrentOrderId} />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} orderReading={orderReading} orderSelect={orderSelect} />
           )}
         </div>
         <Footer
@@ -140,6 +147,8 @@ function DashboardCuisine({ config, setConfig }) {
               handleOrderAnnoncement={handleOrderAnnoncement}
               orderReading={orderReading}
               handleOrderReading={handleOrderReading}
+              orderSelect={orderSelect}
+              handleOrderSelect={handleOrderSelect}
               touchscreenMode={touchscreenMode}
               handleTouchscreenMode={handleTouchscreenMode}
               setConfig={setConfig}

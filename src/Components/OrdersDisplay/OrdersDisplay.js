@@ -13,10 +13,12 @@ import PropTypes from "prop-types";
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
  * @param {Boolean} orderAnnoncement - A boolean to determine if an order announcement is active.
+ * @param {Boolean} orderSelect - A boolean to determine if an order announcement is active for the selected order.
+ * @param {Boolean} orderReading - A boolean to determine if an order announcement is active for the new order.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrderId}) {
+function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrderId, orderSelect, orderReading}) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -37,6 +39,37 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
       window.speechSynthesis.speak(pauseUtterance);
     }, pauseDuration);
   };
+
+  const prepareText = (currentOrder) => {
+    let text = "";
+
+    if (currentOrder) {
+      text = `Commande pour la table ${currentOrder.props.orderDetails.number}`;
+      speakWithPause(text);
+      
+      for (const food of currentOrder.props.orderDetails.food_ordered) {
+        text = `Plat: ${food.name}`;
+        speakWithPause(text);
+        
+        if (food.details.length > 0) {
+          text = "details: " + food.details.join(", ");
+          speakWithPause(text);
+        }
+        
+        if (food.mods_ingredients.length > 0) {
+          text = 'ingredients: ' + food.mods_ingredients.map(ingredient => {
+            return ingredient.type === 'DEL' ? `Enlever: ${ingredient.ingredient}` : `Ajouter: ${ingredient.ingredient}`;
+          }).join(", ");
+          speakWithPause(text);
+        }
+        
+        if (food.note) {
+          text = `Note: ${food.note}`;
+          speakWithPause(text);
+        }
+      }
+    }
+  }
 
   /**
    * @function fetchOrders
@@ -107,6 +140,11 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
           audio.play().catch((error) => {
             console.error("Erreur lors de la lecture du son :", error);
           });
+
+          if (orderReading) {
+            for (i in orderToDisplay.length - previousNbrOrders.current)
+              prepareText(orderToDisplay[i]);
+          }
         }
 
         previousNbrOrders.current = orderToDisplay.length;
@@ -264,38 +302,14 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 
   useEffect(() => {
     let currentOrder;
-    let text = "";
 
+    if (orderSelect)
+      return;
     if (selectOrder <= 4)
       currentOrder = ordersLine1[selectOrder];
     else 
       currentOrder = ordersLine2[selectOrder - 5];
-      if (currentOrder) {
-        text = `Commande pour la table ${currentOrder.props.orderDetails.number}`;
-        speakWithPause(text);
-        
-        for (const food of currentOrder.props.orderDetails.food_ordered) {
-          text = `Plat: ${food.name}`;
-          speakWithPause(text);
-          
-          if (food.details.length > 0) {
-            text = "details: " + food.details.join(", ");
-            speakWithPause(text);
-          }
-          
-          if (food.mods_ingredients.length > 0) {
-            text = 'ingredients: ' + food.mods_ingredients.map(ingredient => {
-              return ingredient.type === 'DEL' ? `Enlever: ${ingredient.ingredient}` : `Ajouter: ${ingredient.ingredient}`;
-            }).join(", ");
-            speakWithPause(text);
-          }
-          
-          if (food.note) {
-            text = `Note: ${food.note}`;
-            speakWithPause(text);
-          }
-        }
-      }
+    prepareText(currentOrder)
   }, [selectOrder]);
 
   return (
