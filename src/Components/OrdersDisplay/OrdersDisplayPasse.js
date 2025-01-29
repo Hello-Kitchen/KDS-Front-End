@@ -214,8 +214,8 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
   }, [selectOrder, ordersLine1]);
 
   return (
-    <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
-      <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
+    <div className="relative w-full h-full grid grid-cols-1">
+      <div className="grid grid-cols-5 gap-4 mx-2 py-2 h-full">
         {ordersLine1}
       </div>
       {nbrOrdersWaiting === 1 && (
