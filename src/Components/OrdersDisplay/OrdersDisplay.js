@@ -154,14 +154,14 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
           setNbrOrder(ordersLineComponents.length);
           ordersLineComponents.forEach((order) => {
             if (
-              currentLine1Cols + order.nbrCol <= 5 &&
+              currentLine1Cols + order.nbrCol <=10 &&
               waitingOrdersQueue.length === 0 &&
               ordersLine2.length === 0
             ) {
               ordersLine1.push(order.component);
               currentLine1Cols += order.nbrCol;
             } else if (
-              currentLine2Cols + order.nbrCol <= 5 &&
+              currentLine2Cols + order.nbrCol <= 10 &&
               waitingOrdersQueue.length === 0
             ) {
               ordersLine2.push(order.component);
