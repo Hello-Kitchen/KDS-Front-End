@@ -137,7 +137,7 @@ const OrderCarousel = ({ label }) => {
       return <NothingCard />;
     } else {
       return (
-        <div className="h-full col-start-5">
+        <div className="flex-1 flex flex-col col-start-5">
           <SingleOrderDisplay orderDetails={orders[currentIndex]} span={getNbrColumns(orders[currentIndex])} index={currentIndex} selectOrder={-1} recall={true} />
           <div className='bg-slate-600 h-8 rounded-bl-lg rounded-br-lg flex justify-center items-center justify-around'>
             <img className='cursor-pointer' onClick={prevOrder} src={`${process.env.PUBLIC_URL}/left-arrow.png`} width="22" height="22"/>

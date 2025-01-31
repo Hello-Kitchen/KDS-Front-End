@@ -148,9 +148,9 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   );
 
   return (
-    <div className={`h-full flex flex-col`}>
+    <div className={`flex-1 flex flex-col`}>
       {orderDetails ? (
-        <div className={`h-full flex flex-col`}>
+        <div className={`flex-1 flex flex-col`}>
           <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg flex-shrink-0">
             <div className="p-2 text-left">
               <p className="font-semibold text-lg">{orderDetails.number}</p>
@@ -181,7 +181,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
               </p>
             </div>
           </div>
-          <div className={`flex-grow px-3 py-1 border-4 border-t-0 rounded-b-lg ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
+          <div className={`flex-grow px-3 py-1 border-4 border-t-0 ${recall ? `` : `rounded-b-lg`} ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
