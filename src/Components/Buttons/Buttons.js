@@ -88,7 +88,7 @@ const GenericButton = ({
                 , {headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }})
-                .then((response) => {localStorage.getItem("restaurantID")
+                .then((response) => {
                 if (response.status === 401) {
                     navigate("/", {state: {error: "Unauthorized access. Please log in."}});
                     throw new Error("Unauthorized access. Please log in.");
