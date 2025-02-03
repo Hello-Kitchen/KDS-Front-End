@@ -79,6 +79,6 @@ describe('OrderCarousel Component', () => {
         render(<OrderCarousel label="cuisine" />);
 
         // Attendre que le message soit affiché
-        await screen.findByText(/Aucune commande a rappelle/i);
+        await screen.findByText(/Aucune commande à rappeler/i);
     });
 });
