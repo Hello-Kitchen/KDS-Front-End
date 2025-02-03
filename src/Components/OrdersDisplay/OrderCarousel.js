@@ -22,7 +22,7 @@ const NothingCard = () => {
     <div className="h-full col-start-5">
       <div className='bg-slate-600 h-6 rounded-t-lg flex items-center content-center justify-between px-2'></div>
       <div className="bg-gray-800 shadow-md p-4 flex flex-col items-center">
-        <p className="mt-2 text-gray-600">Aucune commande a rappelle</p>
+        <p className="mt-2 text-gray-600">Aucune commande à rappeler</p>
       </div>
       <div className='bg-slate-600 h-6 rounded-bl-lg rounded-br-lg flex items-center content-center justify-between px-2'></div>
     </div>
