@@ -72,7 +72,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
     }));
 
     // API Request
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, {
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${idFood}`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

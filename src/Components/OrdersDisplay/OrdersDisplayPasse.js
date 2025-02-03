@@ -59,7 +59,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
   const fetchOrders = () => {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time&status=${status}`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders?sort=time&status=${status}`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -99,7 +99,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
         // Fetch food details for each order to display
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 5).map((order) => {
           return fetch(
-            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
+            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${order.id}?forKDS=true`
             , {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
