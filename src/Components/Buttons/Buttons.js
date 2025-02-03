@@ -54,6 +54,8 @@ const icons = {
  * @param {function} props.navigationPrev - A function to navigate to the prev order.
  * @param {function} props.navigationAfter - A function to navigate to the next order.
  * @param {function} props.handleDisplayStatistics - A function to handle display statistics.
+ * @param {boolean} props.activeRecall - The currently active recall.
+ * @param {function} props.updateActiveRecall - A function to update the active recall.
  *
  * @return {JSX.Element} A button component with an icon or image and a label.
  */
@@ -69,7 +71,9 @@ const GenericButton = ({
     navigationAfter,
     handleDisplayStatistics,
     handleSettingsDisplay,
-    currentOrderId
+    currentOrderId,
+    activeRecall,
+    updateActiveRecall
 }) => {
     const [isInverted, setIsInverted] = useState(false);
     const navigate = useNavigate();
@@ -162,6 +166,12 @@ const GenericButton = ({
         if (label === "RÉGLAGES")
             handleSettingsDisplay();
 
+        if (label === "RAPPEL")
+            updateActiveRecall(!activeRecall);
+
+        if (label !== "RAPPEL" && activeRecall === true)
+            updateActiveRecall(false);
+
         if (!invertOnClick) {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
         }
@@ -207,7 +217,9 @@ GenericButton.propTypes = {
     navigationAfter: PropTypes.func, ///< Function to handle navigation order
     handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
-    currentOrderId: PropTypes.number
+    currentOrderId: PropTypes.number,
+    activeRecall: PropTypes.bool, ///< Currently active recall
+    updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
 
 export { GenericButton };
@@ -241,10 +253,12 @@ let buttonData = {
  * @param {function} props.navigationAfter - A function to navigate to the next order.
  * @param {string} props.activeTab - The currently active tab.
  * @param {function} props.updateActiveTab - A function to update the active tab.
+ * @param {boolean} props.activeRecall - The currently active recall.
+ * @param {function} props.updateActiveRecall - A function to update the active recall.
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId, activeRecall, updateActiveRecall }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -270,6 +284,8 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         handleDisplayStatistics={handleDisplayStatistics}
                         handleSettingsDisplay={handleSettingsDisplay}
                         currentOrderId={currentOrderId}
+                        activeRecall={activeRecall}
+                        updateActiveRecall={updateActiveRecall}
                     />
                 );
             })}
@@ -287,6 +303,8 @@ ButtonSet.propTypes = {
     handleDisplayStatistics: PropTypes.func, ///< Function to handle display statistics
     handleSettingsDisplay: PropTypes.func, ///< Function to handle settings display
     currentOrderId: PropTypes.number, ///< Function to handle serving feature
+    activeRecall: PropTypes.bool, ///< Currently active recall
+    updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
 };
 
 export default ButtonSet;
