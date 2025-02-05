@@ -46,6 +46,7 @@ function DashboardCuisine({ config, setConfig }) {
   const handleDisplayStatistics = () => {
     setDisplayStatistics(!displayStatistics);
     setDisplaySettings(false);
+    setActiveRecall(false);
   };
   const [activeRecall, setActiveRecall] = useState(false);
 
@@ -75,6 +76,7 @@ function DashboardCuisine({ config, setConfig }) {
   const handleSettingsDisplay = () => {
     setDisplaySettings(!displaySettings);
     setDisplayStatistics(false);
+    setActiveRecall(false);
   };
 
   /**

@@ -189,7 +189,7 @@ const GenericButton = ({
                 `}
                 onMouseDown={invertOnClick ? handleMouseDown : undefined}
                 onMouseUp={invertOnClick ? handleMouseUp : undefined}
-                onClick={handleClick}
+                onClick={activeTab !== "RAPPEL" && label == "RAPPEL" ? undefined : handleClick}
             >
                 {icon !== 'null' ? (
                     React.createElement(icons[icon], { size: 50, color: isActive ? '#499CA6' : '#F2E5A2' })
