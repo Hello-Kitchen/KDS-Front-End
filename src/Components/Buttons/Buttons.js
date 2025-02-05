@@ -88,7 +88,7 @@ const GenericButton = ({
 
     const handleServed = (id) => {
             fetch(
-                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${id}`
+                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${id}`
                 , {headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }})
@@ -102,7 +102,7 @@ const GenericButton = ({
                 .then((order) => {
                 if (order.food_ordered.every(food => food.is_ready === true)) {
                     fetch(
-                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/served/${order.id}`
+                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/served/${order.id}`
                         , {
                             method: 'PUT',
                             headers: {
@@ -122,7 +122,7 @@ const GenericButton = ({
                     order.food_ordered.forEach((food) => {
                         if (!food.is_ready) {
                             fetch(
-                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${food.id}`
+                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${food.id}`
                                 , {
                                     method: 'PUT',
                                     headers: {
