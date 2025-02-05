@@ -36,6 +36,7 @@ describe('Login Page', () => {
         expect(screen.getByText(/Sample error message/i)).toBeInTheDocument();
 
         // Check if the form is rendered correctly
+        expect(screen.getByLabelText(/Numéro de restaurant/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/Nom d'utilisateur/i)).toBeInTheDocument();
         expect(screen.getByLabelText(/Mot de passe/i)).toBeInTheDocument();
         expect(screen.getByRole('button', { name: /Se connecter/i })).toBeInTheDocument();
@@ -52,6 +53,7 @@ describe('Login Page', () => {
         render(<Login />);
 
         // Fill in the form
+        fireEvent.change(screen.getByLabelText(/Numéro de restaurant/i), { target: { value: '1' } });
         fireEvent.change(screen.getByLabelText(/Nom d'utilisateur/i), { target: { value: 'testuser' } });
         fireEvent.change(screen.getByLabelText(/Mot de passe/i), { target: { value: 'password123' } });
 

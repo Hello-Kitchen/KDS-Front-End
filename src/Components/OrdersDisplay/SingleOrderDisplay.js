@@ -10,9 +10,11 @@ import PropTypes from "prop-types";
  * @param {number} span - The number of columns the order should span in the grid.
  * @param {number} index - Index of the order into array.
  * @param {number} selectOrder - Index of the order be selected with button "suivant" and "precedent".
+ * @param {number} recall - Can specify whether the component is used for displaying a recall.
  * @returns {JSX.Element} The rendered component.
  */
-export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder }) {
+export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder, recall }) {
+  // if (recall) console.log("orderdetails = ", orderDetails);
   const navigate = useNavigate();
 
   const [orderDetail, setOrderDetail] = useState(orderDetails);
@@ -53,7 +55,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   const updateStatus = (idFood) => {
     // Save previous state
     setPreviousStates(prev => new Map(prev).set(idFood, {...orderDetail}));
-    
+
     // Mark as updating
     setUpdatingFoodIds(prev => new Set(prev).add(idFood));
     setLastUpdateTime(prev => new Map(prev).set(idFood, Date.now()));
@@ -72,9 +74,9 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
     }));
 
     // API Request
-    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/status/${idFood}`, {
+    fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${idFood}`, {
       method: 'PUT',
-      headers: { 
+      headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         'Content-Type': 'application/json'
       }
@@ -87,7 +89,6 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
       if (!response.ok) {
         throw new Error('Update failed');
       }
-      return response.json();
     })
     .catch(error => {
       console.error('Error updating status:', error);
@@ -128,11 +129,11 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
 
   // Component rendering with loading state management
   const renderFoodItem = (food) => (
-    <span 
-      onClick={() => !updatingFoodIds.has(food.id) && updateStatus(food.id)} 
+    <span
+      onClick={() => !updatingFoodIds.has(food.id) && updateStatus(food.id)}
       className={`
         cursor-pointer
-        ${food.is_ready ? "text-slate-500 italic" : ""} 
+        ${food.is_ready ? "text-slate-500 italic" : ""}
         ${updatingFoodIds.has(food.id) ? "opacity-50" : ""}
       `}
     >
@@ -147,10 +148,10 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   );
 
   return (
-    <div className={`h-full`}>
+    <div className={`flex-1 flex flex-col`}>
       {orderDetails ? (
-        <div>
-          <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg">
+        <div className={`flex-1 flex flex-col`}>
+          <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg flex-shrink-0">
             <div className="p-2 text-left">
               <p className="font-semibold text-lg">{orderDetails.number}</p>
               <p className="text-sm">{orderDetails.channel}</p>
@@ -180,7 +181,7 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
               </p>
             </div>
           </div>
-          <div className={`px-3 py-1 border-4 border-t-0 rounded-b-lg ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
+          <div className={`flex-grow px-3 py-1 border-4 border-t-0 ${recall ? `` : `rounded-b-lg`} ${selectOrder === index ? `border-select-orange ${orderDetails.channel === "Sur place" ? "bg-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100" : "bg-purple-100"}` : orderDetails.channel === "Sur place" ? "bg-yellow-100 border-yellow-100" : orderDetails.channel === "A emporter" ? "bg-blue-100 border-blue-100" : "bg-purple-100 border-purple-100"}`} style={{ columnCount: span }}>
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
@@ -247,6 +248,6 @@ SingleOrderDisplay.propTypes = {
   orderDetails: PropTypes.object.isRequired,
   span: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
-  selectOrder: PropTypes.number.isRequired
+  selectOrder: PropTypes.number.isRequired,
+  recall: PropTypes.bool
 };
-

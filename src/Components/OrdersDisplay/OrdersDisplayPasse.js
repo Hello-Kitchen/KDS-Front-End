@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import SingleOrderDisplay from './SingleOrderDisplay';
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import OrderCarousel from './OrderCarousel';
 
 /**
  * @component OrdersDisplayPasse
@@ -12,15 +13,17 @@ import { useNavigate } from "react-router-dom";
  * @param {string} props.status - The status of the orders to display ('ready' or 'pending').
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
+ * @param {boolean} props.activeRecall - The currently active recall.
  *
  * @example
  * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId, activeRecall }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
+  const [lastOrders, setLastOrders] = useState();
   const selectOrderRef = useRef(selectOrder);
 
   /**
@@ -59,7 +62,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
   const fetchOrders = () => {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time&status=${status}`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders?sort=time&status=${status}`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -99,7 +102,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
         // Fetch food details for each order to display
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 5).map((order) => {
           return fetch(
-            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
+            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${order.id}?forKDS=true`
             , {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -129,7 +132,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
-                  key={orderDetails.number}
+                  key={index}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
@@ -190,7 +193,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
     const newOrdersLineComponents = ordersLine1.map((order) => ({
       component: (
         <SingleOrderDisplay
-          key={order.props.orderDetails.number}
+          key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
           index={order.props.index}
@@ -213,10 +216,26 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId 
 
   }, [selectOrder, ordersLine1]);
 
+  useEffect(() => {
+    if (nbrOrders >= 5) {
+      if (activeRecall) {
+        setLastOrders(ordersLine1[ordersLine1.length]);
+        setOrdersLine1((prevOrders) => prevOrders.slice(0, -1));
+        setNbrOrdersWaiting(nbrOrdersWaiting + 1);
+      }
+      else {
+        setOrdersLine1((prevOrders) => [...prevOrders, lastOrders]);
+        setLastOrders(undefined);
+        setNbrOrdersWaiting(nbrOrdersWaiting - 1);
+      }
+    }
+  }, [activeRecall]);
+
   return (
-    <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
-      <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
+    <div className="relative w-full h-full grid grid-cols-1">
+      <div className="grid grid-cols-5 gap-4 mx-2 py-2 h-full">
         {ordersLine1}
+        {activeRecall && <OrderCarousel label="passe" />}
       </div>
       {nbrOrdersWaiting === 1 && (
         <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">
@@ -236,7 +255,8 @@ OrdersDisplayPasse.propTypes = {
   status: PropTypes.string.isRequired,
   selectOrder: PropTypes.number.isRequired,
   setNbrOrder: PropTypes.func,
-  onSelectOrderId: PropTypes.func
+  onSelectOrderId: PropTypes.func,
+  activeRecall: PropTypes.bool,
 };
 
 export default OrdersDisplayPasse;

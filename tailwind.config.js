@@ -34,7 +34,8 @@ module.exports = {
         'select-orange': '#FF9900'
       },
       boxShadow: {
-        'inner-top-lg': 'inset 0 5px 5px rgba(0, 0, 0, 0.3)'
+        'inner-top-lg': 'inset 0 5px 5px rgba(0, 0, 0, 0.3)',
+        'inner-right-lg': 'inset -5px 0 5px rgba(0, 0, 0, 0.3)',
       },
     },
   },
