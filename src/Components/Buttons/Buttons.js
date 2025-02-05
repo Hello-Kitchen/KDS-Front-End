@@ -166,8 +166,9 @@ const GenericButton = ({
         if (label === "RÉGLAGES")
             handleSettingsDisplay();
 
-        if (label === "RAPPEL")
+        if (label === "RAPPEL") {
             updateActiveRecall(!activeRecall);
+        }
 
         if (label !== "RAPPEL" && activeRecall === true)
             updateActiveRecall(false);
@@ -189,7 +190,7 @@ const GenericButton = ({
                 `}
                 onMouseDown={invertOnClick ? handleMouseDown : undefined}
                 onMouseUp={invertOnClick ? handleMouseUp : undefined}
-                onClick={activeTab !== "RAPPEL" && label == "RAPPEL" ? undefined : handleClick}
+                onClick={label !== "RAPPEL" ? handleClick : activeTab !== "ACTIVER" && activeTab !== "" && activeTab !== "RAPPEL" ? undefined : handleClick}
             >
                 {icon !== 'null' ? (
                     React.createElement(icons[icon], { size: 50, color: isActive ? '#499CA6' : '#F2E5A2' })
