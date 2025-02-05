@@ -144,7 +144,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
             console.error("Erreur lors de la lecture du son :", error);
           });
 
-          if (orderReading) {
+          if (!orderReading) {
             for (const i in orderToDisplay.length - previousNbrOrders.current)
               prepareText(orderToDisplay[i]);
           }
@@ -321,7 +321,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
   useEffect(() => {
     let currentOrder;
 
-    if (orderSelect)
+    if (!orderSelect)
       return;
     if (selectOrder <= 4)
       currentOrder = ordersLine1[selectOrder];
