@@ -31,6 +31,7 @@ function DashboardPasse() {
   const [currentOrderId, setCurrentOrderId] = useState(undefined);
   const [nbrOrder, setNbrOrder] = useState(0);
   const [activeTab, setActiveTab] = useState("");
+  const [activeRecall, setActiveRecall] = useState(false);
 
   /**
    * @function updateActiveTab
@@ -40,6 +41,16 @@ function DashboardPasse() {
    */
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
+  };
+
+  /**
+   * @function updateActiveRecall
+   * @description Updates the active recall for order.
+   *
+   * @param {boolean} newRecall - The new recall to set as active or not.
+   */
+  const updateActiveRecall = (newRecall) => {
+    setActiveRecall(newRecall);
   };
 
   useEffect(() => {
@@ -70,7 +81,7 @@ function DashboardPasse() {
       <div className='w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'>
         <div className="col-span-1 row-span-2"><LeftSection /></div>
         <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} onSelectOrderId={setCurrentOrderId} /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} onSelectOrderId={setCurrentOrderId} /></div>
+        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} /></div>
       </div>
       <Footer
         buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
@@ -79,6 +90,8 @@ function DashboardPasse() {
         activeTab={activeTab}
         updateActiveTab={updateActiveTab}
         currentOrderId={currentOrderId}
+        activeRecall={activeRecall}
+        updateActiveRecall={updateActiveRecall}
       />
     </div>
   );

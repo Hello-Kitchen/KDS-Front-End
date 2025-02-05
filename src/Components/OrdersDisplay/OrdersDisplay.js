@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import SingleOrderDisplay from "./SingleOrderDisplay";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import OrderCarousel from './OrderCarousel';
 
 /**
  * @component OrdersDisplay
@@ -13,16 +14,18 @@ import PropTypes from "prop-types";
  * @param {number} props.selectOrder - Index of the order be selected with button "suivant" and "precedent".
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
  * @param {Boolean} orderAnnoncement - A boolean to determine if an order announcement is active.
+ * @param {boolean} props.activeRecall - The currently active recall.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrderId}) {
+function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId}) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [ordersLine2, setOrdersLine2] = useState([]);
   const previousNbrOrders = useRef(0);
+  const [lastOrders, setLastOrders] = useState();
   const selectOrderRef = useRef(selectOrder);
 
   const audio = new Audio("audio/newOrder.mp3");
@@ -62,7 +65,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
     };
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?sort=time`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders?sort=time`
       , {headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       }})
@@ -106,7 +109,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
         // Fetch food details for each order to display
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 10).map((order) => {
           return fetch(
-            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
+            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${order.id}?forKDS=true`
           , {headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           }})
@@ -135,7 +138,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
-                  key={orderDetails.number}
+                  key={index}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
@@ -213,7 +216,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
     const newOrdersLineComponents = ordersLine1.map((order) => ({
       component: (
         <SingleOrderDisplay
-          key={order.props.orderDetails.number}
+          key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
           index={order.props.index}
@@ -228,7 +231,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
     const newOrdersLineComponents2 = ordersLine2.map((order) => ({
       component: (
         <SingleOrderDisplay
-          key={order.props.orderDetails.number}
+          key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
           index={order.props.index}
@@ -251,6 +254,21 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 
   }, [selectOrder, ordersLine1]);
 
+  useEffect(() => {
+    if (nbrOrders >= 10) {
+      if (activeRecall) {
+        setLastOrders(ordersLine2[ordersLine2.length]);
+        setOrdersLine2((prevOrders) => prevOrders.slice(0, -1));
+        setNbrOrdersWaiting(nbrOrdersWaiting + 1);
+      }
+      else {
+        setOrdersLine2((prevOrders) => [...prevOrders, lastOrders]);
+        setLastOrders(undefined);
+        setNbrOrdersWaiting(nbrOrdersWaiting - 1);
+      }
+    }
+  }, [activeRecall]);
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
@@ -258,6 +276,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
       </div>
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
         {ordersLine2}
+        {activeRecall && <OrderCarousel label="cuisine" />}
       </div>
       {nbrOrdersWaiting === 1 && (
         <div className="absolute bottom-0 right-0 bg-orange-400 text-white font-bold border-2 border-orange-400 rounded-tl-md">
@@ -277,7 +296,8 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, onSelectOrde
 OrdersDisplay.propTypes = {
   orderAnnoncement: PropTypes.bool, //< A boolean to determine if an order announcement is active.
   selectOrder: PropTypes.number.isRequired, //< Index of the order be selected with button "suivant" and "precedent".
-  setNbrOrder: PropTypes.func, //< Function for set the number of order for the selection.
+  setNbrOrder: PropTypes.func,
+  activeRecall: PropTypes.bool, //< Function for set the number of order for the selection.
   onSelectOrderId: PropTypes.func.isRequired,
 };
 

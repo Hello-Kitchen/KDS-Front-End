@@ -6,6 +6,7 @@ import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
 import StatisticsView from '../../Components/ModalViews/StatisticsView';
 import SettingsView from '../../ModalViews/SettingsView';
 
+
 /**
  * @function formatDate
  * @description Formats a Date object into a string in the format DD/MM/YYYY - HH:MM.
@@ -46,6 +47,7 @@ function DashboardCuisine({ config, setConfig }) {
     setDisplayStatistics(!displayStatistics);
     setDisplaySettings(false);
   };
+  const [activeRecall, setActiveRecall] = useState(false);
 
   /**
    * @function updateActiveTab
@@ -73,6 +75,16 @@ function DashboardCuisine({ config, setConfig }) {
   const handleSettingsDisplay = () => {
     setDisplaySettings(!displaySettings);
     setDisplayStatistics(false);
+  };
+
+  /**
+   * @function updateActiveRecall
+   * @description Updates the active recall for order.
+   *
+   * @param {boolean} newRecall - The new recall to set as active or not.
+   */
+  const updateActiveRecall = (newRecall) => {
+    setActiveRecall(newRecall);
   };
 
   useEffect(() => {
@@ -116,7 +128,7 @@ function DashboardCuisine({ config, setConfig }) {
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}onSelectOrderId={setCurrentOrderId} />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} />
           )}
         </div>
         <Footer
@@ -125,7 +137,7 @@ function DashboardCuisine({ config, setConfig }) {
           handleDisplayStatistics={handleDisplayStatistics}
           activeTab={activeTab}
           updateActiveTab={updateActiveTab}
-          navigationPrev={handleNavigationPrev}
+          activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} navigationPrev={handleNavigationPrev}
           navigationAfter={handleNavigationAfter}
           handleSettingsDisplay={handleSettingsDisplay}
           currentOrderId={currentOrderId}
