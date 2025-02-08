@@ -15,10 +15,12 @@ import OrderCarousel from './OrderCarousel';
  * @param {func} props.setNbrOrder - Function for set the number of order for the selection.
  * @param {Boolean} orderAnnoncement - A boolean to determine if an order announcement is active.
  * @param {boolean} props.activeRecall - The currently active recall.
+ * @param {Boolean} orderSelect - A boolean to determine if an order announcement is active for the selected order.
+ * @param {Boolean} orderReading - A boolean to determine if an order announcement is active for the new order.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId}) {
+function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading}) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -29,6 +31,48 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
   const selectOrderRef = useRef(selectOrder);
 
   const audio = new Audio("audio/newOrder.mp3");
+
+  const speakWithPause = (text, pauseDuration = 1000) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+    
+    // Pause après la première partie
+    setTimeout(() => {
+      const pauseUtterance = new SpeechSynthesisUtterance(''); // Utterance vide pour la pause
+      window.speechSynthesis.speak(pauseUtterance);
+    }, pauseDuration);
+  };
+
+  const prepareText = (currentOrder) => {
+    let text = "";
+
+    if (currentOrder) {
+      text = `Commande pour la table ${currentOrder.props.orderDetails.number}`;
+      speakWithPause(text);
+      
+      for (const food of currentOrder.props.orderDetails.food_ordered) {
+        text = `Plat: ${food.name}`;
+        speakWithPause(text);
+        
+        if (food.details.length > 0) {
+          text = "details: " + food.details.join(", ");
+          speakWithPause(text);
+        }
+        
+        if (food.mods_ingredients.length > 0) {
+          text = 'ingredients: ' + food.mods_ingredients.map(ingredient => {
+            return ingredient.type === 'DEL' ? `Enlever: ${ingredient.ingredient}` : `Ajouter: ${ingredient.ingredient}`;
+          }).join(", ");
+          speakWithPause(text);
+        }
+        
+        if (food.note) {
+          text = `Note: ${food.note}`;
+          speakWithPause(text);
+        }
+      }
+    }
+  };
 
   /**
    * @function fetchOrders
@@ -99,6 +143,11 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
           audio.play().catch((error) => {
             console.error("Erreur lors de la lecture du son :", error);
           });
+
+          if (!orderReading) {
+            for (const i in orderToDisplay.length - previousNbrOrders.current)
+              prepareText(orderToDisplay[i]);
+          }
         }
 
         previousNbrOrders.current = orderToDisplay.length;
@@ -269,6 +318,18 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
     }
   }, [activeRecall]);
 
+  useEffect(() => {
+    let currentOrder;
+
+    if (!orderSelect)
+      return;
+    if (selectOrder <= 4)
+      currentOrder = ordersLine1[selectOrder];
+    else 
+      currentOrder = ordersLine2[selectOrder - 5];
+    prepareText(currentOrder);
+  }, [selectOrder]);
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
@@ -299,6 +360,8 @@ OrdersDisplay.propTypes = {
   setNbrOrder: PropTypes.func,
   activeRecall: PropTypes.bool, //< Function for set the number of order for the selection.
   onSelectOrderId: PropTypes.func.isRequired,
+  orderSelect: PropTypes.bool,
+  orderReading: PropTypes.bool,
 };
 
 OrdersDisplay.defaultProps = {
