@@ -44,23 +44,31 @@ const OrderCarousel = ({ label }) => {
   };
 
   const getNbrColumns = (orderDetails) => {
+    if (!orderDetails || !orderDetails.food_ordered || orderDetails.food_ordered.length === 0) {
+      return 1;
+    }
+
     let nbrLines = 0;
     let nbrCol = 0;
 
     orderDetails.food_ordered.map((food) => {
       nbrLines += 1;
-      food.details.map(() => {
-        nbrLines += 1;
-      });
-      food.mods_ingredients.map(() => {
-        nbrLines += 1;
-      });
+      if (food.details && Array.isArray(food.details)) {
+        food.details.map(() => {
+          nbrLines += 1;
+        });
+      }
+      if (food.mods_ingredients && Array.isArray(food.mods_ingredients)) {
+        food.mods_ingredients.map(() => {
+          nbrLines += 1;
+        });
+      }
       if (food.note) {
         nbrLines += 1;
       }
     });
     nbrCol = Math.ceil(nbrLines / 10);
-    return nbrCol;
+    return nbrCol || 1;
   };
 
   function fetchOrdersKitchen(status) {

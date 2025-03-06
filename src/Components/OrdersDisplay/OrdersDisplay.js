@@ -20,7 +20,7 @@ import OrderCarousel from './OrderCarousel';
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading}) {
+function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -35,7 +35,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
   const speakWithPause = (text, pauseDuration = 1000) => {
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
-    
+
     // Pause après la première partie
     setTimeout(() => {
       const pauseUtterance = new SpeechSynthesisUtterance(''); // Utterance vide pour la pause
@@ -49,23 +49,23 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
     if (currentOrder) {
       text = `Commande pour la table ${currentOrder.props.orderDetails.number}`;
       speakWithPause(text);
-      
+
       for (const food of currentOrder.props.orderDetails.food_ordered) {
         text = `Plat: ${food.name}`;
         speakWithPause(text);
-        
+
         if (food.details.length > 0) {
           text = "details: " + food.details.join(", ");
           speakWithPause(text);
         }
-        
+
         if (food.mods_ingredients.length > 0) {
           text = 'ingredients: ' + food.mods_ingredients.map(ingredient => {
             return ingredient.type === 'DEL' ? `Enlever: ${ingredient.ingredient}` : `Ajouter: ${ingredient.ingredient}`;
           }).join(", ");
           speakWithPause(text);
         }
-        
+
         if (food.note) {
           text = `Note: ${food.note}`;
           speakWithPause(text);
@@ -89,33 +89,43 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
      * @returns {number} The number of columns needed to display the order.
      */
     const getNbrColumns = (orderDetails) => {
+      if (!orderDetails || !orderDetails.food_ordered || orderDetails.food_ordered.length === 0) {
+        return 1;
+      }
+
       let nbrLines = 0;
       let nbrCol = 0;
 
       orderDetails.food_ordered.map((food) => {
         nbrLines += 1;
-        food.details.map(() => {
-          nbrLines += 1;
-        });
-        food.mods_ingredients.map(() => {
-          nbrLines += 1;
-        });
+        if (food.details && Array.isArray(food.details)) {
+          food.details.map(() => {
+            nbrLines += 1;
+          });
+        }
+        if (food.mods_ingredients && Array.isArray(food.mods_ingredients)) {
+          food.mods_ingredients.map(() => {
+            nbrLines += 1;
+          });
+        }
         if (food.note) {
           nbrLines += 1;
         }
       });
       nbrCol = Math.ceil(nbrLines / 10);
-      return nbrCol;
+      return nbrCol || 1;
     };
 
     fetch(
       `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders?sort=time`
-      , {headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }})
+      , {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      })
       .then((response) => {
         if (response.status === 401) {
-          navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+          navigate("/", { state: { error: "Unauthorized access. Please log in." } });
           throw new Error("Unauthorized access. Please log in.");
         }
         return response.json();
@@ -159,12 +169,14 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
         const fetchFoodDetailsPromises = orderToDisplay.slice(0, 10).map((order) => {
           return fetch(
             `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${order.id}?forKDS=true`
-          , {headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          }})
+            , {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              }
+            })
             .then((response) => {
               if (response.status === 401) {
-                navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                navigate("/", { state: { error: "Unauthorized access. Please log in." } });
                 throw new Error("Unauthorized access. Please log in.");
               }
               return response.json();
@@ -325,7 +337,7 @@ function OrdersDisplay({orderAnnoncement, selectOrder, setNbrOrder, activeRecall
       return;
     if (selectOrder <= 4)
       currentOrder = ordersLine1[selectOrder];
-    else 
+    else
       currentOrder = ordersLine2[selectOrder - 5];
     prepareText(currentOrder);
   }, [selectOrder]);
