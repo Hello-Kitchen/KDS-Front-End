@@ -66,7 +66,7 @@ const OrderCarousel = ({ label }) => {
   function fetchOrdersKitchen(status) {
 
     fetch(
-      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders?status=${status}&sort=time`
+      `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders?status=${status}&sort=time`
       , {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -84,7 +84,7 @@ const OrderCarousel = ({ label }) => {
         // Fetch food details for each order to display
         const fetchFoodDetailsPromises = ordersData.map((order) => {
           return fetch(
-            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${process.env.REACT_APP_NBR_RESTAURANT}/orders/${order.id}?forKDS=true`
+            `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${order.id}?forKDS=true`
             , {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
