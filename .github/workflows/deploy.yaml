@@ -27,12 +27,10 @@ jobs:
         cd G-EIP-700-PAR-7-1-eip-jules.gresset
         mkdir -p -v KDS-Front-End
         rsync -av --delete ../ KDS-Front-End/ --exclude .git --exclude G-EIP-700-PAR-7-1-eip-jules.gresset/
-
     - name: Configure Git
       run: |
         git config --global user.name "Jules Gresset"
         git config --global user.email "jules.gresset@epitech.eu"
-
     - name: Push to EPITECH repository
       run: |
         cd G-EIP-700-PAR-7-1-eip-jules.gresset
@@ -75,9 +73,9 @@ jobs:
         TARGET: ${{ secrets.VPS_TARGET }}
         EXCLUDE: "/node_modules/"
         SCRIPT_AFTER: |
-          echo "REACT_APP_BACKEND_URL=\"${{ secrets.BACKEND_URL }}\"" >> ${{ secrets.VPS_TARGET }}.env
-          echo "REACT_APP_BACKEND_PORT=\"${{ secrets.BACKEND_PORT }}\"" >> ${{ secrets.VPS_TARGET }}.env
-          echo "SALT_HASH=\"${{ secrets.BACKEND_SALT }}\"" >> ${{ secrets.VPS_TARGET }}.env
+          echo 'REACT_APP_BACKEND_URL="${{ secrets.BACKEND_URL }}"' >> ${{ secrets.VPS_TARGET }}.env
+          echo 'REACT_APP_BACKEND_PORT="${{ secrets.BACKEND_PORT }}"' >> ${{ secrets.VPS_TARGET }}.env
+          echo 'REACT_APP_SALT_HASH="${{ secrets.BACKEND_SALT }}"' >> ${{ secrets.VPS_TARGET }}.env
           sleep 2
           ./restartKDS.sh
         SCRIPT_AFTER_REQUIRED: true
