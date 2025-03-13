@@ -12,6 +12,8 @@ import PropTypes from 'prop-types';
  * @param {function} props.handleOrderAnnoncement - The function to handle changes to order announcement setting.
  * @param {boolean} props.orderReading - The current state of order reading setting.
  * @param {function} props.handleOrderReading - The function to handle changes to order reading setting.
+ * @param {boolean} props.orderSelect - The current state of order select setting.
+ * @param {function} props.handleOrderSelect - The function to handle changes to order select setting.
  * @param {boolean} props.touchscreenMode - The current state of touchscreen mode setting.
  * @param {function} props.handleTouchscreenMode - The function to handle changes to touchscreen mode setting.
  * @param {function} props.setConfig - The function to set the configuration.
@@ -23,6 +25,8 @@ const SettingsView = ({
     handleOrderAnnoncement, 
     orderReading, 
     handleOrderReading,
+    orderSelect, 
+    handleOrderSelect,
     touchscreenMode, 
     handleTouchscreenMode,
     setConfig,
@@ -50,10 +54,18 @@ const SettingsView = ({
                 </div>
                 <div className="border-white border-[0.5px]"/>
                 <div className="flex flex-row justify-between px-3">
-                    <div className="">Lecture des commandes</div>
+                    <div className="">Lecture des commandes à l&apos;arrivée</div>
                     <SettingsSwitch
                         value={orderReading}
                         onChange={handleOrderReading}
+                    />
+                </div>
+                <div className="border-white border-[0.5px]"/>
+                <div className="flex flex-row justify-between px-3">
+                    <div className="">Lecture de la commande sélectionnée</div>
+                    <SettingsSwitch
+                        value={orderSelect}
+                        onChange={handleOrderSelect}
                     />
                 </div>
                 <div className="border-white border-[0.5px]"/>
@@ -84,6 +96,8 @@ SettingsView.propTypes = {
     handleOrderAnnoncement: PropTypes.func.isRequired, //< function - The function to handle changes to order announcement setting.
     orderReading: PropTypes.bool.isRequired, //< boolean - The current state of order reading setting.
     handleOrderReading: PropTypes.func.isRequired, //< function - The function to handle changes to order reading setting.
+    orderSelect: PropTypes.bool.isRequired, //< boolean - The current state of order select setting.
+    handleOrderSelect: PropTypes.func.isRequired, //< function - The function to handle changes to order select setting.
     touchscreenMode: PropTypes.bool.isRequired, //< boolean - The current state of touchscreen mode setting.
     handleTouchscreenMode: PropTypes.func.isRequired, //< function - The function to handle changes to touchscreen mode setting.
     setConfig: PropTypes.func.isRequired, //< function - The function to set the configuration.

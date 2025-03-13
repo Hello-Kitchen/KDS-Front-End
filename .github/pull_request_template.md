@@ -1,5 +1,7 @@
 ## Describe your changes
 
+## How to test the feature
+
 ## Issue ticket number and link
 
 ## Checklist before requesting a review

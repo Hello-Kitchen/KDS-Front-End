@@ -14,7 +14,7 @@ describe('ButtonSet Component', () => {
     test('renders all buttons with correct text', () => {
         const buttons = ['servie', 'precedent', 'suivant', 'rappel', 'statistique', 'reglage', 'activer'];
 
-        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} />);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} activeRecall={true} updateActiveRecall={() => {}} />);
 
         // Check that each button's text is present
         expect(screen.getByText("SERVIE")).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe('ButtonSet Component', () => {
     test('Button click triggers updateActiveTab', () => {
         const buttons = ['servie', 'precedent', 'suivant', 'rappel'];
 
-        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} />);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} activeRecall={true} updateActiveRecall={() => {}} />);
 
         const buttonElement = screen.getByText("RAPPEL");
 
@@ -42,7 +42,7 @@ describe('ButtonSet Component', () => {
 
     test('ButtonPower toggles configuration on click', () => {
         const buttons = ['activer'];
-        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={() => {}} navigationPrev={() => {}} navigationAfter={() => {}}/>);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={() => {}} navigationPrev={() => {}} navigationAfter={() => {}} activeRecall={true} updateActiveRecall={() => {}} />);
 
         const buttonElement = screen.getByText("ACTIVER");
 
@@ -64,7 +64,7 @@ describe('ButtonSet Component', () => {
     test('Button click applies color inversion for invertOnClick=true', () => {
         const buttons = ['servie', 'precedent', 'suivant'];
 
-        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}}/>);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} activeRecall={true} updateActiveRecall={() => {}} />);
 
         const buttonElement = screen.getByText("SERVIE");
 
@@ -86,7 +86,8 @@ describe('ButtonSet Component', () => {
     test('Button click triggers updateActiveTab for different buttons', () => {
         const buttons = ['rappel', 'statistique', 'reglage'];
 
-        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} handleDisplayStatistics={() => {}} handleSettingsDisplay={() => {}}/>);
+        render(<ButtonSet buttons={buttons} setConfig={setConfigMock} activeTab="" updateActiveTab={updateActiveTabMock} navigationPrev={() => {}} navigationAfter={() => {}} activeRecall={true} updateActiveRecall={() => {}} handleDisplayStatistics={() => {}} handleSettingsDisplay={() => {}}/>);
+
         // Fire click events on each of the buttons
         fireEvent.click(screen.getByText("RAPPEL"));
         expect(updateActiveTabMock).toHaveBeenCalledWith("RAPPEL");

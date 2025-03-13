@@ -6,6 +6,7 @@ import OrdersDisplay from '../../Components/OrdersDisplay/OrdersDisplay';
 import StatisticsView from '../../Components/ModalViews/StatisticsView';
 import SettingsView from '../../ModalViews/SettingsView';
 
+
 /**
  * @function formatDate
  * @description Formats a Date object into a string in the format DD/MM/YYYY - HH:MM.
@@ -40,11 +41,15 @@ function DashboardCuisine({ config, setConfig }) {
   const [displaySettings, setDisplaySettings] = useState(false);
   const [orderAnnoncement, setOrderAnnoncement] = useState(false);
   const [orderReading, setOrderReading] = useState(false);
+  const [orderSelect, setOrderSelect] = useState(false);
   const [touchscreenMode, setTouchscreenMode] = useState(true);
 
   const handleDisplayStatistics = () => {
     setDisplayStatistics(!displayStatistics);
+    setDisplaySettings(false);
+    setActiveRecall(false);
   };
+  const [activeRecall, setActiveRecall] = useState(false);
 
   /**
    * @function updateActiveTab
@@ -54,6 +59,7 @@ function DashboardCuisine({ config, setConfig }) {
    */
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
+
   };
 
   const handleOrderAnnoncement = () => {
@@ -64,12 +70,28 @@ function DashboardCuisine({ config, setConfig }) {
     setOrderReading(!orderReading);
   };
 
+  const handleOrderSelect = () => {
+    setOrderSelect(!orderSelect);
+  };
+
   const handleTouchscreenMode = () => {
     setTouchscreenMode(!touchscreenMode);
   };
 
   const handleSettingsDisplay = () => {
     setDisplaySettings(!displaySettings);
+    setDisplayStatistics(false);
+    setActiveRecall(false);
+  };
+
+  /**
+   * @function updateActiveRecall
+   * @description Updates the active recall for order.
+   *
+   * @param {boolean} newRecall - The new recall to set as active or not.
+   */
+  const updateActiveRecall = (newRecall) => {
+    setActiveRecall(newRecall);
   };
 
   useEffect(() => {
@@ -107,13 +129,15 @@ function DashboardCuisine({ config, setConfig }) {
               handleOrderAnnoncement={handleOrderAnnoncement}
               orderReading={orderReading}
               handleOrderReading={handleOrderReading}
+              orderSelect={orderSelect}
+              handleOrderSelect={handleOrderSelect}
               touchscreenMode={touchscreenMode}
               handleTouchscreenMode={handleTouchscreenMode}
               setConfig={setConfig}
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement}onSelectOrderId={setCurrentOrderId} />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} />
           )}
         </div>
         <Footer
@@ -122,7 +146,7 @@ function DashboardCuisine({ config, setConfig }) {
           handleDisplayStatistics={handleDisplayStatistics}
           activeTab={activeTab}
           updateActiveTab={updateActiveTab}
-          navigationPrev={handleNavigationPrev}
+          activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} navigationPrev={handleNavigationPrev}
           navigationAfter={handleNavigationAfter}
           handleSettingsDisplay={handleSettingsDisplay}
           currentOrderId={currentOrderId}
@@ -140,6 +164,8 @@ function DashboardCuisine({ config, setConfig }) {
               handleOrderAnnoncement={handleOrderAnnoncement}
               orderReading={orderReading}
               handleOrderReading={handleOrderReading}
+              orderSelect={orderSelect}
+              handleOrderSelect={handleOrderSelect}
               touchscreenMode={touchscreenMode}
               handleTouchscreenMode={handleTouchscreenMode}
               setConfig={setConfig}

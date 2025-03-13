@@ -5,6 +5,7 @@ import SettingsView from '../ModalViews/SettingsView';
 describe('SettingsView', () => {
     const mockHandleOrderAnnoncement = jest.fn();
     const mockHandleOrderReading = jest.fn();
+    const mockHandleOrderSelect = jest.fn();
     const mockHandleTouchscreenMode = jest.fn();
     const mockSetConfig = jest.fn();
 
@@ -13,6 +14,8 @@ describe('SettingsView', () => {
         handleOrderAnnoncement: mockHandleOrderAnnoncement,
         orderReading: true,
         handleOrderReading: mockHandleOrderReading,
+        orderSelect: true,
+        handleOrderSelect: mockHandleOrderSelect,
         touchscreenMode: true,
         handleTouchscreenMode: mockHandleTouchscreenMode,
         setConfig: mockSetConfig,
@@ -26,13 +29,14 @@ describe('SettingsView', () => {
     test('renders SettingsView component', () => {
         expect(screen.getByText("Eteindre l'écran")).toBeInTheDocument();
         expect(screen.getByText("Tonalité d'annonce")).toBeInTheDocument();
-        expect(screen.getByText("Lecture des commandes")).toBeInTheDocument();
+        expect(screen.getByText("Lecture des commandes à l'arrivée")).toBeInTheDocument();
+        expect(screen.getByText("Lecture de la commande sélectionnée")).toBeInTheDocument();
         expect(screen.getByText("Mode de fonctionnement")).toBeInTheDocument();
         expect(screen.getByText("Gestion du compte")).toBeInTheDocument();
     });
 
     test('renders SettingsSwitch components', () => {
-        expect(screen.getAllByText('Oui')).toHaveLength(2);
+        expect(screen.getAllByText('Oui')).toHaveLength(3);
         expect(screen.getByText('Tactile')).toBeInTheDocument();
     });
 
