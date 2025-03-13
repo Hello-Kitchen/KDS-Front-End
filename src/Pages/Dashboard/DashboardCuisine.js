@@ -102,7 +102,6 @@ function DashboardCuisine({ config, setConfig }) {
 
     return () => clearInterval(interval);
   }, []);
-  console.log(servingOrder);
   const handleNavigationPrev = () => {
     setCurrentOrderIndex((prevIndex) => {
       const newIndex = (prevIndex - 1 + nbrOrder) % nbrOrder;
