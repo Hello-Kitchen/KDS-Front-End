@@ -43,6 +43,7 @@ function DashboardCuisine({ config, setConfig }) {
   const [orderReading, setOrderReading] = useState(false);
   const [orderSelect, setOrderSelect] = useState(false);
   const [touchscreenMode, setTouchscreenMode] = useState(true);
+  const [servingOrder, setServingOrder] = useState(-1);
 
   const handleDisplayStatistics = () => {
     setDisplayStatistics(!displayStatistics);
@@ -101,7 +102,7 @@ function DashboardCuisine({ config, setConfig }) {
 
     return () => clearInterval(interval);
   }, []);
-
+  console.log(servingOrder);
   const handleNavigationPrev = () => {
     setCurrentOrderIndex((prevIndex) => {
       const newIndex = (prevIndex - 1 + nbrOrder) % nbrOrder;
@@ -137,7 +138,7 @@ function DashboardCuisine({ config, setConfig }) {
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} />
+            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} isServing={servingOrder}/>
           )}
         </div>
         <Footer
@@ -150,6 +151,7 @@ function DashboardCuisine({ config, setConfig }) {
           navigationAfter={handleNavigationAfter}
           handleSettingsDisplay={handleSettingsDisplay}
           currentOrderId={currentOrderId}
+          isServing={setServingOrder}
         />
       </div>
     );

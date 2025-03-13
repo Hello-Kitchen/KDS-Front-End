@@ -73,7 +73,8 @@ const GenericButton = ({
     handleSettingsDisplay,
     currentOrderId,
     activeRecall,
-    updateActiveRecall
+    updateActiveRecall,
+    isServing
 }) => {
     const [isInverted, setIsInverted] = useState(false);
     const navigate = useNavigate();
@@ -86,66 +87,75 @@ const GenericButton = ({
         setIsInverted(false);
     };
 
-    const handleServed = (id) => {
-            fetch(
-                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${id}`
-                , {headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                }})
-                .then((response) => {
-                if (response.status === 401) {
-                    navigate("/", {state: {error: "Unauthorized access. Please log in."}});
-                    throw new Error("Unauthorized access. Please log in.");
+    const handleServed = async (id) => {
+        isServing(id);
+
+        try {
+            const response = await fetch(
+                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
                 }
-                return response.json();
-                })
-                .then((order) => {
-                if (order.food_ordered.every(food => food.is_ready === true)) {
+            );
+
+            if (response.status === 401) {
+                navigate("/", { state: { error: "Unauthorized access. Please log in." } });
+                throw new Error("Unauthorized access. Please log in.");
+            }
+
+            const order = await response.json();
+
+            const fetchPromises = [];
+
+            if (order.food_ordered.every(food => food.is_ready === true)) {
+                fetchPromises.push(
                     fetch(
-                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/served/${order.id}`
-                        , {
+                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/served/${order.id}`,
+                        {
                             method: 'PUT',
                             headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            },
                         }
-                        })
-                        .then((response) => {
+                    ).then((response) => {
                         if (response.status === 401) {
-                            navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                            navigate("/", { state: { error: "Unauthorized access. Please log in." } });
                             throw new Error("Unauthorized access. Please log in.");
                         }
-                        })
-                        .catch((error) => {
-                            console.error('An error occurred:', error.message);
-                        });
-                } else {
-                    order.food_ordered.forEach((food) => {
-                        if (!food.is_ready) {
+                    })
+                );
+            } else {
+                order.food_ordered.forEach((food) => {
+                    if (!food.is_ready) {
+                        fetchPromises.push(
                             fetch(
-                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${food.id}`
-                                , {
+                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${food.id}`,
+                                {
                                     method: 'PUT',
                                     headers: {
-                                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                    },
                                 }
-                                })
-                                .then((response) => {
+                            ).then((response) => {
                                 if (response.status === 401) {
-                                    navigate("/", {state: {error: "Unauthorized access. Please log in."}});
+                                    navigate("/", { state: { error: "Unauthorized access. Please log in." } });
                                     throw new Error("Unauthorized access. Please log in.");
                                 }
-                                })
-                                .catch((error) => {
-                                    console.error('An error occurred:', error.message);
-                                });
-                        }
-                    });
-                }
+                            })
+                        );
+                    }
+                });
             }
-        )
-        .catch((error) => {
+
+            await Promise.all(fetchPromises);
+            
+        } catch (error) {
             console.error('An error occurred:', error.message);
-        });
+        } finally {
+            isServing(-1);
+        }
     };
 
     const handleClick = () => {
@@ -221,6 +231,7 @@ GenericButton.propTypes = {
     currentOrderId: PropTypes.number,
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
+    isServing: PropTypes.func, ///< Function to update the Id of the order being served
 };
 
 export { GenericButton };
@@ -259,7 +270,7 @@ let buttonData = {
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId, activeRecall, updateActiveRecall }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId, activeRecall, updateActiveRecall, isServing }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -287,6 +298,7 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         currentOrderId={currentOrderId}
                         activeRecall={activeRecall}
                         updateActiveRecall={updateActiveRecall}
+                        isServing={isServing}
                     />
                 );
             })}
@@ -306,6 +318,7 @@ ButtonSet.propTypes = {
     currentOrderId: PropTypes.number, ///< Function to handle serving feature
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
+    isServing: PropTypes.func, ///< Function to update the Id of the order being served
 };
 
 export default ButtonSet;
