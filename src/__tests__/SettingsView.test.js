@@ -79,5 +79,5 @@ describe('SettingsView', () => {
         
         expect(localStorage.removeItem).toHaveBeenCalledWith('token');
         expect(mockNavigate).toHaveBeenCalledWith('/');
-    })
+    });
 });
