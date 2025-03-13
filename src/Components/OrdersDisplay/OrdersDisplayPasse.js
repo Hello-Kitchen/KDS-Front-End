@@ -140,7 +140,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
-                  key={index}
+                  key={orderDetails.id}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
