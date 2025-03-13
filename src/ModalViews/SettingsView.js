@@ -1,6 +1,6 @@
-import React from "react";
-
-import { IoIosArrowForward } from "react-icons/io";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import SettingsSwitch from "../Components/Buttons/SettingsSwitch";
 import PropTypes from 'prop-types';
 
@@ -32,6 +32,8 @@ const SettingsView = ({
     setConfig,
     screenOn
 }) => {
+    const navigate = useNavigate();
+    const [showAccGestion, setShowAccGestion] = useState(false);
 
     return (
         <div className='w-full h-full bg-kitchen-blue border-kitchen-yellow border-y-2'>
@@ -81,10 +83,19 @@ const SettingsView = ({
                     />
                 </div>
                 <div className="border-white border-[0.5px]"/>
-                <div className="flex flex-row justify-between px-3">
+                <div className="flex flex-row justify-between px-3" onClick={() => setShowAccGestion(!showAccGestion)}>
                     <div className="">Gestion du compte</div>
-                    <IoIosArrowForward />
-                </div>
+                    {showAccGestion ? <IoIosArrowDown /> : <IoIosArrowForward />}
+                    </div>
+                    {showAccGestion && (
+                        <div className="mt-2 px-3 flex flex-col space-y-2">
+                            <div className="text-sm" onClick={() => 
+                            {localStorage.removeItem('token');
+                            navigate('/');}
+                            }>Se déconnecter</div>
+                        </div>
+                        )
+                    }
                 <div className="border-white border-[0.5px]"/>
             </div>
         </div>
