@@ -20,7 +20,7 @@ import OrderCarousel from './OrderCarousel';
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading }) {
+function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading, isServing }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -274,7 +274,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
   }, []);
 
   useEffect(() => {
-    const newOrdersLineComponents = ordersLine1.map((order) => ({
+    const newOrdersLineComponents = ordersLine1.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
           key={order.props.index}
@@ -289,7 +289,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     let array = [];
     newOrdersLineComponents.forEach((component) => { array.push(component.component); });
     setOrdersLine1(array);
-    const newOrdersLineComponents2 = ordersLine2.map((order) => ({
+    const newOrdersLineComponents2 = ordersLine2.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
           key={order.props.index}
@@ -305,7 +305,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     newOrdersLineComponents2.forEach((component) => { array.push(component.component); });
     setOrdersLine2(array);
     selectOrderRef.current = selectOrder;
-  }, [selectOrder]);
+  }, [selectOrder, isServing]);
 
   useEffect(() => {
     const selectedOrder = ordersLine1.concat(ordersLine2)[selectOrder];
@@ -342,6 +342,11 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     prepareText(currentOrder);
   }, [selectOrder]);
 
+  useEffect(() => {
+    if (isServing !== -1)
+      setNbrOrders(nbrOrders - 1);
+  }, [isServing]);
+
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
       <div className="grid grid-cols-5 gap-4 mx-2 py-2 min-h-full">
@@ -374,6 +379,7 @@ OrdersDisplay.propTypes = {
   onSelectOrderId: PropTypes.func.isRequired,
   orderSelect: PropTypes.bool,
   orderReading: PropTypes.bool,
+  isServing: PropTypes.number
 };
 
 OrdersDisplay.defaultProps = {

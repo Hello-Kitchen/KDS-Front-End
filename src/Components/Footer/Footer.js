@@ -65,10 +65,11 @@ const NotConnected = () => (
  * @param {function} props.updateActiveTab - A function to update the active tab state.
  * @param {boolean} props.activeRecall - The currently active recall.
  * @param {function} props.updateActiveRecall - A function to update the active recall.
+ * @param {function} props.isServing - A function to update dashboard's state.
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics, currentOrderId, activeRecall, updateActiveRecall }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics, currentOrderId, activeRecall, updateActiveRecall, isServing }) {
     const [isConnected, setIsConnected] = useState(false);
 
     const navigate = useNavigate();
@@ -107,7 +108,7 @@ function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev
 
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} currentOrderId={currentOrderId}/>
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} currentOrderId={currentOrderId} isServing={isServing}/>
             <ConnectionStatus />
         </div>
     );
@@ -125,6 +126,7 @@ Footer.propTypes = {
     currentOrderId: PropTypes.number, ///< Function to handle serving feature
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
+    isServing: PropTypes.function, ///< Function to update the Id of the order being served
 };
 
 export default Footer;
