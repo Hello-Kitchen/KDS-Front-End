@@ -289,7 +289,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     let array = [];
     newOrdersLineComponents.forEach((component) => { array.push(component.component); });
     setOrdersLine1(array);
-    const newOrdersLineComponents2 = ordersLine2.map((order) => ({
+    const newOrdersLineComponents2 = ordersLine2.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
           key={order.props.index}
@@ -342,9 +342,10 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     prepareText(currentOrder);
   }, [selectOrder]);
 
-  // useEffect(() => {
-
-  // }, [isServing])
+  useEffect(() => {
+    if (isServing !== -1)
+      setNbrOrders(nbrOrders - 1);
+  }, [isServing]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
