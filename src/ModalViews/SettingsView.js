@@ -33,7 +33,7 @@ const SettingsView = ({
     screenOn
 }) => {
     const navigate = useNavigate();
-    const [showAccGestion, setShowAccGestion] = useState(false);
+    const [showAccountManagement, setShowAccountManagement] = useState(false);
 
     return (
         <div className='w-full h-full bg-kitchen-blue border-kitchen-yellow border-y-2'>
@@ -83,11 +83,11 @@ const SettingsView = ({
                     />
                 </div>
                 <div className="border-white border-[0.5px]"/>
-                <div className="flex flex-row justify-between px-3" onClick={() => setShowAccGestion(!showAccGestion)}>
+                <div className="flex flex-row justify-between px-3" onClick={() => setShowAccountManagement(!showAccountManagement)}>
                     <div className="">Gestion du compte</div>
-                    {showAccGestion ? <IoIosArrowDown /> : <IoIosArrowForward />}
+                    {showAccountManagement ? <IoIosArrowDown /> : <IoIosArrowForward />}
                     </div>
-                    {showAccGestion && (
+                    {showAccountManagement && (
                         <div className="mt-2 px-3 flex flex-col space-y-2">
                             <div className="text-sm" onClick={() => 
                             {localStorage.removeItem('token');
