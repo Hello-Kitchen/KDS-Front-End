@@ -199,7 +199,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
-                  key={index}
+                  key={orderDetails.id}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
                   index={index}
