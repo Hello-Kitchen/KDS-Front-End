@@ -1,6 +1,11 @@
 import React from 'react';
+import { useNavigate, } from 'react-router-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SettingsView from '../ModalViews/SettingsView';
+
+jest.mock('react-router-dom', () => ({
+    useNavigate: jest.fn(),
+}));
 
 describe('SettingsView', () => {
     const mockHandleOrderAnnoncement = jest.fn();
@@ -22,8 +27,16 @@ describe('SettingsView', () => {
         screenOn: true
     };
 
+    const mockNavigate = jest.fn();        
+
     beforeEach(() => {
+        useNavigate.mockReturnValue(mockNavigate);
         render(<SettingsView {...defaultProps} />);
+        jest.spyOn(Storage.prototype, 'removeItem');
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks(); // Clear all mocks after each test to avoid leakage
     });
 
     test('renders SettingsView component', () => {
@@ -56,5 +69,15 @@ describe('SettingsView', () => {
         const touchscreenModeSwitch = screen.getByText('Clavier');
         fireEvent.click(touchscreenModeSwitch);
         expect(mockHandleTouchscreenMode).toHaveBeenCalled();
+    });
+
+    test('disconnects and returns to login if logout button is clicked', () => {
+        const accountGestion = screen.getByText('Gestion du compte');
+        fireEvent.click(accountGestion);
+        const logout = screen.getByText('Déconnexion');
+        fireEvent.click(logout);
+        
+        expect(localStorage.removeItem).toHaveBeenCalledWith('token');
+        expect(mockNavigate).toHaveBeenCalledWith('/');
     });
 });
