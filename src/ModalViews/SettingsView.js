@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 import SettingsSwitch from "../Components/Buttons/SettingsSwitch";
+import AccountManagement from "./AccountManagement";
 import PropTypes from 'prop-types';
 
 /**
@@ -36,8 +37,11 @@ const SettingsView = ({
     const [showAccountManagement, setShowAccountManagement] = useState(false);
 
     return (
-        <div className='w-full h-full bg-kitchen-blue border-kitchen-yellow border-y-2'>
+        <div className='w-full h-full bg-kitchen-blue border-kitchen-yellow border-y-2 '>
             <div className="flex flex-col text-white text-3xl font-bold space-y-5 px-3 pt-5">
+                {
+                    !showAccountManagement ?
+                <>
                 {screenOn &&
                     <div className="space-y-5">
                         <div className="flex flex-row justify-between px-3" onClick={() => {setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));}}>
@@ -85,7 +89,7 @@ const SettingsView = ({
                 <div className="border-white border-[0.5px]"/>
                 <div className="flex flex-row justify-between px-3" onClick={() => setShowAccountManagement(!showAccountManagement)}>
                     <div className="">Gestion du compte</div>
-                    {showAccountManagement ? <IoIosArrowDown /> : <IoIosArrowForward />}
+                    <IoIosArrowForward />
                     </div>
                     {showAccountManagement && (
                         <div className="mt-2 px-3 flex flex-col space-y-2">
@@ -97,6 +101,11 @@ const SettingsView = ({
                         )
                     }
                 <div className="border-white border-[0.5px]"/>
+                </> :
+                <>
+                    <AccountManagement onClickBack={() => setShowAccountManagement(false)}></AccountManagement>
+                </>
+                }
             </div>
         </div>
     );

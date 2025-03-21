@@ -74,7 +74,7 @@ describe('SettingsView', () => {
     test('disconnects and returns to login if logout button is clicked', () => {
         const accountGestion = screen.getByText('Gestion du compte');
         fireEvent.click(accountGestion);
-        const logout = screen.getByText('Se déconnecter');
+        const logout = screen.getByText('Déconnexion');
         fireEvent.click(logout);
         
         expect(localStorage.removeItem).toHaveBeenCalledWith('token');
