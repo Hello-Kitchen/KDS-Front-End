@@ -218,7 +218,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
           setNbrOrder(ordersLineComponents.length);
           ordersLineComponents.forEach((order) => {
             if (
-              currentLine1Cols + order.nbrCol <= 5 &&
+              currentLine1Cols + order.nbrCol <=5 &&
               waitingOrdersQueue.length === 0 &&
               ordersLine2.length === 0
             ) {
