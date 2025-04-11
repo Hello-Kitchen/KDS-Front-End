@@ -151,15 +151,15 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
     return (<></>);
 
   return (
-    <div className={`flex-1 flex flex-col`}>
+    <div className={`flex col-span-${span}`}>
       {orderDetails ? (
         <div className={`flex-1 flex flex-col`}>
-          <div className="bg-slate-600 text-white grid grid-cols-2 rounded-t-lg flex-shrink-0">
+          <div className="bg-slate-600 text-white flex justify-between rounded-t-lg flex-shrink-0">
             <div className="p-2 text-left">
               <p className="font-semibold text-lg">{orderDetails.number}</p>
               <p className="text-sm">{orderDetails.channel}</p>
             </div>
-            <div className="text-right p-2 text-lg">
+            <div className="text-right p-2 text-lg flex flex-col justify-between h-[70px] items-end">
               {calculateWaitingTime(orderDetails.date).hours > 1 && calculateWaitingTime(orderDetails.date).seconds % 2 ? (
                 <p className="font-semibold text-xl text-white border-2 bg-red-500 border-red-500 text-center rounded-lg">
                   {calculateWaitingTime(orderDetails.date).hours}:{calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
