@@ -150,8 +150,16 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   if (!orderDetail || !orderDetail.food_ordered)
     return (<></>);
 
+  const colSpanClasses = {
+    1: 'col-span-1',
+    2: 'col-span-2',
+    3: 'col-span-3',
+    4: 'col-span-4',
+    5: 'col-span-5',
+  };
+
   return (
-    <div className={`flex col-span-${span}`}>
+    <div className={`flex ${colSpanClasses[span]}`}>
       {orderDetails ? (
         <div className={`flex-1 flex flex-col`}>
           <div className="bg-slate-600 text-white flex justify-between rounded-t-lg flex-shrink-0">
@@ -188,14 +196,16 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
             <ul>
               {orderDetail.food_ordered.map((food, index) =>
                 <li key={index}>
-                  {renderFoodItem(food)}
-                  {food.is_ready && <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 bg-green-500`}>     </span>}
-                  <ol>
-                    {food.details.map((detail, index) => <li key={index} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>→ {detail}</li>)}
-                  </ol>
+                  <div className='break-inside-avoid'>
+                    {renderFoodItem(food)}
+                    {food.is_ready && <span className={`whitespace-pre h-2 w-2 rounded-full mr-2 bg-green-500`}>     </span>}
+                    <ol>
+                      {food.details.map((detail, index) => <li key={index} className={`${food.is_ready ? "text-slate-500 italic" : ""}`}>→ {detail}</li>)}
+                    </ol>
+                  </div>
                   <ol>
                     {food.mods_ingredients.map((modif, index) => (
-                      <div key={index}>
+                      <div key={index} className='break-inside-avoid'>
                         <li className="flex flex-row pl-5">
                           <div className={`${food.is_ready ? "text-slate-500 italic" : ""} p-px text-white font-semibold ${modif.type === "ADD" ? "bg-green-500" : modif.type === "DEL" ? "bg-red-500" : "bg-orange-500"}`}>
                             {modif.type}
