@@ -89,7 +89,7 @@ const GenericButton = ({
 
     const handleServed = async (id) => {
         isServing(id);
-
+        let willRecurse = false;
         try {
             const response = await fetch(
                 `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${id}`,
@@ -129,6 +129,8 @@ const GenericButton = ({
             } else {
                 order.food_ordered.forEach((food) => {
                     if (!food.is_ready) {
+                        if (food.quantity > 1)
+                            willRecurse = true;
                         fetchPromises.push(
                             fetch(
                                 `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${food.id}`,
@@ -150,7 +152,9 @@ const GenericButton = ({
             }
 
             await Promise.all(fetchPromises);
-            
+            if (willRecurse) {
+                handleServed(id);
+            }
         } catch (error) {
             console.error('An error occurred:', error.message);
         } finally {
