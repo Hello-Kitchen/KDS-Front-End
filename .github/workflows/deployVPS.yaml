@@ -1,0 +1,106 @@
+name: Deploy to VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy'
+        required: false
+        type: string
+        default: 'latest'
+  workflow_call:
+    inputs:
+      tag:
+        required: false
+        type: string
+        default: 'latest'
+
+jobs:
+  buildAndPush:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [production-ca, production-uk]
+
+    environment: ${{ matrix.environment }}
+    
+    env:
+      IMAGE_TAG: ${{ inputs.tag }}
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: List files
+        run: ls -R
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build \
+          --build-arg REACT_APP_BACKEND_URL=${{ secrets.BACKEND_URL }} \
+          --build-arg REACT_APP_BACKEND_PORT=${{ secrets.BACKEND_PORT }} \
+          --build-arg REACT_APP_SALT_HASH=${{ secrets.BACKEND_SALT }} \
+          -t ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
+
+      - name: Push Docker image (Docker Hub)
+        run: docker push ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+      - name: Tag image for GHCR
+        if: matrix.environment == 'production-uk'
+        run: |
+          IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker tag ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG }} ghcr.io/$IMAGE_NAME:${{ env.IMAGE_TAG }}
+
+      - name: Push image to GHCR
+        if: matrix.environment == 'production-uk'
+        run: |
+          IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          docker push ghcr.io/$IMAGE_NAME:${{ env.IMAGE_TAG }}
+
+
+  deploy:
+    name: Deploy to VPS
+    needs: buildAndPush
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [production-ca, production-uk]
+
+    environment: ${{ matrix.environment }}
+    env:
+      IMAGE_TAG: ${{ inputs.tag }}
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy config & restart KDS on VPS
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH }}
+          REMOTE_HOST: ${{ secrets.VPS_HOST }}
+          REMOTE_USER: ${{ secrets.VPS_USERNAME }}
+          TARGET: ${{ secrets.VPS_TARGET }}
+          ARGS: "-rlgoDzvc --delete"
+          SOURCE: docker-compose.yml
+          SCRIPT_AFTER: |
+            echo "POS_IMAGE_TAG=${{ env.IMAGE_TAG }}" > ${{ secrets.VPS_TARGET }}.env
+            sleep 2
+            echo "Pull and restart KDS container"
+            cd ${{ secrets.VPS_TARGET }}
+            echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            docker-compose down
+            docker rm -f KDS || true
+            docker-compose pull
+            docker-compose up -d
+          SCRIPT_AFTER_REQUIRED: true

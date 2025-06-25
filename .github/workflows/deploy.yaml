@@ -8,74 +8,9 @@ on:
 
 jobs:
   deployEpitech:
-    runs-on: ubuntu-latest
-    name: Deploy to EPITECH Repository
-    environment: epitech
+    uses: ./.github/workflows/deployEPITECH.yaml
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.DEPLOY_EPITECH_KEY }}
-
-    - name: Clone EPITECH repository
-      run: |
-        git clone git@github.com:EpitechPromo2026/G-EIP-700-PAR-7-1-eip-jules.gresset.git
-        cd G-EIP-700-PAR-7-1-eip-jules.gresset
-        mkdir -p -v KDS-Front-End
-        rsync -av --delete ../ KDS-Front-End/ --exclude .git --exclude G-EIP-700-PAR-7-1-eip-jules.gresset/
-    - name: Configure Git
-      run: |
-        git config --global user.name "Jules Gresset"
-        git config --global user.email "jules.gresset@epitech.eu"
-    - name: Push to EPITECH repository
-      run: |
-        cd G-EIP-700-PAR-7-1-eip-jules.gresset
-        git add .
-        git commit -m "Update from KDS-Front-End (Automation)"
-        git push origin main
-  
-  
   deployVPS:
-    runs-on: ubuntu-latest
-    name: Deploy to VPS
-    strategy:
-        matrix:
-            environment: [production-ca, production-uk]
-
-    environment: ${{ matrix.environment }}
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.X'
-    
-    - name: Install dependencies
-      run: npm install
-
-    - name: Build
-      run: npm run build
-
-    - name: Deploy to VPS CA
-      uses: easingthemes/ssh-deploy@main
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH }}
-        ARGS: "-rlgoDzvc --delete"
-        REMOTE_HOST: ${{ secrets.VPS_HOST }}
-        REMOTE_USER: ${{ secrets.VPS_USERNAME }}
-        TARGET: ${{ secrets.VPS_TARGET }}
-        EXCLUDE: "/node_modules/"
-        SCRIPT_AFTER: |
-          echo 'REACT_APP_BACKEND_URL="${{ secrets.BACKEND_URL }}"' >> ${{ secrets.VPS_TARGET }}.env
-          echo 'REACT_APP_BACKEND_PORT="${{ secrets.BACKEND_PORT }}"' >> ${{ secrets.VPS_TARGET }}.env
-          echo 'REACT_APP_SALT_HASH="${{ secrets.BACKEND_SALT }}"' >> ${{ secrets.VPS_TARGET }}.env
-          sleep 2
-          ./restartKDS.sh
-        SCRIPT_AFTER_REQUIRED: true
+    uses: ./.github/workflows/deployVPS.yaml
+    with:
+      tag: ${{ github.ref_name }}
