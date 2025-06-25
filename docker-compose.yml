@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   kds-frontend:
-    image: julesgresset/hellokitchen-kds:${POS_IMAGE_TAG}
+    image: julesgresset/hellokitchen-kds:${KDS_IMAGE_TAG}
     container_name: kds
     ports:
       - "3001:3000"
