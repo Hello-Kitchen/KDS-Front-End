@@ -34,7 +34,7 @@ const Login = () => {
         const hasedPassword = bcrypt.hashSync(password, `${process.env.REACT_APP_SALT_HASH}`);
 
 
-        fetch(`http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login?idRestaurant=${restaurantID}&username=${username}&password=${hasedPassword}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login?idRestaurant=${restaurantID}&username=${username}&password=${hasedPassword}`)
             .then(response => {
                 if (response.status === 400)
                     setError('Username or password is incorrect');

@@ -92,7 +92,7 @@ const GenericButton = ({
         let willRecurse = false;
         try {
             const response = await fetch(
-                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${id}`,
+                `${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -112,7 +112,7 @@ const GenericButton = ({
             if (order.food_ordered.every(food => food.is_ready === true)) {
                 fetchPromises.push(
                     fetch(
-                        `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/served/${order.id}`,
+                        `${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/served/${order.id}`,
                         {
                             method: 'PUT',
                             headers: {
@@ -133,7 +133,7 @@ const GenericButton = ({
                             willRecurse = true;
                         fetchPromises.push(
                             fetch(
-                                `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${food.id}`,
+                                `${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/orders/status/${food.id}`,
                                 {
                                     method: 'PUT',
                                     headers: {

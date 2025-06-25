@@ -78,7 +78,7 @@ function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev
         const checkServerHealth = async () => {
             try {
                 const response = await fetch(
-                    `http://${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/ping`,
+                    `${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/ping`,
                 );
 
                 if (response.status === 401) {
