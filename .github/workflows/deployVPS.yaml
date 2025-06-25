@@ -35,9 +35,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: List files
-        run: ls -R
-
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
@@ -94,7 +91,7 @@ jobs:
           ARGS: "-rlgoDzvc --delete"
           SOURCE: docker-compose.yml
           SCRIPT_AFTER: |
-            echo "POS_IMAGE_TAG=${{ env.IMAGE_TAG }}" > ${{ secrets.VPS_TARGET }}.env
+            echo "KDS_IMAGE_TAG=${{ env.IMAGE_TAG }}" > ${{ secrets.VPS_TARGET }}.env
             sleep 2
             echo "Pull and restart KDS container"
             cd ${{ secrets.VPS_TARGET }}
