@@ -85,7 +85,7 @@ function DashboardPasse() {
         <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} isServing={servingOrder} /></div>
       </div>
       <Footer
-        buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
+        buttons={["servie", "precedent", "suivant", "rappel", "reglage"]}
         navigationPrev={handleNavigationPrev}
         navigationAfter={handleNavigationAfter}
         activeTab={activeTab}
