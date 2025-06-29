@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Login from '../Pages/Login/Login';
-import bcrypt from 'bcryptjs-react';
 
 // Mocking useNavigate and useLocation from react-router-dom
 jest.mock('react-router-dom', () => ({
@@ -10,10 +9,6 @@ jest.mock('react-router-dom', () => ({
   useLocation: jest.fn()
 }));
 
-// Mocking bcryptjs-react
-jest.mock('bcryptjs-react', () => ({
-  hashSync: jest.fn(() => 'hashedPassword'),
-}));
 describe('Login Page', () => {
     const mockNavigate = jest.fn();
     const mockLocation = { state: { error: 'Sample error message' } };
@@ -59,9 +54,6 @@ describe('Login Page', () => {
 
         // Submit the form
         fireEvent.click(screen.getByRole('button', { name: /Se connecter/i }));
-
-        // Verify that bcrypt.hashSync was called
-        expect(bcrypt.hashSync).toHaveBeenCalledWith('password123', `${process.env.REACT_APP_SALT_HASH}`);
 
         // Wait for the fetch to resolve and navigation to occur
         await waitFor(() => {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 // import logo from './logo-notext.png';
-import bcrypt from "bcryptjs-react";
 
 /**
  * Component : Page, Component used to handle a User login in the POS Application. Main entry point
@@ -31,10 +30,7 @@ const Login = () => {
             return;
         }
 
-        const hasedPassword = bcrypt.hashSync(password, `${process.env.REACT_APP_SALT_HASH}`);
-
-
-        fetch(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login?idRestaurant=${restaurantID}&username=${username}&password=${hasedPassword}`)
+        fetch(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/login?idRestaurant=${restaurantID}&username=${username}&password=${password}`)
             .then(response => {
                 if (response.status === 400)
                     setError('Username or password is incorrect');
