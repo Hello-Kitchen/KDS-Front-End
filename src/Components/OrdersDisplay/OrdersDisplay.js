@@ -17,10 +17,11 @@ import OrderCarousel from './OrderCarousel';
  * @param {boolean} props.activeRecall - The currently active recall.
  * @param {Boolean} orderSelect - A boolean to determine if an order announcement is active for the selected order.
  * @param {Boolean} orderReading - A boolean to determine if an order announcement is active for the new order.
+ * @param {Function} props.setOrdersForStatistics - Function to handle the selection of an order ID.
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading, isServing }) {
+function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading, isServing, setOrdersForStatistics }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -131,8 +132,6 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
         return response.json();
       })
       .then((ordersData) => {
-
-
         // Filter orders to display, only those that have at least one food that is not ready
 
         const orderToDisplay = [];
@@ -148,6 +147,8 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
             orderToDisplay.push(order);
           }
         });
+
+        setOrdersForStatistics(orderToDisplay);
 
         if (orderAnnoncement && orderToDisplay.length > previousNbrOrders.current) {
           audio.play().catch((error) => {
@@ -379,7 +380,8 @@ OrdersDisplay.propTypes = {
   onSelectOrderId: PropTypes.func.isRequired,
   orderSelect: PropTypes.bool,
   orderReading: PropTypes.bool,
-  isServing: PropTypes.number
+  isServing: PropTypes.number,
+  setOrdersForStatistics: PropTypes.func.isRequired, //< Function to set the orders to count in the statistics page.
 };
 
 OrdersDisplay.defaultProps = {

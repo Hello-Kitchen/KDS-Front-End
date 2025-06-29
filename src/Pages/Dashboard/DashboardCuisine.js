@@ -44,6 +44,7 @@ function DashboardCuisine({ config, setConfig }) {
   const [orderSelect, setOrderSelect] = useState(false);
   const [touchscreenMode, setTouchscreenMode] = useState(true);
   const [servingOrder, setServingOrder] = useState(-1);
+  const [ordersForStatistics, setOrdersForStatistics] = useState([]);
 
   const handleDisplayStatistics = () => {
     setDisplayStatistics(!displayStatistics);
@@ -122,7 +123,7 @@ function DashboardCuisine({ config, setConfig }) {
         <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
           {displayStatistics ? (
-            <StatisticsView />
+            <StatisticsView ordersForStatistics={ordersForStatistics}/>
           ) : displaySettings ? (
             <SettingsView
               orderAnnoncement={orderAnnoncement}
@@ -137,7 +138,7 @@ function DashboardCuisine({ config, setConfig }) {
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} isServing={servingOrder}/>
+            <OrdersDisplay setOrdersForStatistics={setOrdersForStatistics} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} isServing={servingOrder}/>
           )}
         </div>
         <Footer

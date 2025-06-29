@@ -4,6 +4,29 @@ import { BeatLoader } from 'react-spinners';
 import PropTypes from "prop-types";
 
 /**
+ * @function calculateWaitingTime
+ * @description Calculates the waiting time for the order based on the order date.
+ * @param {string} orderDate - The date when the order was placed.
+ * @returns {Object} The calculated waiting time in hours, minutes, and seconds.
+ */
+export const calculateWaitingTime = (orderDate, currentTime) => {
+  const orderDateTime = new Date(orderDate).getTime();
+  const currentDateTime = new Date(currentTime).getTime();
+  let difference = currentDateTime - orderDateTime;
+
+  const hours = Math.floor(difference / (1000 * 60 * 60));
+  difference -= hours * (1000 * 60 * 60);
+  const minutes = Math.floor(difference / (1000 * 60));
+  difference -= minutes * (1000 * 60);
+  const seconds = Math.floor(difference / 1000);
+  return {
+    hours: String(hours).padStart(2, "0"),
+    minutes: String(minutes).padStart(2, "0"),
+    seconds: String(seconds).padStart(2, "0"),
+  };
+};
+
+/**
  * @function SingleOrderDisplay
  * @description Component representing an order with various details.
  * @param {Object} orderDetails - Details of the order to be displayed.
@@ -21,31 +44,17 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
   const [updatingFoodIds, setUpdatingFoodIds] = useState(new Set());
   const [lastUpdateTime, setLastUpdateTime] = useState(new Map());
   const [previousStates, setPreviousStates] = useState(new Map());
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date().toUTCString());
 
   // Update current time every second
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(new Date());
+      setCurrentTime(new Date().toUTCString());
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  /**
-   * @function calculateWaitingTime
-   * @description Calculates the waiting time for the order based on the order date.
-   * @param {string} orderDate - The date when the order was placed.
-   * @returns {Object} The calculated waiting time in hours, minutes, and seconds.
-   */
-  const calculateWaitingTime = (orderDate) => {
-    const waitTime = new Date(currentTime - new Date(orderDate));
-    return {
-      hours: String(waitTime.getHours()).padStart(2, "0"),
-      minutes: String(waitTime.getMinutes()).padStart(2, "0"),
-      seconds: String(waitTime.getSeconds()).padStart(2, "0"),
-    };
-  };
 
   /**
    * @function updateStatus
@@ -168,23 +177,23 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
               <p className="text-sm">{orderDetails.channel}</p>
             </div>
             <div className="text-right p-2 text-lg flex flex-col justify-between h-[70px] items-end">
-              {calculateWaitingTime(orderDetails.date).hours > 1 && calculateWaitingTime(orderDetails.date).seconds % 2 ? (
+              {calculateWaitingTime(orderDetails.date, currentTime).hours >= 1 && calculateWaitingTime(orderDetails.date, currentTime).seconds % 2 ? (
                 <p className="font-semibold text-xl text-white border-2 bg-red-500 border-red-500 text-center rounded-lg">
-                  {calculateWaitingTime(orderDetails.date).hours}:{calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
+                  {calculateWaitingTime(orderDetails.date, currentTime).hours}:{calculateWaitingTime(orderDetails.date, currentTime).minutes}:{calculateWaitingTime(orderDetails.date, currentTime).seconds}
                 </p>
-              ) : calculateWaitingTime(orderDetails.date).hours > 1 ? (
+              ) : calculateWaitingTime(orderDetails.date, currentTime).hours >= 1 ? (
                 <p className="font-semibold text-xl text-red-500 border-2 bg-white border-red-500 text-center rounded-lg">
-                  {calculateWaitingTime(orderDetails.date).hours}:{calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
+                  {calculateWaitingTime(orderDetails.date, currentTime).hours}:{calculateWaitingTime(orderDetails.date, currentTime).minutes}:{calculateWaitingTime(orderDetails.date, currentTime).seconds}
                 </p>
               ) : (
                 <p
                   className={
-                    calculateWaitingTime(orderDetails.date).minutes > 15
+                    calculateWaitingTime(orderDetails.date, currentTime).minutes > 15
                       ? "font-semibold text-lg text-red-500"
                       : "font-semibold text-lg"
                   }
                 >
-                  {calculateWaitingTime(orderDetails.date).minutes}:{calculateWaitingTime(orderDetails.date).seconds}
+                  {calculateWaitingTime(orderDetails.date, currentTime).minutes}:{calculateWaitingTime(orderDetails.date, currentTime).seconds}
                 </p>
               )}
               <p className="text-sm">
