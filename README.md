@@ -21,7 +21,6 @@ Create a `.env` file at the root of the project with the following variables:
 ```
 REACT_APP_BACKEND_URL= [Database URL]
 REACT_APP_BACKEND_PORT= [Database port]
-REACT_APP_SALT_HASH= [SALT HASH used for the password]
 ```
 
 ## 🚀 Running the Project
