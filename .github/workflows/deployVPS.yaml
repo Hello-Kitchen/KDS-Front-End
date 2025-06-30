@@ -46,7 +46,6 @@ jobs:
           docker build \
           --build-arg REACT_APP_BACKEND_URL=${{ secrets.BACKEND_URL }} \
           --build-arg REACT_APP_BACKEND_PORT=${{ secrets.BACKEND_PORT }} \
-          --build-arg REACT_APP_SALT_HASH=${{ secrets.BACKEND_SALT }} \
           -t ${{ secrets.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
 
       - name: Push Docker image (Docker Hub)
