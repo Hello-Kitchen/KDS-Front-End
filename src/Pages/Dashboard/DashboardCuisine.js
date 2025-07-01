@@ -144,7 +144,7 @@ function DashboardCuisine({ config, setConfig }) {
   if (config.enable) {
     return (
       <div style={{ width: "100%", height: "100%" }}>
-        <Header textLeft={"Preparation time: " + (time ? time : "--:--")} textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
+        <Header textLeft={"Tps Moyen: " + (time ? (time.startsWith("00:") ? time.substring(3) : time) : "--:--")} textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
           {displayStatistics ? (
             <StatisticsView ordersForStatistics={ordersForStatistics}/>
