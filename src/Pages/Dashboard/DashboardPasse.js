@@ -103,7 +103,7 @@ function DashboardPasse() {
 
   return (
     <div style={{ width: "100%", height: "100%", flexDirection: "column" }}>
-      <Header textLeft={"Waiting time: " + (time ? time : "--:--")} textCenter="Passe" textRight={formatDate(currentTime)} />
+      <Header textLeft={"Tps Moyen : " + (time ? (time.startsWith("00:") ? time.substring(3) : time) : "--:--")} textCenter="Passe" textRight={formatDate(currentTime)} />
       <div className='w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'>
         <div className="col-span-1 row-span-2"><LeftSection /></div>
         <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} onSelectOrderId={setCurrentOrderId} isServing={servingOrder} /></div>
