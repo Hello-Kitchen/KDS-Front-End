@@ -45,6 +45,7 @@ function DashboardCuisine({ config, setConfig }) {
   const [touchscreenMode, setTouchscreenMode] = useState(true);
   const [servingOrder, setServingOrder] = useState(-1);
   const [ordersForStatistics, setOrdersForStatistics] = useState([]);
+  const [time, setTime] = useState();
 
   const handleDisplayStatistics = () => {
     setDisplayStatistics(!displayStatistics);
@@ -96,11 +97,34 @@ function DashboardCuisine({ config, setConfig }) {
     setActiveRecall(newRecall);
   };
 
+  const updateTime = () => {
+    const today = new Date().toISOString();
+    const oneHourAgo = new Date(
+      new Date().getTime() - 1 * 60 * 60 * 1000,
+    ).toISOString();
+    fetch(`${process.env.REACT_APP_BACKEND_URL}:${process.env.REACT_APP_BACKEND_PORT}/api/${localStorage.getItem("restaurantID")}/kpi/averageTimeAllDishes?timeBegin=${oneHourAgo}&timeEnd=${today}&breakdown=true`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Get time failed');
+      } else {
+        response.json().then(data => {
+          setTime(`${String(data.time.hours).padStart(2, '0')}:${String(data.time.minutes).padStart(2, '0')}:${String(data.time.seconds).padStart(2, '0')}`);
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
+    updateTime();
     return () => clearInterval(interval);
   }, []);
   const handleNavigationPrev = () => {
@@ -120,7 +144,7 @@ function DashboardCuisine({ config, setConfig }) {
   if (config.enable) {
     return (
       <div style={{ width: "100%", height: "100%" }}>
-        <Header textLeft="time" textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
+        <Header textLeft={"Preparation time: " + (time ? time : "--:--")} textCenter="Cuisine 1" textRight={formatDate(currentTime)} />
         <div className='w-full h-lb'>
           {displayStatistics ? (
             <StatisticsView ordersForStatistics={ordersForStatistics}/>
@@ -138,7 +162,7 @@ function DashboardCuisine({ config, setConfig }) {
               screenOn={true}
             />
           ) : (
-            <OrdersDisplay setOrdersForStatistics={setOrdersForStatistics} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} isServing={servingOrder}/>
+            <OrdersDisplay updateTime={updateTime} setOrdersForStatistics={setOrdersForStatistics} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} orderAnnoncement={orderAnnoncement} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} orderReading={orderReading} orderSelect={orderSelect} isServing={servingOrder}/>
           )}
         </div>
         <Footer
@@ -152,6 +176,7 @@ function DashboardCuisine({ config, setConfig }) {
           handleSettingsDisplay={handleSettingsDisplay}
           currentOrderId={currentOrderId}
           isServing={setServingOrder}
+          updateTime={updateTime}
         />
       </div>
     );

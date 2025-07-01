@@ -36,7 +36,7 @@ export const calculateWaitingTime = (orderDate, currentTime) => {
  * @param {number} recall - Can specify whether the component is used for displaying a recall.
  * @returns {JSX.Element} The rendered component.
  */
-export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder, recall }) {
+export default function SingleOrderDisplay({ orderDetails, span, index, selectOrder, recall, updateTime }) {
   // if (recall) console.log("orderdetails = ", orderDetails);
   const navigate = useNavigate();
 
@@ -97,6 +97,9 @@ export default function SingleOrderDisplay({ orderDetails, span, index, selectOr
       }
       if (!response.ok) {
         throw new Error('Update failed');
+      }
+      else {
+        updateTime();
       }
     })
     .catch(error => {
@@ -271,5 +274,6 @@ SingleOrderDisplay.propTypes = {
   span: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
   selectOrder: PropTypes.number.isRequired,
-  recall: PropTypes.bool
+  recall: PropTypes.bool,
+  updateTime: PropTypes.func.isRequired,
 };
