@@ -69,7 +69,7 @@ const NotConnected = () => (
  *
  * @return {JSX.Element} A JSX element representing the footer with buttons and connection state.
  */
-function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics, currentOrderId, activeRecall, updateActiveRecall, isServing }) {
+function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleSettingsDisplay, handleDisplayStatistics, currentOrderId, activeRecall, updateActiveRecall, isServing, updateTime }) {
     const [isConnected, setIsConnected] = useState(false);
 
     const navigate = useNavigate();
@@ -108,7 +108,7 @@ function Footer({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev
 
     return (
         <div className='w-full h-lf bg-kitchen-yellow flex flex-row justify-between'>
-            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} currentOrderId={currentOrderId} isServing={isServing}/>
+            <ButtonSet buttons={buttons} setConfig={setConfig} activeTab={activeTab} updateActiveTab={updateActiveTab} navigationPrev={navigationPrev} navigationAfter={navigationAfter} activeRecall={activeRecall} updateActiveRecall={updateActiveRecall} handleDisplayStatistics={handleDisplayStatistics} handleSettingsDisplay={handleSettingsDisplay} currentOrderId={currentOrderId} isServing={isServing} updateTime={updateTime}/>
             <ConnectionStatus />
         </div>
     );
@@ -127,6 +127,7 @@ Footer.propTypes = {
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
     isServing: PropTypes.function, ///< Function to update the Id of the order being served
+    updateTime: PropTypes.func, ///< Function to update the time
 };
 
 export default Footer;
