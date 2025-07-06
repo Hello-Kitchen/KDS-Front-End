@@ -186,8 +186,7 @@ const GenericButton = ({
 
         if (label !== "RAPPEL" && activeRecall === true)
             updateActiveRecall(false);
-
-        if (!invertOnClick) {
+        if (!invertOnClick && label !== "ACTIVER") {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
         }
     };
