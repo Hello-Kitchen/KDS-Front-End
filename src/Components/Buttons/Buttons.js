@@ -74,7 +74,8 @@ const GenericButton = ({
     currentOrderId,
     activeRecall,
     updateActiveRecall,
-    isServing
+    isServing,
+    updateTime
 }) => {
     const [isInverted, setIsInverted] = useState(false);
     const navigate = useNavigate();
@@ -155,6 +156,7 @@ const GenericButton = ({
             if (willRecurse) {
                 handleServed(id);
             }
+            updateTime();
         } catch (error) {
             console.error('An error occurred:', error.message);
         } finally {
@@ -239,6 +241,7 @@ GenericButton.propTypes = {
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
     isServing: PropTypes.func, ///< Function to update the Id of the order being served
+    updateTime: PropTypes.func, ///< Function to update the time
 };
 
 export { GenericButton };
@@ -274,10 +277,12 @@ let buttonData = {
  * @param {function} props.updateActiveTab - A function to update the active tab.
  * @param {boolean} props.activeRecall - The currently active recall.
  * @param {function} props.updateActiveRecall - A function to update the active recall.
+ * @param {function} props.updateTime - A function to update the time.
+ * @param {function} props.isServing - A function to update the Id of the order being served.
  *
  * @return {JSX.Element} A set of rendered buttons.
  */
-function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId, activeRecall, updateActiveRecall, isServing }) {
+function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationPrev, navigationAfter, handleDisplayStatistics, handleSettingsDisplay, currentOrderId, activeRecall, updateActiveRecall, isServing, updateTime }) {
     return (
         <div className="flex w-full">
             {buttons.map((key, i) => {
@@ -306,6 +311,7 @@ function ButtonSet({ buttons, setConfig, activeTab, updateActiveTab, navigationP
                         activeRecall={activeRecall}
                         updateActiveRecall={updateActiveRecall}
                         isServing={isServing}
+                        updateTime={updateTime}
                     />
                 );
             })}
@@ -326,6 +332,7 @@ ButtonSet.propTypes = {
     activeRecall: PropTypes.bool, ///< Currently active recall
     updateActiveRecall: PropTypes.func, ///< Function to handle recall changes
     isServing: PropTypes.func, ///< Function to update the Id of the order being served
+    updateTime: PropTypes.func, ///< Function to update the time
 };
 
 export default ButtonSet;
