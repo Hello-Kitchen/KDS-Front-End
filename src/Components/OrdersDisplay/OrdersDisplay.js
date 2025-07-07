@@ -136,7 +136,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
 
         const orderToDisplay = [];
 
-        ordersData.forEach((order) => {
+        ordersData.filter((order) => order.id !== isServing).forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
             if (food.part === order.part) {
@@ -272,9 +272,10 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     const intervalId = setInterval(fetchOrders, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isServing]);
 
   useEffect(() => {
+    let nbrOrders = 0;
     const newOrdersLineComponents = ordersLine1.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
@@ -290,6 +291,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     let array = [];
     newOrdersLineComponents.forEach((component) => { array.push(component.component); });
     setOrdersLine1(array);
+    nbrOrders += array.length;
     const newOrdersLineComponents2 = ordersLine2.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
@@ -305,7 +307,9 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     array = [];
     newOrdersLineComponents2.forEach((component) => { array.push(component.component); });
     setOrdersLine2(array);
+    nbrOrders += array.length;
     selectOrderRef.current = selectOrder;
+    setNbrOrder(nbrOrders);
   }, [selectOrder, isServing]);
 
   useEffect(() => {
@@ -343,10 +347,6 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     prepareText(currentOrder);
   }, [selectOrder]);
 
-  useEffect(() => {
-    if (isServing !== -1)
-      setNbrOrders(nbrOrders - 1);
-  }, [isServing]);
 
   return (
     <div className="relative w-full h-full grid grid-rows-2 grid-cols-1">
