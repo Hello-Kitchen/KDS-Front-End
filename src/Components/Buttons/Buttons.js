@@ -159,6 +159,7 @@ const GenericButton = ({
             console.error('An error occurred:', error.message);
         } finally {
             isServing(-1);
+            
         }
     };
 
@@ -166,8 +167,11 @@ const GenericButton = ({
         if (setConfig) {
             setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));
         }
-        if (label === "SERVIE")
+        if (label === "SERVIE") {
             handleServed(currentOrderId);
+            navigationAfter();
+            navigationPrev();
+        }
 
         if (label === "SUIVANT")
             navigationAfter();
@@ -186,8 +190,7 @@ const GenericButton = ({
 
         if (label !== "RAPPEL" && activeRecall === true)
             updateActiveRecall(false);
-
-        if (!invertOnClick) {
+        if (!invertOnClick && label !== "ACTIVER") {
             activeTab === label ? updateActiveTab("") : updateActiveTab(label);
         }
     };

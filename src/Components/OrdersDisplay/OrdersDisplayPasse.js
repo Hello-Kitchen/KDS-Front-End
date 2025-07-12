@@ -18,7 +18,7 @@ import OrderCarousel from './OrderCarousel';
  * @example
  * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId, activeRecall, setOrdersForStatistics, orderAnnoncement, orderReading }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId, activeRecall, setOrdersForStatistics, orderAnnoncement, orderReading, isServing }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -135,7 +135,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
 
         const orderToDisplay = [];
 
-        ordersData.forEach((order) => {
+        ordersData.filter((order) => order.id !== isServing).forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
             if (food.part === order.part) {
@@ -255,10 +255,10 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
     const intervalId = setInterval(fetchOrders, 5000);
 
     return () => clearInterval(intervalId);
-  }, [status]);
+  }, [status, isServing]);
 
   useEffect(() => {
-    const newOrdersLineComponents = ordersLine1.map((order) => ({
+    const newOrdersLineComponents = ordersLine1.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
           key={order.props.index}
@@ -273,8 +273,10 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
     let array = [];
     newOrdersLineComponents.forEach((component) => { array.push(component.component); });
     setOrdersLine1(array);
+    if (setNbrOrder !== undefined)
+      setNbrOrder(array.length);
     selectOrderRef.current = selectOrder;
-  }, [selectOrder]);
+  }, [selectOrder, isServing]);
 
   useEffect(() => {
     const selectedOrder = ordersLine1[selectOrder];
@@ -328,6 +330,7 @@ OrdersDisplayPasse.propTypes = {
   setOrdersForStatistics: PropTypes.func,
   orderAnnoncement: PropTypes.bool,
   orderReading: PropTypes.bool,
+  isServing: PropTypes.number,
 };
 
 export default OrdersDisplayPasse;
