@@ -4,6 +4,8 @@ import Footer from '../../Components/Footer/Footer';
 import OrdersDisplayPasse from '../../Components/OrdersDisplay/OrdersDisplayPasse';
 import LeftSection from "../../Components/LeftSection/LeftSection";
 import './DashboardPasse.css';
+import StatisticsView from '../../Components/ModalViews/StatisticsView';
+import SettingsView from '../../ModalViews/SettingsView';
 
 /**
  * @function formatDate
@@ -33,6 +35,19 @@ function DashboardPasse() {
   const [activeTab, setActiveTab] = useState("");
   const [activeRecall, setActiveRecall] = useState(false);
   const [servingOrder, setServingOrder] = useState(-1);
+  const [displayStatistics, setDisplayStatistics] = useState(false);
+  const [displaySettings, setDisplaySettings] = useState(false);
+  const [orderAnnoncement, setOrderAnnoncement] = useState(false);
+  const [orderReading, setOrderReading] = useState(false);
+  const [orderSelect, setOrderSelect] = useState(false);
+  const [touchscreenMode, setTouchscreenMode] = useState(true);
+  const [ordersForStatistics, setOrdersForStatistics] = useState([]);
+
+  const handleDisplayStatistics = () => {
+    setDisplayStatistics(!displayStatistics);
+    setDisplaySettings(false);
+    setActiveRecall(false);
+  };
 
   /**
    * @function updateActiveTab
@@ -42,6 +57,28 @@ function DashboardPasse() {
    */
   const updateActiveTab = (newTab) => {
     setActiveTab(newTab);
+  };
+
+  const handleOrderAnnoncement = () => {
+    setOrderAnnoncement(!orderAnnoncement);
+  };
+
+  const handleOrderReading = () => {
+    setOrderReading(!orderReading);
+  };
+
+  const handleOrderSelect = () => {
+    setOrderSelect(!orderSelect);
+  };
+
+  const handleTouchscreenMode = () => {
+    setTouchscreenMode(!touchscreenMode);
+  };
+
+  const handleSettingsDisplay = () => {
+    setDisplaySettings(!displaySettings);
+    setDisplayStatistics(false);
+    setActiveRecall(false);
   };
 
   /**
@@ -79,13 +116,31 @@ function DashboardPasse() {
   return (
     <div style={{ width: "100%", height: "100%", flexDirection: "column" }}>
       <Header textLeft="time" textCenter="Passe" textRight={formatDate(currentTime)} />
-      <div className='w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'>
-        <div className="col-span-1 row-span-2"><LeftSection /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} onSelectOrderId={setCurrentOrderId} isServing={servingOrder} /></div>
-        <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} isServing={servingOrder} /></div>
+      <div className={displayStatistics || displaySettings ? 'w-full h-lb' : 'w-full h-lb grid grid-cols-[5%_1fr] grid-rows-2 gap-0.5 bg-kitchen-blue'}>
+        {displayStatistics ? (
+                    <StatisticsView ordersForStatistics={ordersForStatistics}/>
+                  ) : displaySettings ? (
+                    <SettingsView
+                      orderAnnoncement={orderAnnoncement}
+                      handleOrderAnnoncement={handleOrderAnnoncement}
+                      orderReading={orderReading}
+                      handleOrderReading={handleOrderReading}
+                      orderSelect={orderSelect}
+                      handleOrderSelect={handleOrderSelect}
+                      touchscreenMode={touchscreenMode}
+                      handleTouchscreenMode={handleTouchscreenMode}
+                      screenOn={true}
+                    />
+                  ) : (
+                    <>
+                    <div className="col-span-1 row-span-2"><LeftSection /></div>
+                    <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"ready"} selectOrder={currentOrderIndex} setNbrOrder={setNbrOrder} onSelectOrderId={setCurrentOrderId} isServing={servingOrder} setOrdersForStatistics={setOrdersForStatistics} orderReading={orderReading} orderAnnoncement={orderAnnoncement} /></div>
+                    <div className="col-span-1 row-span-1 bg-white"><OrdersDisplayPasse status={"pending"} selectOrder={-1} setNbrOrder={undefined} onSelectOrderId={setCurrentOrderId} activeRecall={activeRecall} isServing={servingOrder} setOrdersForStatistics={setOrdersForStatistics} orderReading={orderReading} orderAnnoncement={orderAnnoncement} /></div>
+                    </>
+                  )}
       </div>
       <Footer
-        buttons={["servie", "precedent", "suivant", "rappel", "reglage"]}
+        buttons={["servie", "precedent", "suivant", "rappel", "statistique", "reglage"]}
         navigationPrev={handleNavigationPrev}
         navigationAfter={handleNavigationAfter}
         activeTab={activeTab}
@@ -94,6 +149,8 @@ function DashboardPasse() {
         activeRecall={activeRecall}
         updateActiveRecall={updateActiveRecall}
         isServing={setServingOrder}
+        handleDisplayStatistics={handleDisplayStatistics}
+        handleSettingsDisplay={handleSettingsDisplay}
       />
     </div>
   );

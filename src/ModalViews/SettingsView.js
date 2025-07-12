@@ -42,7 +42,7 @@ const SettingsView = ({
                 {
                     !showAccountManagement ?
                 <>
-                {screenOn &&
+                {screenOn && setConfig &&
                     <div className="space-y-5">
                         <div className="flex flex-row justify-between px-3" onClick={() => {setConfig(prevConfig => ({ ...prevConfig, enable: !prevConfig.enable }));}}>
                             <div className="">Eteindre l&apos;écran</div>
@@ -132,7 +132,7 @@ SettingsView.propTypes = {
     handleOrderSelect: PropTypes.func.isRequired, //< function - The function to handle changes to order select setting.
     touchscreenMode: PropTypes.bool.isRequired, //< boolean - The current state of touchscreen mode setting.
     handleTouchscreenMode: PropTypes.func.isRequired, //< function - The function to handle changes to touchscreen mode setting.
-    setConfig: PropTypes.func.isRequired, //< function - The function to set the configuration.
+    setConfig: PropTypes.func, //< function - The function to set the configuration.
     screenOn: PropTypes.bool.isRequired //< boolean - The current state of the screen.
 };
 
