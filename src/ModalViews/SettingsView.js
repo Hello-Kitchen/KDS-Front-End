@@ -51,6 +51,18 @@ const SettingsView = ({
                         <div className="border-white border-[0.5px]"/>
                     </div>
                 }
+                {
+                    setConfig ? 
+                    <div className="flex flex-row justify-between px-3" onClick={() => {navigate('/passe');}}>
+                        <div className="">Naviguer vers le PASSE</div>
+                        <IoIosArrowForward />
+                    </div> :
+                    <div className="flex flex-row justify-between px-3" onClick={() => {navigate('/cuisine');}}>
+                        <div className="">Naviguer vers la CUISINE</div>
+                        <IoIosArrowForward />
+                    </div>
+                }
+                <div className="border-white border-[0.5px]"/>
                 <div className="flex flex-row justify-between px-3">
                     <div className="">Tonalité d&apos;annonce</div>
                     <SettingsSwitch
