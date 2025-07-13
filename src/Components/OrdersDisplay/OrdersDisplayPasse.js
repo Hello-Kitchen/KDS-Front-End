@@ -18,13 +18,58 @@ import OrderCarousel from './OrderCarousel';
  * @example
  * <OrdersDisplayPasse status="ready" selectOrder=0/>
  */
-function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId, activeRecall }) {
+function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId, activeRecall, setOrdersForStatistics, orderAnnoncement, orderReading, isServing }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
   const [ordersLine1, setOrdersLine1] = useState([]);
   const [lastOrders, setLastOrders] = useState();
   const selectOrderRef = useRef(selectOrder);
+  const previousNbrOrders = useRef(0);
+
+  const audio = new Audio("audio/newOrder.mp3");
+
+  const speakWithPause = (text, pauseDuration = 1000) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+
+    // Pause après la première partie
+    setTimeout(() => {
+      const pauseUtterance = new SpeechSynthesisUtterance(''); // Utterance vide pour la pause
+      window.speechSynthesis.speak(pauseUtterance);
+    }, pauseDuration);
+  };
+
+  const prepareText = (currentOrder) => {
+    let text = "";
+
+    if (currentOrder) {
+      text = `Commande pour la table ${currentOrder.props.orderDetails.number}`;
+      speakWithPause(text);
+
+      for (const food of currentOrder.props.orderDetails.food_ordered) {
+        text = `Plat: ${food.name}`;
+        speakWithPause(text);
+
+        if (food.details.length > 0) {
+          text = "details: " + food.details.join(", ");
+          speakWithPause(text);
+        }
+
+        if (food.mods_ingredients.length > 0) {
+          text = 'ingredients: ' + food.mods_ingredients.map(ingredient => {
+            return ingredient.type === 'DEL' ? `Enlever: ${ingredient.ingredient}` : `Ajouter: ${ingredient.ingredient}`;
+          }).join(", ");
+          speakWithPause(text);
+        }
+
+        if (food.note) {
+          text = `Note: ${food.note}`;
+          speakWithPause(text);
+        }
+      }
+    }
+  };
 
   /**
      * @function getNbrColumns
@@ -90,7 +135,7 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
 
         const orderToDisplay = [];
 
-        ordersData.forEach((order) => {
+        ordersData.filter((order) => order.id !== isServing).forEach((order) => {
           const foodPart = [];
           order.food_ordered.forEach((food) => {
             if (food.part === order.part) {
@@ -103,6 +148,21 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
             orderToDisplay.push(order);
           }
         });
+
+        setOrdersForStatistics(orderToDisplay);
+
+        if (orderAnnoncement && orderToDisplay.length > previousNbrOrders.current) {
+          audio.play().catch((error) => {
+            console.error("Erreur lors de la lecture du son :", error);
+          });
+
+          if (!orderReading) {
+            for (const i in orderToDisplay.length - previousNbrOrders.current)
+              prepareText(orderToDisplay[i]);
+          }
+        }
+
+        previousNbrOrders.current = orderToDisplay.length;
 
         // Update the number of orders to display
         setNbrOrders(orderToDisplay.length);
@@ -195,10 +255,10 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
     const intervalId = setInterval(fetchOrders, 5000);
 
     return () => clearInterval(intervalId);
-  }, [status]);
+  }, [status, isServing]);
 
   useEffect(() => {
-    const newOrdersLineComponents = ordersLine1.map((order) => ({
+    const newOrdersLineComponents = ordersLine1.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
           key={order.props.index}
@@ -213,8 +273,10 @@ function OrdersDisplayPasse({ status, selectOrder, setNbrOrder, onSelectOrderId,
     let array = [];
     newOrdersLineComponents.forEach((component) => { array.push(component.component); });
     setOrdersLine1(array);
+    if (setNbrOrder !== undefined)
+      setNbrOrder(array.length);
     selectOrderRef.current = selectOrder;
-  }, [selectOrder]);
+  }, [selectOrder, isServing]);
 
   useEffect(() => {
     const selectedOrder = ordersLine1[selectOrder];
@@ -265,6 +327,10 @@ OrdersDisplayPasse.propTypes = {
   setNbrOrder: PropTypes.func,
   onSelectOrderId: PropTypes.func,
   activeRecall: PropTypes.bool,
+  setOrdersForStatistics: PropTypes.func,
+  orderAnnoncement: PropTypes.bool,
+  orderReading: PropTypes.bool,
+  isServing: PropTypes.number,
 };
 
 export default OrdersDisplayPasse;

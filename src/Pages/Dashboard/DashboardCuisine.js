@@ -200,7 +200,7 @@ function DashboardCuisine({ config, setConfig }) {
             />
           ) : (
             <div className='w-full h-full flex justify-center items-center bg-[#BABABA]'>
-              <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 2 est désactivé</div>
+              <div className='flex justify-center items-center text-white font-bold text-4xl'>Cuisine 1 est désactivé</div>
             </div>
           )}
         </div>
