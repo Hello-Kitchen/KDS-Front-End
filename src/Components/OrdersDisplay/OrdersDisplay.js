@@ -21,7 +21,7 @@ import OrderCarousel from './OrderCarousel';
  *
  * @returns {JSX.Element} The rendered component.
  */
-function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading, isServing, setOrdersForStatistics }) {
+function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecall, onSelectOrderId, orderSelect, orderReading, isServing, setOrdersForStatistics, updateTime }) {
   const navigate = useNavigate();
   const [nbrOrders, setNbrOrders] = useState(0);
   const [nbrOrdersWaiting, setNbrOrdersWaiting] = useState(0);
@@ -37,9 +37,8 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     const utterance = new SpeechSynthesisUtterance(text);
     window.speechSynthesis.speak(utterance);
 
-    // Pause après la première partie
     setTimeout(() => {
-      const pauseUtterance = new SpeechSynthesisUtterance(''); // Utterance vide pour la pause
+      const pauseUtterance = new SpeechSynthesisUtterance('');
       window.speechSynthesis.speak(pauseUtterance);
     }, pauseDuration);
   };
@@ -200,6 +199,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
             (orderDetails, index) => ({
               component: (
                 <SingleOrderDisplay
+                  updateTime={updateTime}
                   key={orderDetails.id}
                   orderDetails={orderDetails}
                   span={getNbrColumns(orderDetails)}
@@ -279,6 +279,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     const newOrdersLineComponents = ordersLine1.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
+          updateTime={updateTime}
           key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
@@ -295,6 +296,7 @@ function OrdersDisplay({ orderAnnoncement, selectOrder, setNbrOrder, activeRecal
     const newOrdersLineComponents2 = ordersLine2.filter((order) => order.props.orderDetails.id !== isServing).map((order) => ({
       component: (
         <SingleOrderDisplay
+          updateTime={updateTime}
           key={order.props.index}
           orderDetails={order.props.orderDetails}
           span={order.props.span}
@@ -382,6 +384,7 @@ OrdersDisplay.propTypes = {
   orderReading: PropTypes.bool,
   isServing: PropTypes.number,
   setOrdersForStatistics: PropTypes.func.isRequired, //< Function to set the orders to count in the statistics page.
+  updateTime: PropTypes.func.isRequired,
 };
 
 OrdersDisplay.defaultProps = {
