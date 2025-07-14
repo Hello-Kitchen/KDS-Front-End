@@ -7,10 +7,21 @@ on:
          - "v*"
 
 jobs:
+
+  test:
+    name: "Build and test"
+    uses: ./.github/workflows/buildAndTest.yaml
+
   deployEpitech:
+    name: "Deploy to Epitech"
+    needs: test
+    secrets: inherit
     uses: ./.github/workflows/deployEPITECH.yaml
 
   deployVPS:
+    name: "Deploy to VPS"
+    needs: test
+    secrets: inherit
     uses: ./.github/workflows/deployVPS.yaml
     with:
       tag: ${{ github.ref_name }}

@@ -96,7 +96,7 @@ jobs:
             cd ${{ secrets.VPS_TARGET }}
             echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker-compose down
-            docker rm -f KDS || true
+            docker rm -f kds || true
             docker-compose pull
             docker-compose up -d
           SCRIPT_AFTER_REQUIRED: true
