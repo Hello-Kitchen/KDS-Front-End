@@ -129,7 +129,7 @@ const GenericButton = ({
                 );
             } else {
                 order.food_ordered.forEach((food) => {
-                    if (!food.is_ready) {
+                    if (!food.is_ready && food.part === order.part) {
                         if (food.quantity > 1)
                             willRecurse = true;
                         fetchPromises.push(
